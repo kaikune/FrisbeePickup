@@ -1,7 +1,7 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 
 import * as helpers from '../helpers.js';
-import { events } from '../config/mongoCollections.js';
+//import { events } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
 const create = async (

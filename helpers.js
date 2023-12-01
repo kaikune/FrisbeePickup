@@ -2,17 +2,45 @@
 
 import { ObjectId } from 'mongodb';
 
-export function validateAttendee(firstName, lastName, emailAddress) {
-    if (!firstName || !lastName || !emailAddress) throw 'All fields need to have valid values';
-    if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof emailAddress !== 'string') throw 'All fields need to be strings';
-    firstName = firstName.trim().toLowerCase();
-    lastName = lastName.trim().toLowerCase();
+export function validateUser(username, emailAddress, password) {//Using
+    if (!username|| !password || !emailAddress) throw 'All fields need to have valid values';
+    if (typeof username !== 'string' || typeof password !== 'string' || typeof emailAddress !== 'string') throw 'All fields need to be strings';
+    username = username.trim().toLowerCase();
+    password = password.trim();
     emailAddress = emailAddress.trim().toLowerCase();
-    if (firstName.length === 0 || lastName.length === 0 || emailAddress.length === 0) throw '1 or more fields is an empty string';
-    if (!isValidEmail(emailAddress)) throw 'Attendee email is not a valid format';
-    if (!isValidName(firstName) || !isValidName(lastName)) throw 'Attendee name is not valid';
+    if (username.length === 0 || password.length === 0 || emailAddress.length === 0) throw '1 or more fields is an empty string';
+    if (!isValidEmail(emailAddress)) throw 'User email is not a valid format';
+    if(username.length < 3 || username.length > 10) throw "Username is not a valid length"
+    validatePassword(password);
 }
-
+export function validateUserBio(username, profilePicture, description){
+    if(!username || !profilePicture || !description){
+        throw "All fields need to have valid values";
+    }
+    if (typeof username !== 'string' || typeof profilePicture !== 'string' || typeof description !== 'string') throw 'All fields need to be strings';
+    username = username.trim().toLowerCase();
+    profilePicture = profilePicture.trim().toLowerCase();
+    description = description.trim().toLowerCase();
+    if (username.length === 0 || profilePicture.length === 0 || description.length === 0) throw '1 or more fields is an empty string';
+    if(username.length < 3 || username.length > 10) throw "Username is not a valid length";
+    if(description.length < 0 || description.length > 300) throw "Description is not a valid length";
+    //TODO figure out the description
+}
+export function validatePassword(password){//Using
+    if(password.length < 8){
+        throw "Password must be at least 8 characters long.";
+    }
+    if(!/[A-Z]/.test(password)){
+        console.log(password)
+        throw "Password must contain at least one uppercase letter.";
+    }
+    if(!/[0-9]/.test(password)){
+        throw "Password must contain at least one number.";
+    }
+    if(!/[!@#$%^&*(),.?":{}|<>]/.test(password)){
+        throw "Password must contain at least one special character.";
+    }
+}
 export function validateEvent(
     eventName,
     eventDescription,
@@ -111,7 +139,7 @@ export function isValidName(name) {
     return /^[a-z' -]+$/.test(name);
 }
 
-export function isValidEmail(contactEmail) {
+export function isValidEmail(contactEmail) {//Using
     return /^([a-z0-9]+|([a-z0-9]+[.-_]*[a-z0-9]))+@[a-z0-9-]+\.[a-z]{2,}$/.test(contactEmail);
 }
 

@@ -13,4 +13,6 @@ const getCollectionFn = (collection) => {
     };
 };
 
-export const events = getCollectionFn('events');
+export const users = getCollectionFn('users');
+export const games = getCollectionFn('games');
+export const groups = getCollectionFn('groups');

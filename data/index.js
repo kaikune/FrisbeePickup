@@ -1,6 +1,8 @@
 // This file should import both data files and export them as shown in the lecture code
-import eventsFunctions from './events.js';
-import attendeesFunctions from './attendees.js';
+import groupFunctions from './groups.js';
+import gameFunctions from './games.js';
+import userFunctions from './users.js';
 
-export const eventsData = eventsFunctions;
-export const attendeesData = attendeesFunctions;
+export const groupsData = groupFunctions;
+export const gamesData = gameFunctions;
+export const usersData = userFunctions;

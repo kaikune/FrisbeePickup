@@ -12,6 +12,7 @@
   "author": "Charles Canata, Alex D'Agostino, Luke Roumy, Zachary Petrov",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.18.2",
     "mongodb": "^6.2.0"
   }
