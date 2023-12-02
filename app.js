@@ -1,11 +1,18 @@
-// This file should set up the express server as shown in the lecture code
-
 import express from 'express';
-const app = express();
+import exphbs from 'express-handlebars';
+
 import configRoutesFunction from './routes/index.js';
 
+const app = express();
 
 app.use(express.json());
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
 configRoutesFunction(app);
 
 app.listen(3000, () => {
