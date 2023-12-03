@@ -1,9 +1,11 @@
-// import attendeesRoute from './attendees.js';
-// import eventsRoute from './events.js';
+import usersRoutes from './users.js';
+import gamesRoutes from './games.js';
+import groupsRoutes from './groups.js';
 
 const configRoutesFunction = (app) => {
-    // app.use('/events', eventsRoute);
-    // app.use('/attendees', attendeesRoute);
+    app.use("/users", usersRoutes);
+    app.use("/games", gamesRoutes);
+    app.use("/groups", groupsRoutes);
 
     app.use("/", (req, res, next) => {
         if (req.path == "/") {
