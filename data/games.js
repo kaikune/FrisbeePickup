@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 
 const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
     // Input Validation
-    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
+    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();
@@ -90,7 +90,7 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     helpers.isValidId(gameId);
     gameId = gameId.trim();
 
-    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
+    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();

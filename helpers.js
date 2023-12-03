@@ -2,131 +2,142 @@
 
 import { ObjectId } from 'mongodb';
 
-export function validateUser(username, emailAddress, password) {//Using
-    if (!username|| !password || !emailAddress) throw 'All fields need to have valid values';
+export function validateUser(username, emailAddress, password) {
+    //Using
+    if (!username || !password || !emailAddress) throw 'All fields need to have valid values';
     if (typeof username !== 'string' || typeof password !== 'string' || typeof emailAddress !== 'string') throw 'All fields need to be strings';
     username = username.trim().toLowerCase();
     password = password.trim();
     emailAddress = emailAddress.trim().toLowerCase();
     if (username.length === 0 || password.length === 0 || emailAddress.length === 0) throw '1 or more fields is an empty string';
     if (!isValidEmail(emailAddress)) throw 'User email is not a valid format';
-    if(username.length < 3 || username.length > 10) throw "Username is not a valid length"
+    if (username.length < 3 || username.length > 10) throw 'Username is not a valid length';
     validatePassword(password);
 }
-export function validateUserBio(username, profilePicture, description){
-    if(!username || !profilePicture || !description){
-        throw "All fields need to have valid values";
+export function validateUserBio(username, profilePicture, description) {
+    if (!username || !profilePicture || !description) {
+        throw 'All fields need to have valid values';
     }
     if (typeof username !== 'string' || typeof profilePicture !== 'string' || typeof description !== 'string') throw 'All fields need to be strings';
     username = username.trim().toLowerCase();
     profilePicture = profilePicture.trim().toLowerCase();
     description = description.trim().toLowerCase();
     if (username.length === 0 || profilePicture.length === 0 || description.length === 0) throw '1 or more fields is an empty string';
-    if(username.length < 3 || username.length > 10) throw "Username is not a valid length";
-    if(description.length < 0 || description.length > 300) throw "Description is not a valid length";
+    if (username.length < 3 || username.length > 10) throw 'Username is not a valid length';
+    if (description.length < 0 || description.length > 300) throw 'Description is not a valid length';
     //TODO figure out the description
 }
-export function validatePassword(password){//Using
-    if(password.length < 8){
-        throw "Password must be at least 8 characters long.";
+export function validatePassword(password) {
+    //Using
+    if (password.length < 8) {
+        throw 'Password must be at least 8 characters long.';
     }
-    if(!/[A-Z]/.test(password)){
-        console.log(password)
-        throw "Password must contain at least one uppercase letter.";
+    if (!/[A-Z]/.test(password)) {
+        console.log(password);
+        throw 'Password must contain at least one uppercase letter.';
     }
-    if(!/[0-9]/.test(password)){
-        throw "Password must contain at least one number.";
+    if (!/[0-9]/.test(password)) {
+        throw 'Password must contain at least one number.';
     }
-    if(!/[!@#$%^&*(),.?":{}|<>]/.test(password)){
-        throw "Password must contain at least one special character.";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        throw 'Password must contain at least one special character.';
     }
 }
-export function validateEvent(
-    eventName,
-    eventDescription,
-    eventLocation,
-    contactEmail,
-    maxCapacity,
-    priceOfAdmission,
-    eventDate,
-    startTime,
-    endTime,
-    publicEvent
-) {
+export function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) {
     // Input Validation
     if (
-        eventName == null ||
-        eventDescription == null ||
-        eventLocation == null ||
-        contactEmail == null ||
+        gameName == null ||
+        gameDescription == null ||
+        gameLocation == null ||
         maxCapacity == null ||
-        priceOfAdmission == null ||
-        eventDate == null ||
+        gameDate == null ||
         startTime == null ||
         endTime == null ||
-        publicEvent == null
+        group == null
     )
         throw 'All fields need to have valid values';
 
     if (
-        typeof eventName !== 'string' ||
-        typeof eventDescription !== 'string' ||
-        typeof contactEmail !== 'string' ||
-        typeof eventDate !== 'string' ||
+        typeof gameName !== 'string' ||
+        typeof gameDescription !== 'string' ||
+        typeof gameDate !== 'string' ||
         typeof startTime !== 'string' ||
         typeof endTime !== 'string'
     )
         throw 'One or more string fields not given as string';
 
-    eventName = eventName.trim();
-    eventDescription = eventDescription.trim();
-    contactEmail = contactEmail.trim().toLowerCase();
-    eventDate = eventDate.trim();
+    gameName = gameName.trim();
+    gameDescription = gameDescription.trim();
+    gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
 
-    if (
-        eventName.length === 0 ||
-        eventDescription.length === 0 ||
-        contactEmail.length === 0 ||
-        eventDate.length === 0 ||
-        startTime.length === 0 ||
-        endTime.length === 0
-    )
+    if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)
         throw 'One or more string fields empty';
 
-    if (eventName.length < 5) throw 'Event name less than 5 chars';
-    if (eventDescription.length < 25) throw 'Event description less than 25 chars';
-    if (!isValidEmail(contactEmail)) throw 'Contact email is not a valid format';
-    if (!isValidDay(eventDate)) throw 'Event Date is not valid';
+    if (gameName.length < 5) throw 'Event name less than 5 chars';
+    if (gameDescription.length < 25) throw 'Event description less than 25 chars';
+    if (!isValidDay(gameDate)) throw 'Event Date is not valid';
     const date = new Date();
     const currentDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    if (compareDates(currentDate, eventDate) === 1) throw 'Event Date has to be in the future';
+    if (compareDates(currentDate, gameDate) === 1) throw 'Event Date has to be in the future';
     if (!isValidTime(startTime) || !isValidTime(endTime)) throw 'Start and/or end time is not valid';
     if (!compareTimes(startTime, endTime)) throw 'Start time has to be 30min before end time';
 
-    if (typeof publicEvent !== 'boolean') throw 'Public event is not a boolean';
-    if (typeof maxCapacity !== 'number' || typeof priceOfAdmission !== 'number') throw 'Max cap. and/or price not a number';
-    if (priceOfAdmission < 0) throw 'Price should be >= 0';
-    if (priceOfAdmission.toString().split('.')[1] && priceOfAdmission.toString().split('.')[1].length !== 2)
-        throw 'Price not a whole number or not 2 decimal places';
+    if (typeof maxCapacity !== 'number') throw 'Max cap. and/or price not a number';
     if (maxCapacity <= 0) throw 'Max cap. should be > 0';
     if (maxCapacity.toString().split('.')[1]) throw 'Max cap. not a whole number';
-    if (typeof eventLocation !== 'object') throw 'Event location is not an object';
-    if (!eventLocation.streetAddress || !eventLocation.city || !eventLocation.state || !eventLocation.zip) throw 'Event location missing key(s)';
+    if (typeof gameLocation !== 'object') throw 'Event location is not an object';
+    if (!gameLocation.streetAddress || !gameLocation.city || !gameLocation.state || !gameLocation.zip) throw 'Event location missing key(s)';
     if (
-        typeof eventLocation.streetAddress !== 'string' ||
-        typeof eventLocation.city !== 'string' ||
-        typeof eventLocation.state !== 'string' ||
-        typeof eventLocation.zip !== 'string'
+        typeof gameLocation.streetAddress !== 'string' ||
+        typeof gameLocation.city !== 'string' ||
+        typeof gameLocation.state !== 'string' ||
+        typeof gameLocation.zip !== 'string'
     )
         throw 'Event location values not string';
-    for (const key in eventLocation) eventLocation[key] = eventLocation[key].trim();
-    if (eventLocation.streetAddress.length < 3) throw "Event location's street address too short";
-    if (eventLocation.city.length < 3) throw "Event location's city name too short";
-    eventLocation.state = eventLocation.state.toUpperCase();
-    if (!states.includes(eventLocation.state)) throw 'State is not valid';
-    if (eventLocation.zip.length !== 5 || isNaN(eventLocation.zip)) throw 'Zip code is not valid';
+    for (const key in gameLocation) gameLocation[key] = gameLocation[key].trim();
+    if (gameLocation.streetAddress.length < 3) throw "Event location's street address too short";
+    if (gameLocation.city.length < 3) throw "Event location's city name too short";
+    gameLocation.state = gameLocation.state.toUpperCase();
+    if (!states.includes(gameLocation.state)) throw 'State is not valid';
+    if (gameLocation.zip.length !== 5 || isNaN(gameLocation.zip)) throw 'Zip code is not valid';
+
+    isValidId(group);
+}
+
+export function validateGroup(groupName, groupDescription, groupLeader) {
+    // Input Validation
+    if (groupName == null || groupDescription == null || groupLeader == null) throw 'All fields need to have valid values';
+
+    if (typeof groupName !== 'string' || typeof groupDescription !== 'string') throw 'One or more string fields not given as string';
+
+    groupName = groupName.trim();
+    groupDescription = groupDescription.trim();
+
+    if (groupName.length === 0 || groupDescription.length === 0) throw 'One or more string fields empty';
+
+    if (gameName.length < 5) throw 'group name less than 5 chars';
+    if (gameDescription.length < 25) throw 'group description less than 25 chars';
+    isValidId(groupLeader);
+}
+
+export function validateUser(username, emailAddress, password) {
+    // Input Validation
+    if (username == null || emailAddress == null || password == null) throw 'All fields need to have valid values';
+
+    if (typeof username !== 'string' || typeof emailAddress !== 'string' || typeof password !== 'string')
+        throw 'One or more string fields not given as string';
+
+    username = username.trim();
+    emailAddress = emailAddress.trim();
+    password = password.trim();
+
+    if (username.length === 0 || emailAddress.length === 0 || password.length === 0) throw 'One or more string fields empty';
+
+    if (username.length < 1) throw 'group name less than 1 chars';
+    if (!isValidEmail(emailAddress)) throw 'Email is not valid';
+    isValidId(groupLeader);
 }
 
 export function isValidId(id) {
@@ -139,7 +150,7 @@ export function isValidName(name) {
     return /^[a-z' -]+$/.test(name);
 }
 
-export function isValidEmail(contactEmail) {//Using
+export function isValidEmail(contactEmail) {
     return /^([a-z0-9]+|([a-z0-9]+[.-_]*[a-z0-9]))+@[a-z0-9-]+\.[a-z]{2,}$/.test(contactEmail);
 }
 

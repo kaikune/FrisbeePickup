@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 
 const create = async (groupName, groupDescription, groupLeader) => {
     // Input Validation
-    helpers.validategroup(groupName, groupDescription, groupLeader);
+    helpers.validateGroup(groupName, groupDescription, groupLeader);
 
     groupName = groupName.trim();
     groupDescription = groupDescription.trim();
@@ -82,7 +82,7 @@ const update = async (groupId, groupName, groupDescription, groupLeader) => {
     helpers.isValidId(groupId);
     groupId = groupId.trim();
 
-    helpers.validategroup(groupName, groupDescription, groupLeader);
+    helpers.validateGroup(groupName, groupDescription, groupLeader);
 
     groupName = groupName.trim();
     groupDescription = groupDescription.trim();
