@@ -1,174 +1,121 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 
 import * as helpers from '../helpers.js';
-//import { events } from '../config/mongoCollections.js';
+import { games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
-const create = async (
-    eventName,
-    eventDescription,
-    eventLocation,
-    contactEmail,
-    maxCapacity,
-    priceOfAdmission,
-    eventDate,
-    startTime,
-    endTime,
-    publicEvent
-) => {
+const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) => {
     // Input Validation
-    helpers.validateEvent(
-        eventName,
-        eventDescription,
-        eventLocation,
-        contactEmail,
-        maxCapacity,
-        priceOfAdmission,
-        eventDate,
-        startTime,
-        endTime,
-        publicEvent
-    );
+    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
-    eventName = eventName.trim();
-    eventDescription = eventDescription.trim();
-    contactEmail = contactEmail.trim().toLowerCase();
-    eventDate = eventDate.trim();
+    gameName = gameName.trim();
+    gameDescription = gameDescription.trim();
+    gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
 
-    // Add event to database
-    let newEvent = {
-        eventName,
-        description: eventDescription,
-        eventLocation,
-        contactEmail,
+    // Add game to database
+    let newgame = {
+        gameName,
+        description: gameDescription,
+        gameLocation,
         maxCapacity,
-        priceOfAdmission,
-        eventDate,
+        gameDate,
         startTime,
         endTime,
-        publicEvent,
-        attendees: [],
-        totalNumberOfAttendees: 0,
+        players: [],
+        totalNumberOfPlayers: 0,
     };
 
-    const eventCollection = await events();
-    const insertInfo = await eventCollection.insertOne(newEvent);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add event';
+    const gameCollection = await games();
+    const insertInfo = await gameCollection.insertOne(newgame);
+    if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add game';
 
     const newId = insertInfo.insertedId.toString();
 
-    const event = await eventCollection.findOne({ _id: new ObjectId(newId) });
-    event._id = event._id.toString();
+    const game = await gameCollection.findOne({ _id: new ObjectId(newId) });
+    game._id = game._id.toString();
     //await closeConnection(); // For testing purposes
-    return event;
+    return game;
 };
 
 const getAll = async () => {
-    const eventCollection = await events();
-    let eventList = await eventCollection.find({}).project({ _id: 1, eventName: 1 }).toArray();
-    if (!eventList) throw 'Could not get all events';
-    eventList = eventList.map((element) => {
+    const gameCollection = await games();
+    let gameList = await gameCollection.find({}).project({ _id: 1, gameName: 1 }).toArray();
+    if (!gameList) throw 'Could not get all games';
+    gameList = gameList.map((element) => {
         element._id = element._id.toString();
         return element;
     });
-    return eventList;
+    return gameList;
 };
 
-const get = async (eventId) => {
+const get = async (gameId) => {
     // Input Validation
-    helpers.isValidId(eventId);
-    eventId = eventId.trim();
+    helpers.isValidId(gameId);
+    gameId = gameId.trim();
 
-    // Get event with given id
-    const eventCollection = await events();
-    const event = await eventCollection.findOne({ _id: new ObjectId(eventId) });
-    if (event === null) throw 'No event with that id';
-    event._id = event._id.toString();
-    return event;
+    // Get game with given id
+    const gameCollection = await games();
+    const game = await gameCollection.findOne({ _id: new ObjectId(gameId) });
+    if (game === null) throw 'No game with that id';
+    game._id = game._id.toString();
+    return game;
 };
 
-const remove = async (eventId) => {
+const remove = async (gameId) => {
     // Input Validation
-    helpers.isValidId(eventId);
-    eventId = eventId.trim();
+    helpers.isValidId(gameId);
+    gameId = gameId.trim();
 
-    // Delete event with given id
-    const eventCollection = await events();
-    const deletionInfo = await eventCollection.findOneAndDelete(
+    // Delete game with given id
+    const gameCollection = await games();
+    const deletionInfo = await gameCollection.findOneAndDelete(
         {
-            _id: new ObjectId(eventId),
+            _id: new ObjectId(gameId),
         },
         { returnDocument: 'after' }
     );
     if (!deletionInfo) {
-        throw `Could not delete event with id of ${eventId}`;
+        throw `Could not delete game with id of ${gameId}`;
     }
 
-    const res = { eventName: deletionInfo.eventName, deleted: true };
+    const res = { gameName: deletionInfo.gameName, deleted: true };
     return res;
 };
 
-const update = async (
-    eventId,
-    eventName,
-    eventDescription,
-    eventLocation,
-    contactEmail,
-    maxCapacity,
-    priceOfAdmission,
-    eventDate,
-    startTime,
-    endTime,
-    publicEvent
-) => {
+const update = async (gameId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) => {
     // Input Validation
-    helpers.isValidId(eventId);
-    eventId = eventId.trim();
+    helpers.isValidId(gameId);
+    gameId = gameId.trim();
 
-    helpers.validateEvent(
-        eventName,
-        eventDescription,
-        eventLocation,
-        contactEmail,
-        maxCapacity,
-        priceOfAdmission,
-        eventDate,
-        startTime,
-        endTime,
-        publicEvent
-    );
+    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
-    eventName = eventName.trim();
-    eventDescription = eventDescription.trim();
-    contactEmail = contactEmail.trim().toLowerCase();
-    eventDate = eventDate.trim();
+    gameName = gameName.trim();
+    gameDescription = gameDescription.trim();
+    gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
 
-    const oldEvent = await get(eventId); // Check if event exists
+    const oldgame = await get(gameId); // Check if game exists
 
     // Update record
-    const updatedEvent = {
-        eventName,
-        description: eventDescription,
-        eventLocation,
-        contactEmail,
+    const updatedgame = {
+        gameName,
+        description: gameDescription,
+        gameLocation,
         maxCapacity,
-        priceOfAdmission,
-        eventDate,
+        gameDate,
         startTime,
         endTime,
-        publicEvent,
-        attendees: oldEvent.attendees,
-        totalNumberOfAttendees: oldEvent.totalNumberOfAttendees,
+        players: oldgame.players,
+        totalNumberOfPlayers: oldgame.totalNumberOfPlayers,
     };
 
-    const eventCollection = await events();
-    const updatedInfo = await eventCollection.findOneAndReplace({ _id: new ObjectId(eventId) }, updatedEvent, { returnDocument: 'after' });
+    const gameCollection = await games();
+    const updatedInfo = await gameCollection.findOneAndReplace({ _id: new ObjectId(gameId) }, updatedgame, { returnDocument: 'after' });
     if (!updatedInfo) {
-        throw 'could not update event successfully';
+        throw 'could not update game successfully';
     }
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
