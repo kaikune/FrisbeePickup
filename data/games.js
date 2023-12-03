@@ -4,9 +4,9 @@ import * as helpers from '../helpers.js';
 import { games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 
-const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) => {
+const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
     // Input Validation
-    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
+    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();
@@ -25,6 +25,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         endTime,
         players: [],
         totalNumberOfPlayers: 0,
+        group,
     };
 
     const gameCollection = await games();
@@ -84,12 +85,12 @@ const remove = async (gameId) => {
     return res;
 };
 
-const update = async (gameId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) => {
+const update = async (gameId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
     // Input Validation
     helpers.isValidId(gameId);
     gameId = gameId.trim();
 
-    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
+    helpers.validategame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();
@@ -97,7 +98,7 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     startTime = startTime.trim();
     endTime = endTime.trim();
 
-    const oldgame = await get(gameId); // Check if game exists
+    const oldGame = await get(gameId); // Check if game exists
 
     // Update record
     const updatedgame = {
@@ -108,8 +109,9 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
         gameDate,
         startTime,
         endTime,
-        players: oldgame.players,
-        totalNumberOfPlayers: oldgame.totalNumberOfPlayers,
+        players: oldGame.players,
+        totalNumberOfPlayers: oldGame.totalNumberOfPlayers,
+        group,
     };
 
     const gameCollection = await games();
