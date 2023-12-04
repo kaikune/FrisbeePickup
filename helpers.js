@@ -1,20 +1,36 @@
 // You can add and export any helper functions you want here - if you aren't using any, then you can just leave this file as is
 
 import { ObjectId } from 'mongodb';
-/*
-export function validateUser(username, emailAddress, password) {
-    //Using
-    if (!username || !password || !emailAddress) throw 'All fields need to have valid values';
-    if (typeof username !== 'string' || typeof password !== 'string' || typeof emailAddress !== 'string') throw 'All fields need to be strings';
-    username = username.trim().toLowerCase();
-    password = password.trim();
-    emailAddress = emailAddress.trim().toLowerCase();
-    if (username.length === 0 || password.length === 0 || emailAddress.length === 0) throw '1 or more fields is an empty string';
-    if (!isValidEmail(emailAddress)) throw 'User email is not a valid format';
-    if (username.length < 3 || username.length > 10) throw 'Username is not a valid length';
+
+let stringHelper = function (string, stringName, minLength, maxLength) {
+    if (string == null) {
+        throw stringName + " was not provided!";
+    }
+    if (typeof string != "string") {
+        throw stringName + " must be a string!";
+    }
+    string = string.trim();
+    if (minLength != null && string.length < minLength) {
+        throw "The provided " + stringName + " isn't long enough!";
+    }
+    if (maxLength != null && string.length > maxLength) {
+        throw "The provided " + stringName + " is too long!";
+    }
+    return string;
+}
+
+export function validateUser (username, emailAddress, password) {
+    username = stringHelper(username, "Username", 3, 10);
+    username = username.toLowerCase();
+    emailAddress = stringHelper(emailAddress, "Email address", 1, null);
+    emailAddress = emailAddress.toLowerCase();
+    password = stringHelper(password, "Password", 1, null);
+    if (!isValidEmail(emailAddress)) {
+        throw "User email is invalid!";
+    }
     validatePassword(password);
 }
-*/
+
 export function validateUserBio(username, profilePicture, description) {
     if (!username || !profilePicture || !description) {
         throw 'All fields need to have valid values';
@@ -120,24 +136,6 @@ export function validateGroup(groupName, groupDescription, groupLeader) {
 
     if (gameName.length < 5) throw 'group name less than 5 chars';
     if (gameDescription.length < 25) throw 'group description less than 25 chars';
-    isValidId(groupLeader);
-}
-
-export function validateUser(username, emailAddress, password) {
-    // Input Validation
-    if (username == null || emailAddress == null || password == null) throw 'All fields need to have valid values';
-
-    if (typeof username !== 'string' || typeof emailAddress !== 'string' || typeof password !== 'string')
-        throw 'One or more string fields not given as string';
-
-    username = username.trim();
-    emailAddress = emailAddress.trim();
-    password = password.trim();
-
-    if (username.length === 0 || emailAddress.length === 0 || password.length === 0) throw 'One or more string fields empty';
-
-    if (username.length < 1) throw 'group name less than 1 chars';
-    if (!isValidEmail(emailAddress)) throw 'Email is not valid';
     isValidId(groupLeader);
 }
 
