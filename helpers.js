@@ -1,7 +1,7 @@
 // You can add and export any helper functions you want here - if you aren't using any, then you can just leave this file as is
 
 import { ObjectId } from 'mongodb';
-
+/*
 export function validateUser(username, emailAddress, password) {
     //Using
     if (!username || !password || !emailAddress) throw 'All fields need to have valid values';
@@ -14,6 +14,7 @@ export function validateUser(username, emailAddress, password) {
     if (username.length < 3 || username.length > 10) throw 'Username is not a valid length';
     validatePassword(password);
 }
+*/
 export function validateUserBio(username, profilePicture, description) {
     if (!username || !profilePicture || !description) {
         throw 'All fields need to have valid values';

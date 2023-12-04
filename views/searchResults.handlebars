@@ -1,21 +1,22 @@
 <main>
-    <h1>Search Results for {{searchTerm}}</h1>
-    <h2>Players:</h2>
+    <h1>{{playerName}}</h1>
+    <a>About Me: {{description}}</a>
+    <a>Friends:</a>
     <ul>
-        {{#each playerResults}}
-            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{#each friends}}
+            <li href="/users/{{this._id}}">{{this.name}}</li>
         {{/each}}
     </ul>
-    <h2>Games:</h2>
+    <a>Groups:</a>
     <ul>
-        {{#each gameResults}}
-            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{#each groups}}
+            <li href="/groups/{{this._id}}">{{this.name}}</li>
         {{/each}}
     </ul>
-    <h2>Groups:</h2>
+    <a>Upcoming Games:</a>
     <ul>
-        {{#each groupResults}}
-            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{#each games}}
+            <li href="/games/{{this._id}}">{{this.name}}</li>
         {{/each}}
     </ul>
 </main>

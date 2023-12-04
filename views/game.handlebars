@@ -13,4 +13,10 @@
     {{/if}}
     <a>Date: {{dateTime}}</a>
     <a>Location: {{location}}</a>
+
+    <button class="join-button">Join Game</button>
+
+    {{#if isOwner}}
+        <button class="edit-button">Edit</button>
+    {{/if}}
 </main>

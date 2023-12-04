@@ -14,4 +14,10 @@
             <li href="/games/{{this._id}}">{{this.name}}</li>
         {{/each}}
     </ul>
+
+    <button class="join-button">Join Group</button>
+
+    {{#if isOwner}}
+        <button class="edit-button">Edit</button>
+    {{/if}}
 </main>

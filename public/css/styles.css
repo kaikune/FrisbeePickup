@@ -1,2 +1,27 @@
 /* You will create a CSS stylesheet in /public/css/styles.css; this file should have at least 5 rulesets.  You will need to utilize all 5 rulesets on each of the pages (not every page has to use all 5 rulesets each but all 5 rulesets must be utilized by the various pages in your application).  So you can have some rulesets for one page, some for another page but there needs to be at least 5 total rulesets that are used between all the pages.  */
 
+.header-left{
+    border-right-color: black;
+    border-right-style: dashed;
+    border-right-width: 2px;
+    width: 20%;
+}
+.header-center{
+    border-right-color: black;
+    border-right-style: dashed;
+    border-right-width: 2px;
+    border-left-color: black;
+    border-left-style: dashed;
+    border-left-width: 2px;
+    width: 20%;
+}
+.header-right{
+    border-left-color: black;
+    border-left-style: dashed;
+    border-left-width: 2px;
+    width: 20%;
+}
+#header-menu{
+    background-color: green;
+    width: 99.9%;
+}
