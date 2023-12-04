@@ -1,0 +1,21 @@
+<main>
+    <h1>Search Results for {{searchTerm}}</h1>
+    <h2>Players:</h2>
+    <ul>
+        {{#each playerResults}}
+            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{/each}}
+    </ul>
+    <h2>Games:</h2>
+    <ul>
+        {{#each gameResults}}
+            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{/each}}
+    </ul>
+    <h2>Groups:</h2>
+    <ul>
+        {{#each groupResults}}
+            <a href="/users/{{this.id}}">{{this.name}}</a>
+        {{/each}}
+    </ul>
+</main>

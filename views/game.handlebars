@@ -1,0 +1,16 @@
+<main>
+    <h1>{{gameName}}</h1>
+    <a>Game Info: {{description}}</a>
+    <a>Registered Players:</a>
+    <ul>
+        {{#each players}}
+            <li href="/users/{{this._id}}">{{this.name}}</li>
+        {{/each}}
+    </ul>
+    <a>Organizer: {{organizer}}</a>
+    {{#if hostGroup}}
+    <a href="/groups/{{hostGroup._id}}">Host Group: {{hostGroup.name}}</a>
+    {{/if}}
+    <a>Date: {{dateTime}}</a>
+    <a>Location: {{location}}</a>
+</main>
