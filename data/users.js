@@ -144,5 +144,32 @@ const deleteUser = async (userId) => {
     if (!gameRemove || !groupRemove) throw 'Could not delete user';
     return { gameRemove, groupRemove };
 };
-
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio };
+export const loginUser = async (emailAddress, password) => {
+    //Input Validation
+    if(!emailAddress || !password)throw "Error: 1 or more fields missing";
+    if(typeof emailAddress !== 'string' || typeof password !== 'string')throw "Expected a string";
+    emailAddress = emailAddress.trim();
+    password = password.trim();
+    if(emailAddress.length === 0 || password.length === 0)throw "Cannot be empty spaces"
+    if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
+    helpers.validatePassword(password);
+    const userCollection = await users();
+    let userList = await userCollection.find({}).toArray();
+    if (!userList){
+      throw 'Error: could not get all users';
+    }
+    //Find associated Email Address
+    let user = userList.find(obj => obj.emailAddress === emailAddress);
+    if(!user){
+      throw "Either password or email is invalid";
+    }
+    //Compare Passwords
+    const compare = await bcrypt.compare(password, user.password);
+    if(!compare){
+      throw "Either password or email is invalid";
+    }
+    //I dont know what we want to return for this so currently return everything besides password feel free to change
+    return {username : user.username,emailAddress : emailAddress, description: user.description, profilePicture: user.profilePicture, friends: user.friends, games: user.games, groups: user.groups};
+    
+  };
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio,loginUser };
