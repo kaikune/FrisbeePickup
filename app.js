@@ -1,11 +1,15 @@
 import express from 'express';
 import exphbs from 'express-handlebars';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 
 import configRoutesFunction from './routes/index.js';
 
 const app = express();
+
+app.use(cookieParser());
 
 app.use(express.json());
 
@@ -19,6 +23,16 @@ app.use(express.json());
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+app.use(
+    session({
+        name: 'CoolSession',
+        secret: "crazy super secret signing key!",
+        saveUninitialized: false,
+        resave: false,
+        // cookie: {maxAge: 60 * 1000}
+    })
+  );
 
 configRoutesFunction(app);
 
