@@ -2,17 +2,18 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}}</title>
 	    <link rel="stylesheet" href="/public/css/styles.css">
     </head>
     <body>
         <header>
             <div id="header-menu">
-                <div class="header-left">Home</div>
-                <div class="header-center">Games</div>
-                <div class="header-center">Groups</div>
-                <div class="header-center">Players</div>
-                <div class="header-right">Login</div>
+                <a href="/"><div class="header-left" >Home</div></a>
+                <a href="/games"><div class="header-center" >Games</div></a>
+                <a href="/groups"><div class="header-center" >Groups</div></a>
+                <a href="/users"><div class="header-center" >Players</div></a>
+                <a href="/"><div class="header-right">Login</div></a>   
             </div>
         </header>
         {{{ body }}}
