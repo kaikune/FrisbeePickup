@@ -5,6 +5,36 @@ import { users, games, groups } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 
+const findUsersThatStartWith = async (search) =>{
+    //Returns the first 10 users that start with a search query
+    let resultSize = 10;
+    if(!search){
+        throw "Most provide valid search term";
+    }
+    if(typeof search !== 'string'){
+        throw "Search term must be a valid string";
+    }
+    search = search.trim();
+    if(search.length===0){
+        throw "Empty string is not valid";
+    }
+    const userCollection = await users();
+    let userList = await userCollection.find({}).toArray();//this is inefficent i need to fix this
+    if (!userList) {
+        throw 'Could not get all users';
+    }
+    userList = userList.filter((obj) => obj.username.slice(0,search.length) === search);
+    if(userList.length === 0){
+        throw "Couldn't find any users with that name";
+    }
+    if(userList.length > resultSize){
+        userList = userList.slice(0,10);
+    }
+    //Returns everything besides password, feel free to change
+    userList = userList.map(user => user = {username : user.username,emailAddress : user.emailAddress, description: user.description, profilePicture: user.profilePicture, friends: user.friends, games: user.games, groups: user.groups})
+    return userList;
+}
+
 const createUser = async (username, emailAddress, password) => {
     // Input Validation
 
@@ -172,4 +202,4 @@ export const loginUser = async (emailAddress, password) => {
     return {username : user.username,emailAddress : emailAddress, description: user.description, profilePicture: user.profilePicture, friends: user.friends, games: user.games, groups: user.groups};
     
   };
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio,loginUser };
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio,loginUser,findUsersThatStartWith};
