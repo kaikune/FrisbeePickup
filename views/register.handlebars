@@ -1,5 +1,7 @@
 <main>
-    <form id="create-user-form" class="create-form">
+    <form id="create-user-form" class="create-form" method="POST" action="/register">
+        <label class="form-label" for="emailAddress">Email:</label>
+            <input class="form-input" type="text" id="emailAddress" name="emailAddress" required>
         <label class="form-label" for="username">Username:</label>
             <input class="form-input" type="text" id="username" name="username" required>
         <label class="form-label" for="password">Password:</label>

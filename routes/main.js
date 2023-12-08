@@ -18,8 +18,8 @@ router
     .post(async (req, res) => {
         try {
 
-            let emailAddress = req.body.emailAddress;
-            let password = req.body.password;
+            let emailAddress = req.body["login-emailAddress"];
+            let password = req.body["login-password"];
             
             let userInfo = await usersData.loginUser(emailAddress, password);
             req.session.user = userInfo;
@@ -44,7 +44,7 @@ router
             let password = req.body.password;
             let username = req.body.username;
 
-            let res = await usersData.createUser(username, emailAddress, password);
+            let createUserRes = await usersData.createUser(username, emailAddress, password);
 
             return res.redirect("/login");
 
@@ -57,7 +57,22 @@ router
 router  
     .route("/logout")
     .get(async (req, res) => {
-        res.json({status: "Logout coming soon!"});
+        req.session.user = null;
+        return res.render("logout", {title: "Logout"});
+    });
+
+router
+    .route("/auth")
+    .get(async (req, res) => {
+        if (req.session.user != null) {
+            return res.json({
+                status: "You are currently logged in as " + req.session.user.username + " (" + req.session.user.emailAddress + ")"
+            });
+        } else {
+            return res.json({
+                status: "You aren't logged in at the moment!"
+            });
+        }
     });
 
 export default router;
