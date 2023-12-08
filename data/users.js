@@ -19,21 +19,16 @@ const findUsersThatStartWith = async (search) => {
         throw 'Empty string is not valid';
     }
     const userCollection = await users();
-    let userList = await userCollection.find({}).toArray(); //this is inefficent i need to fix this
-    if (!userList) {
-        throw 'Could not get all users';
-    }
-    userList = userList.filter((obj) => obj.username.slice(0, search.length) === search);
-    if (userList.length === 0) {
+    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    let userList = await userCollection.find({ username: reg }).limit(resultSize).toArray();
+    if (!userList || userList.length === 0) {
         throw "Couldn't find any users with that name";
-    }
-    if (userList.length > resultSize) {
-        userList = userList.slice(0, 10);
     }
     //Returns everything besides password, feel free to change
     userList = userList.map(
         (user) =>
             (user = {
+                _id : user._id.toString(),
                 username: user.username,
                 emailAddress: user.emailAddress,
                 description: user.description,
@@ -57,14 +52,10 @@ const createUser = async (username, emailAddress, password) => {
 
     // Search for users
     const userCollection = await users();
-    let userList = await userCollection.find({}).toArray();
+    const user = await userCollection.findOne({ emailAddress: emailAddress });
 
     // Check for existing email
-    if (!userList) {
-        throw 'Could not get all users';
-    }
-    userList = userList.filter((obj) => obj.emailAddress === emailAddress);
-    if (userList.length > 0) {
+    if (user) {
         throw 'Email address already taken';
     }
     const saltRounds = 16;
@@ -135,8 +126,7 @@ const getUser = async (userId) => {
 
     // Get all users
     const userCollection = await users();
-    let userList = await userCollection.find({}).toArray();
-    const user = userList.find((user) => user._id.toString() === userId);
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
     if (!user) {
         throw 'Could not find user';
     }
@@ -153,7 +143,7 @@ const deleteUser = async (userId) => {
 
     const gameCollection = await games();
     const groupCollection = await groups();
-
+    const userCollection = await users();
     // Remove user from all games
     const gameRemove = await gameCollection.updateMany(
         { 'players._id': new ObjectId(userId) },
@@ -181,9 +171,15 @@ const deleteUser = async (userId) => {
         },
         { returnDocument: 'after' }
     );
+    const userRemove = await userCollection.findOneAndDelete(
+        {_id: new ObjectId(userId)},
+        {returnDocument: 'after'}
+    );
+    if (!gameRemove || !groupRemove || !userRemove) throw 'Could not delete user';
 
-    if (!gameRemove || !groupRemove) throw 'Could not delete user';
-    return { gameRemove, groupRemove };
+    
+    
+    return { gameRemove, groupRemove, userRemove };
 };
 export const loginUser = async (emailAddress, password) => {
     //Input Validation
@@ -195,13 +191,8 @@ export const loginUser = async (emailAddress, password) => {
     if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
     helpers.validatePassword(password);
     const userCollection = await users();
-    let userList = await userCollection.find({}).toArray();
-    if (!userList) {
-        throw 'Error: could not get all users';
-    }
-    //Find associated Email Address
-    let user = userList.find((obj) => obj.emailAddress === emailAddress);
-    if (!user) {
+    const user = await userCollection.findOne({ emailAddress: emailAddress });
+    if(!user){
         throw 'Either password or email is invalid';
     }
     //Compare Passwords
@@ -211,6 +202,7 @@ export const loginUser = async (emailAddress, password) => {
     }
     //I dont know what we want to return for this so currently return everything besides password feel free to change
     return {
+        _id : user._id.toString(),
         username: user.username,
         emailAddress: emailAddress,
         description: user.description,
