@@ -103,7 +103,28 @@ const get = async (gameId) => {
     game._id = game._id.toString();
     return game;
 };
-
+const findGamesThatStartWith = async (search) => {
+    //Returns the first 10 users that start with a search query
+    let resultSize = 10;
+    if (!search) {
+        throw 'Most provide valid search term';
+    }
+    if (typeof search !== 'string') {
+        throw 'Search term must be a valid string';
+    }
+    search = search.trim();
+    if (search.length === 0) {
+        throw 'Empty string is not valid';
+    }
+    const gameCollection = await games();
+    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    let gameList = await gameCollection.find({ gameName: reg }).limit(resultSize).toArray();
+    if (!gameList || gameList.length === 0) {
+        throw "Couldn't find any games with that name";
+    }
+    //Returns the entire gamelist right now
+    return gameList;
+};
 const remove = async (gameId) => {
     // Input Validation
     helpers.isValidId(gameId);
@@ -163,4 +184,4 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     return updatedInfo;
 };
 
-export default { create, getAll, get, remove, update,addUser };
+export default { create, getAll, get, remove, update,addUser, findGamesThatStartWith };

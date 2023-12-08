@@ -156,4 +156,26 @@ const addUser = async (userId,groupId) => {
       //console.log(updateUserResult)
       return {updateGame,updateUser};
 }
-export default { create, getAll, get, remove, update ,addUser};
+const findGroupsThatStartWith = async (search) => {
+    //Returns the first 10 users that start with a search query
+    let resultSize = 10;
+    if (!search) {
+        throw 'Most provide valid search term';
+    }
+    if (typeof search !== 'string') {
+        throw 'Search term must be a valid string';
+    }
+    search = search.trim();
+    if (search.length === 0) {
+        throw 'Empty string is not valid';
+    }
+    const groupCollection = await groups();
+    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    let groupList = await groupCollection.find({ groupName: reg }).limit(resultSize).toArray();
+    if (!groupList || groupList.length === 0) {
+        throw "Couldn't find any groups with that name";
+    }
+    //Returns the entire grouplist right now
+    return groupList;
+};
+export default { create, getAll, get, remove, update ,addUser, findGroupsThatStartWith};
