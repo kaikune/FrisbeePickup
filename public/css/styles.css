@@ -39,6 +39,13 @@
     width: 19%;
     height: 100%;
 }
+
+.search-list{
+    width: 30%;
+    background-color: #d08856;
+    color: #AA210f;
+}
+
 #header-menu{
     background-color: #41403c;
     color: #EDEFEE;
@@ -54,10 +61,21 @@
     margin: 5px
 }
 
+#body-background {
+    position: fixed;
+    top: 5%;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    color: #AA210f;
+    background-color: #EDEFEE;
+}
+
 header {
     background-color: #41403c;
-    position: relative;
+    position: fixed;
     height: 5%;
+    top: 0;
     width: 100%;
     left: 0;
 }

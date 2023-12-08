@@ -1,22 +1,32 @@
 <main>
-    <h1>{{playerName}}</h1>
-    <a>About Me: {{description}}</a>
-    <a>Friends:</a>
-    <ul>
-        {{#each friends}}
-            <li href="/users/{{this._id}}">{{this.name}}</li>
-        {{/each}}
-    </ul>
-    <a>Groups:</a>
-    <ul>
-        {{#each groups}}
-            <li href="/groups/{{this._id}}">{{this.name}}</li>
-        {{/each}}
-    </ul>
-    <a>Upcoming Games:</a>
-    <ul>
-        {{#each games}}
-            <li href="/games/{{this._id}}">{{this.name}}</li>
-        {{/each}}
-    </ul>
+    {{#if friends}}
+    <div class="response-list">
+        <a>Friends:</a>
+        <ul>
+            {{#each friends}}
+                <li href="/users/{{this._id}}">{{this.name}}</li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+    {{#if groups}}
+    <div class="response-list">
+        <a>Groups:</a>
+        <ul>
+            {{#each groups}}
+                <li href="/groups/{{this._id}}">{{this.name}}</li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+    {{#if games}}
+    <div class="response-list">
+        <a>Upcoming Games:</a>
+        <ul>
+            {{#each games}}
+                <li href="/games/{{this._id}}">{{this.name}}</li>
+            {{/each}}
+        </ul>
+    </div> 
+    {{/if}}
 </main>
