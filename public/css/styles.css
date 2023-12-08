@@ -8,9 +8,11 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
-    color: #EDEFEE;
+    color: #159dd8;
+    background-color: #fcb53e;
     width: 19%;
     height: 100%;
+
 }
 .header-center{
     border-right-color: black;
@@ -23,8 +25,9 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
-    color: #EDEFEE;
-    width: 19%;
+    color: #159dd8;
+    background-color: #fcb53e;
+    width: 20%;
     height: 100%;
 }
 .header-right{
@@ -35,7 +38,8 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
-    color: #EDEFEE;
+    color: #159dd8;
+    background-color: #fcb53e;
     width: 19%;
     height: 100%;
 }
@@ -46,19 +50,42 @@
     color: #AA210f;
 }
 
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.form-label {
+    background-color: white;
+    color: #159dd8;
+}
+.form-input {
+    border-style:ridge;
+    margin: auto;
+    background-color: #EFEFEF;
+    margin: 3px;
+    color: #159dd8;
+}
+
 #header-menu{
-    background-color: #41403c;
-    color: #EDEFEE;
-    width: 100%;
+    background-color: #fcb53e;
+    color: #fcb53e;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 99.5%;
     height: 25px;
+    
 }
 
 #login-form {
-    background-color: #AA210f;
+    background-color: white;
+    color: #159dd8;
     border-style: solid;
-    border-color: #41403c;
+    border-color: #0c9dd6;
     width: 25%;
-    margin: 5px
+    padding: 5px
 }
 
 #body-background {
@@ -67,12 +94,12 @@
     height: 100%;
     width: 100%;
     left: 0;
-    color: #AA210f;
-    background-color: #EDEFEE;
+    color: #159dd8;
+    background-color: white;
 }
 
 header {
-    background-color: #41403c;
+    background-color: #2bb891;
     position: fixed;
     height: 5%;
     top: 0;
@@ -81,8 +108,8 @@ header {
 }
 
 footer{
-    background-color: #41403c;
-    color: #EDEFEE;
+    background-color: #2bb891;
+    color: #41403c;
     position: fixed;
     left: 0;
     bottom: 0;

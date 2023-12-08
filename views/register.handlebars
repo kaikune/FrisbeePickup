@@ -1,13 +1,15 @@
 <main>
-    <form id="create-user-form" class="create-form" method="POST" action="/register">
-        <label class="form-label" for="emailAddress">Email:</label>
-            <input class="form-input" type="text" id="emailAddress" name="emailAddress" required>
-        <label class="form-label" for="username">Username:</label>
-            <input class="form-input" type="text" id="username" name="username" required>
-        <label class="form-label" for="password">Password:</label>
-            <input class="form-input" type="password" id="password" name="password" required>
-        <label class="form-label" for="confrim-password">Confirm Password:</label>
-            <input class="form-input" type="password" id="confirm-password" name="confirm-password" required>
-        <button type="submit" class="form-submit-button">Submit</button>
-    </form>
+    <div class="form-wrapper">
+        <form id="create-user-form" class="create-form" method="POST" action="/register">
+            <label class="form-label" for="emailAddress">Email:</label>
+                <input class="form-input" type="text" id="emailAddress" name="emailAddress" required>
+            <label class="form-label" for="username">Username:</label>
+                <input class="form-input" type="text" id="username" name="username" required>
+            <label class="form-label" for="password">Password:</label>
+                <input class="form-input" type="password" id="password" name="password" required>
+            <label class="form-label" for="confrim-password">Confirm Password:</label>
+                <input class="form-input" type="password" id="confirm-password" name="confirm-password" required>
+            <button type="submit" class="form-submit-button">Submit</button>
+        </form>
+    </div>
 </main>
