@@ -8,6 +8,7 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
+    color: #EDEFEE;
     width: 19%;
     height: 100%;
 }
@@ -22,6 +23,7 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
+    color: #EDEFEE;
     width: 19%;
     height: 100%;
 }
@@ -33,15 +35,40 @@
     display: inline-block;
     font-size: larger;
     font-weight: bold;
+    color: #EDEFEE;
     width: 19%;
     height: 100%;
 }
 #header-menu{
-    background-color: green;
+    background-color: #41403c;
+    color: #EDEFEE;
     width: 100%;
     height: 25px;
 }
 
-header {
-    background-color: green;
+#login-form {
+    background-color: #AA210f;
+    border-style: solid;
+    border-color: #41403c;
+    width: 25%;
+    margin: 5px
 }
+
+header {
+    background-color: #41403c;
+    position: relative;
+    height: 5%;
+    width: 100%;
+    left: 0;
+}
+
+footer{
+    background-color: #41403c;
+    color: #EDEFEE;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 10%;
+}
+
