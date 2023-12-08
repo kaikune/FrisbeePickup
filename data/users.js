@@ -5,35 +5,46 @@ import { users, games, groups } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 
-const findUsersThatStartWith = async (search) =>{
+const findUsersThatStartWith = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
-    if(!search){
-        throw "Most provide valid search term";
+    if (!search) {
+        throw 'Most provide valid search term';
     }
-    if(typeof search !== 'string'){
-        throw "Search term must be a valid string";
+    if (typeof search !== 'string') {
+        throw 'Search term must be a valid string';
     }
     search = search.trim();
-    if(search.length===0){
-        throw "Empty string is not valid";
+    if (search.length === 0) {
+        throw 'Empty string is not valid';
     }
     const userCollection = await users();
-    let userList = await userCollection.find({}).toArray();//this is inefficent i need to fix this
+    let userList = await userCollection.find({}).toArray(); //this is inefficent i need to fix this
     if (!userList) {
         throw 'Could not get all users';
     }
-    userList = userList.filter((obj) => obj.username.slice(0,search.length) === search);
-    if(userList.length === 0){
+    userList = userList.filter((obj) => obj.username.slice(0, search.length) === search);
+    if (userList.length === 0) {
         throw "Couldn't find any users with that name";
     }
-    if(userList.length > resultSize){
-        userList = userList.slice(0,10);
+    if (userList.length > resultSize) {
+        userList = userList.slice(0, 10);
     }
     //Returns everything besides password, feel free to change
-    userList = userList.map(user => user = {username : user.username,emailAddress : user.emailAddress, description: user.description, profilePicture: user.profilePicture, friends: user.friends, games: user.games, groups: user.groups})
+    userList = userList.map(
+        (user) =>
+            (user = {
+                username: user.username,
+                emailAddress: user.emailAddress,
+                description: user.description,
+                profilePicture: user.profilePicture,
+                friends: user.friends,
+                games: user.games,
+                groups: user.groups,
+            })
+    );
     return userList;
-}
+};
 
 const createUser = async (username, emailAddress, password) => {
     // Input Validation
@@ -176,30 +187,37 @@ const deleteUser = async (userId) => {
 };
 export const loginUser = async (emailAddress, password) => {
     //Input Validation
-    if(!emailAddress || !password)throw "Error: 1 or more fields missing";
-    if(typeof emailAddress !== 'string' || typeof password !== 'string')throw "Expected a string";
+    if (!emailAddress || !password) throw 'Error: 1 or more fields missing';
+    if (typeof emailAddress !== 'string' || typeof password !== 'string') throw 'Expected a string';
     emailAddress = emailAddress.trim();
     password = password.trim();
-    if(emailAddress.length === 0 || password.length === 0)throw "Cannot be empty spaces"
+    if (emailAddress.length === 0 || password.length === 0) throw 'Cannot be empty spaces';
     if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
     helpers.validatePassword(password);
     const userCollection = await users();
     let userList = await userCollection.find({}).toArray();
-    if (!userList){
-      throw 'Error: could not get all users';
+    if (!userList) {
+        throw 'Error: could not get all users';
     }
     //Find associated Email Address
-    let user = userList.find(obj => obj.emailAddress === emailAddress);
-    if(!user){
-      throw "Either password or email is invalid";
+    let user = userList.find((obj) => obj.emailAddress === emailAddress);
+    if (!user) {
+        throw 'Either password or email is invalid';
     }
     //Compare Passwords
     const compare = await bcrypt.compare(password, user.password);
-    if(!compare){
-      throw "Either password or email is invalid";
+    if (!compare) {
+        throw 'Either password or email is invalid';
     }
     //I dont know what we want to return for this so currently return everything besides password feel free to change
-    return {username : user.username,emailAddress : emailAddress, description: user.description, profilePicture: user.profilePicture, friends: user.friends, games: user.games, groups: user.groups};
-    
-  };
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio,loginUser,findUsersThatStartWith};
+    return {
+        username: user.username,
+        emailAddress: emailAddress,
+        description: user.description,
+        profilePicture: user.profilePicture,
+        friends: user.friends,
+        games: user.games,
+        groups: user.groups,
+    };
+};
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith };

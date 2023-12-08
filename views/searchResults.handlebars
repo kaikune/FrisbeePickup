@@ -1,4 +1,9 @@
 <main>
+    {{#if errors}}
+        {{#each errors}}
+            <p class="error">{{this}}</p>
+        {{/each}}
+    {{/if}}
     {{#if friends}}
     <div class="response-list">
         <a>Friends:</a>
