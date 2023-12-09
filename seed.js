@@ -1,9 +1,6 @@
 import {dbConnection, closeConnection} from './config/mongoConnection.js';
 import { usersData, gamesData, groupsData } from "./data/index.js";
 
-const db = await dbConnection();
-await db.dropDatabase(); //Clears database before insert
-
 export async function seed(){
     const userData = [
         ["jdoe123", "jdoe123@example.com", "P@ssw0rd"],
@@ -117,3 +114,8 @@ export async function seed(){
 
 
 }
+
+const db = await dbConnection();
+await db.dropDatabase(); //Clears database before insert
+await seed();
+await closeConnection();
