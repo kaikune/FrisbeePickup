@@ -1,5 +1,7 @@
 /* You will create a CSS stylesheet in /public/css/styles.css; this file should have at least 5 rulesets.  You will need to utilize all 5 rulesets on each of the pages (not every page has to use all 5 rulesets each but all 5 rulesets must be utilized by the various pages in your application).  So you can have some rulesets for one page, some for another page but there needs to be at least 5 total rulesets that are used between all the pages.  */
 
+/*HEADER STUFF*/
+
 .header-left{
     border-right-color: black;
     border-right-style: dashed;
@@ -44,12 +46,72 @@
     height: 100%;
 }
 
+#header-menu{
+    background-color: #fcb53e;
+    color: #fcb53e;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 99.5%;
+    height: auto;
+    overflow: visible;
+}
+
+/*DROPDOWN STUFF*/
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+    overflow: visible;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    overflow: visible;
+    
+}
+  
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+  
+.dropdown-content a {
+    display: block;
+    background-color: #2bb891;
+    text-decoration: none;
+}
+  
+.dropdown-content a:hover {
+    color: #159dd8;
+    background-color: #00A4BD;
+}
+
+/*END DROPDOWN*/
+
+header {
+    background-color: #2bb891;
+    position: fixed;
+    z-index: 3;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 5%;
+    overflow: visible;
+}
+
+/*END HEADER*/
+
 .search-list{
     width: 30%;
     background-color: #d08856;
     color: #AA210f;
 }
 
+/* FORM STUFF */
 .form-wrapper {
     display: flex;
     justify-content: center;
@@ -68,17 +130,6 @@
     color: #159dd8;
 }
 
-#header-menu{
-    background-color: #fcb53e;
-    color: #fcb53e;
-    margin-top: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 99.5%;
-    height: 25px;
-    
-}
-
 #login-form {
     background-color: white;
     color: #159dd8;
@@ -88,32 +139,42 @@
     padding: 5px
 }
 
+#error-label {
+    color: #AA210f;
+    font-size: small;
+    font-style: italic;
+}
+
+/* END FORM */
+
+/* BODY STUFF */
 #body-background {
     position: fixed;
-    top: 5%;
-    height: 100%;
+    z-index: 1;
+    height: 90%;
     width: 100%;
-    left: 0;
+    left: 0%;
+    top: 5%;
+    margin-left: 1%;
     color: #159dd8;
     background-color: white;
+    overflow: auto;
 }
+/* END BODY */
 
-header {
-    background-color: #2bb891;
-    position: fixed;
-    height: 5%;
-    top: 0;
-    width: 100%;
-    left: 0;
-}
-
+/* FOOTER STUFF */
 footer{
     background-color: #2bb891;
+    z-index: 2;
     color: #41403c;
     position: fixed;
-    left: 0;
     bottom: 0;
+    right: 0;
     width: 100%;
-    height: 10%;
+    height: 5%;
 }
+/* END FOOTER */
 
+.hidden {
+    display: none;
+}
