@@ -1,9 +1,9 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 
 import * as helpers from '../helpers.js';
-import { groups,users } from '../config/mongoCollections.js';
+import { groups, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import { usersData, gamesData } from "./index.js";
+import { usersData, gamesData } from './index.js';
 const create = async (groupName, groupDescription, groupLeader) => {
     // Input Validation
     helpers.validateGroup(groupName, groupDescription, groupLeader);
@@ -27,12 +27,8 @@ const create = async (groupName, groupDescription, groupLeader) => {
     const newId = insertInfo.insertedId.toString();
 
     const userCollection = await users();
-    const updateUser = await userCollection.updateOne(
-        { _id: new ObjectId(groupLeader) },
-        { $push: { groups: newId } }
-    );
-    if(!updateUser) throw "Could not update user"
-   
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(groupLeader) }, { $push: { groups: newId } });
+    if (!updateUser) throw 'Could not update user';
 
     const group = await groupCollection.findOne({ _id: new ObjectId(newId) });
     group._id = group._id.toString();
@@ -101,61 +97,85 @@ const update = async (groupId, groupName, groupDescription, groupLeader) => {
         groupName,
         description: groupDescription,
         groupLeader,
-        comments: oldGroup.players,
+        comments: oldGroup.comments,
         players: oldGroup.players,
         totalNumberOfPlayers: oldGroup.totalNumberOfPlayers,
     };
 
     const groupCollection = await groups();
     const updatedInfo = await groupCollection.findOneAndReplace({ _id: new ObjectId(groupId) }, updatedgroup, { returnDocument: 'after' });
-    if (!updatedInfo) {
-        throw 'could not update group successfully';
-    }
+    if (!updatedInfo) throw 'Could not update group successfully';
+
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
 };
-const addUser = async (userId,groupId) => {
-      //Input validation
-      helpers.isValidId(userId);//maybe should check if is userid and not groupid etc
-      helpers.isValidId(groupId);
-      userId = userId.trim();
-      groupId = groupId.trim();
-  
-      const group = await get(groupId);
-      if(!group){
-          throw "Could not find group"
-      }
-      if(group.maxCapacity <= group.players.length){
-          throw "Game is full";
-      }
-      if(group.players.includes(userId)){
-          throw "User is already in the group."
-      }
-      const user = await usersData.getUser(userId);
-      if(!user){
-          throw "Could not find user";
-      }
-      //Update group collection
-      const groupCollection = await groups();
-      const userCollection = await users();
-      const updateGame = await groupCollection.updateOne(
-          { _id: new ObjectId(groupId) },
-          { 
-              $push: { players: userId },
-              $inc: { totalNumberOfPlayers: 1 } 
-          }
-      );
-      const updateUser = await userCollection.updateOne(
-          { _id: new ObjectId(userId) },
-          { $push: { groups: groupId } }
-      );
-      
-      if(!updateGame || !updateUser){
-        throw "Could not update either game or user";
-      }
-      //console.log(updateUserResult)
-      return {updateGame,updateUser};
-}
+
+const addComment = async (groupId, userId, comment) => {
+    // Input Validation
+    helpers.isValidId(groupId);
+    helpers.isValidId(userId);
+    groupId = groupId.trim();
+    userId = userId.trim();
+    if (!comment) throw 'Comment is not provided';
+    if (typeof comment !== 'string') throw 'Comment is not a string';
+    comment = comment.trim();
+    if (comment.length === 0) throw 'Comment is all whitespace';
+
+    // Update record
+    const newComment = {
+        _id: new ObjectId(),
+        userId,
+        timestamp: new Date(),
+        commentText: comment,
+    };
+
+    const groupCollection = await groups();
+    const updatedInfo = await groupCollection.updateOne({ _id: new ObjectId(groupId) }, { $push: { comments: newComment } });
+
+    if (!updatedInfo) throw 'Could not update group successfully';
+    return updatedInfo;
+};
+
+const addUser = async (userId, groupId) => {
+    //Input validation
+    helpers.isValidId(userId); //maybe should check if is userid and not groupid etc
+    helpers.isValidId(groupId);
+    userId = userId.trim();
+    groupId = groupId.trim();
+
+    const group = await get(groupId);
+    if (!group) {
+        throw 'Could not find group';
+    }
+    if (group.maxCapacity <= group.players.length) {
+        throw 'Game is full';
+    }
+    if (group.players.includes(userId)) {
+        throw 'User is already in the group.';
+    }
+    const user = await usersData.getUser(userId);
+    if (!user) {
+        throw 'Could not find user';
+    }
+    //Update group collection
+    const groupCollection = await groups();
+    const userCollection = await users();
+    const updateGame = await groupCollection.updateOne(
+        { _id: new ObjectId(groupId) },
+        {
+            $push: { players: userId },
+            $inc: { totalNumberOfPlayers: 1 },
+        }
+    );
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $push: { groups: groupId } });
+
+    if (!updateGame || !updateUser) {
+        throw 'Could not update either game or user';
+    }
+    //console.log(updateUserResult)
+    return { updateGame, updateUser };
+};
+
 const findGroupsThatStartWith = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
@@ -178,4 +198,4 @@ const findGroupsThatStartWith = async (search) => {
     //Returns the entire grouplist right now
     return groupList;
 };
-export default { create, getAll, get, remove, update ,addUser, findGroupsThatStartWith};
+export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith };
