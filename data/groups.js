@@ -121,6 +121,9 @@ const addComment = async (groupId, userId, comment) => {
     comment = comment.trim();
     if (comment.length === 0) throw 'Comment is all whitespace';
 
+    const group = await get(groupId);
+    if (!group.players.includes(userId)) throw 'Commenter is not in the group';
+
     // Update record
     const newComment = {
         _id: new ObjectId(),

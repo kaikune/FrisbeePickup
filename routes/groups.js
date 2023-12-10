@@ -8,7 +8,7 @@ router
     .route("/")
     .get(async (req, res) => {
         let allGroupsData = await groupsData.getAll();
-        
+
         return res.json(allGroupsData);
     });
 
@@ -37,7 +37,8 @@ router
             let groupRes = await groupsData.addComment(groupId, userId, comment)
             return res.json(groupRes);
         } catch (e) {
-            res.status(500).json({error: e})
+            if (e === 'Could not update group successfully') return res.status(500).json({error: e})
+            return res.status(400).json({error: e})
         }
     })
 export default router;
