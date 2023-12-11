@@ -7,8 +7,9 @@ const router = Router();
 router
     .route("/")
     .get(async (req, res) => {
-        let allGamesData = await gamesData.getAll();
-        return res.json(allGamesData);
+        let allGameObjs = await gamesData.getAll();
+        // return res.json(allGamesData);
+        return res.render("games", {games: allGameObjs});
     });
 
 router
@@ -16,8 +17,12 @@ router
     .get(async (req, res) => {
         try {
             let gameId = req.params.gameId;
-            let gameRes = await gamesData.get(gameId);
-            return res.json(gameRes);
+            let gameObj = await gamesData.get(gameId);
+            // return res.json(gameObj);
+            return res.render("game", {
+                game: gameObj,
+                players: []
+            });
         } catch (e) {
             res.status(400);
             res.json({error: e});
