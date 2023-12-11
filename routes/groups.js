@@ -1,47 +1,57 @@
 import { Router } from 'express';
 
-import { usersData, gamesData, groupsData } from "../data/index.js";
+import { usersData, gamesData, groupsData } from '../data/index.js';
 
 const router = Router();
 
 router
-    .route("/")
+    .route('/')
     .get(async (req, res) => {
         let allGroupObjs = await groupsData.getAll();
         // return res.json(allGroupsData);
-        return res.render("groups", {groups: allGroupObjs});
-    });
-
-router
-    .route('/:groupId')
-    .get(async (req, res) => {
-        try {
-            let groupId = req.params.groupId;
-            let groupObj = await groupsData.get(groupId);
-            // return res.json(groupObj);
-            return res.render("group", {
-                group: groupObj,
-                members: []
-            });
-        } catch (e) {
-            res.status(400);
-            res.json({error: e});
-        }
-    });
-
-router
-    .route('/:groupId/comments')
-    .post(async (req, res) => {
-        try {
-            let groupId = req.params.groupId;
-            let comment = req.body.comment;
-            let userId = req.body.userId;
-
-            let groupRes = await groupsData.addComment(groupId, userId, comment)
-            return res.json(groupRes);
-        } catch (e) {
-            if (e === 'Could not update group successfully') return res.status(500).json({error: e})
-            return res.status(400).json({error: e})
-        }
+        return res.render('groups', { groups: allGroupObjs });
     })
+    .post(async (req, res) => {
+        const groupName = req.body.groupName;
+        const groupDescription = req.body.groupDescription;
+        const groupLeader = req.body.groupLeader;
+
+        try {
+            helpers.validateGroup(groupName, groupDescription, groupLeader);
+            const createResult = await groupsData.create(groupName, groupDescription, groupLeader);
+
+            return res.json(createResult);
+        } catch (err) {
+            return res.status(400).json({ error: err });
+        }
+    });
+
+router.route('/:groupId').get(async (req, res) => {
+    try {
+        let groupId = req.params.groupId;
+        let groupObj = await groupsData.get(groupId);
+        // return res.json(groupObj);
+        return res.render('group', {
+            group: groupObj,
+            members: [],
+        });
+    } catch (e) {
+        res.status(400);
+        res.json({ error: e });
+    }
+});
+
+router.route('/:groupId/comments').post(async (req, res) => {
+    try {
+        let groupId = req.params.groupId;
+        let comment = req.body.comment;
+        let userId = req.body.userId;
+
+        let groupRes = await groupsData.addComment(groupId, userId, comment);
+        return res.json(groupRes);
+    } catch (e) {
+        if (e === 'Could not update group successfully') return res.status(500).json({ error: e });
+        return res.status(400).json({ error: e });
+    }
+});
 export default router;
