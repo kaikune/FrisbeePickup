@@ -7,8 +7,9 @@ const router = Router();
 router
     .route("/")
     .get(async (req, res) => {
-        let allUsersRes = await usersData.getAllUsers();
-        return res.json(allUsersRes);
+        let allUserObjs = await usersData.getAllUsers();
+        // return res.json(allUsersRes);
+        return res.render("users", {users: allUserObjs});
     });
 
 router
@@ -16,8 +17,18 @@ router
     .get(async (req, res) => {
         try {
             let userId = req.params.userId;
-            let userRes = await usersData.getUser(userId);
-            return res.json(userRes);
+            let userObj = await usersData.getUser(userId);
+
+            let isOwner = (req.session.user != null) && (req.session.user._id.toString() == userId);
+
+            // return res.json(userObj);
+            return res.render("user", {
+                user: userObj,
+                friends: [],
+                groups: [],
+                games: [],
+                isOwner: isOwner
+            });
         } catch (e) {
             res.status(400);
             res.json({error: e});

@@ -7,9 +7,9 @@ const router = Router();
 router
     .route("/")
     .get(async (req, res) => {
-        let allGroupsData = await groupsData.getAll();
-
-        return res.json(allGroupsData);
+        let allGroupObjs = await groupsData.getAll();
+        // return res.json(allGroupsData);
+        return res.render("groups", {groups: allGroupObjs});
     });
 
 router
@@ -17,9 +17,12 @@ router
     .get(async (req, res) => {
         try {
             let groupId = req.params.groupId;
-            let groupRes = await groupsData.get(groupId);
-
-            return res.json(groupRes);
+            let groupObj = await groupsData.get(groupId);
+            // return res.json(groupObj);
+            return res.render("group", {
+                group: groupObj,
+                members: []
+            });
         } catch (e) {
             res.status(400);
             res.json({error: e});
