@@ -1,6 +1,6 @@
 <main>
     <h1>{{user.username}}</h1>
-    <a>About Me: {{user.description}}</a>
+    <p>About me: {{user.description}}</p>
     <a>Friends:</a>
     <ul>
         {{#each friends}}
@@ -22,5 +22,7 @@
 
     {{#if isOwner}}
         <button class="edit-button">Edit</button>
+    {{else}}
+        <button class="add-freind">Add Friend</button>
     {{/if}}
 </main>

@@ -13,12 +13,16 @@
                 <a href="/search"><div class="header-center" >Search</div></a>
                 <a href="/groups"><div class="header-center" >Create Group</div></a>
                 <a href="/games"><div class="header-center" >Create Game</div></a>
-                <a href="/login" id="header-login-box"><div class="header-right">Login</div></a>
-                    <div class="header-right dropdown hidden" id="header-profile-box"> 
-                        <a>TEST NAME</a>
+                    <div class="header-right dropdown" id="header-profile-box"> 
+                        <a>Profile</a>
                         <div class="dropdown-content">
+                            {{#if user}}
                             <a href="/users/{{user._id}}">View profile</a>
                             <a href="/logout">Logout</a>
+                            {{else}}
+                            <a href="/login">Login</a>
+                            {{/if}}
+
                         </div>
                     </div>
             </div>
@@ -29,6 +33,6 @@
         <footer>
             <a>I totally didn't rip off a high noon can for this</a>
         </footer>
+        <script src='/public/js/main.js'></script>
     </body>
-    
 </html>

@@ -18,12 +18,6 @@ const __dirname = dirname(__filename);
 const staticDir = express.static(__dirname + '/public');
 app.use('/public', staticDir);
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-
 app.use(
     session({
         name: 'CoolSession',
@@ -33,6 +27,12 @@ app.use(
         // cookie: {maxAge: 60 * 1000}
     })
   );
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 configRoutesFunction(app);
 
