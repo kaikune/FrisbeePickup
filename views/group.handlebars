@@ -1,17 +1,17 @@
 <main>
     <h1>{{group.groupName}}</h1>
     <a>About Us: {{group.description}}</a>
-    <a>Owner: {{owner}}</a>
+    <a>Owner: {{owner.username}}</a>
     <a>Members:</a>
     <ul>
         {{#each members}}
-            <li href="/users/{{this._id}}">{{this.name}}</li>
+            <li><a href="/users/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
     </ul>
     <a>Upcoming Games:</a>
     <ul>
         {{#each games}}
-            <li href="/games/{{this._id}}">{{this.name}}</li>
+            <li><a href="/games/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
     </ul>
 
