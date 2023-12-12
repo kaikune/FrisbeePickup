@@ -82,7 +82,17 @@ const createUser = async (username, emailAddress, password) => {
 
     return { insertedUser: true };
 };
-
+const getIDName = async (userIds)=> {
+    //Given an array of IDs return an array of objects, each object contains the id and the associated name
+    let ret = []
+    for (let userId of userIds){
+        helpers.isValidId(userId);
+        userId = userId.trim();
+        const user = await get(userId);
+        ret.push({_id: userId, name: user.username})
+    }
+    return ret;
+}
 const updateUserBio = async (userId, username, profilePicture, description) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
@@ -226,4 +236,5 @@ const addFriend = async (userId, friendUserId) => {
     if (!updatedInfo) throw 'Could not update user successfully';
     return updatedInfo;
 };
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend };
+
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend,getIDName };

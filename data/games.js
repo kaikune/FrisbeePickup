@@ -183,5 +183,15 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
 };
-
-export default { create, getAll, get, remove, update,addUser, findGamesThatStartWith };
+const getIDName = async (gameIds)=> {
+    //Given an array of IDs return an array of objects, each object contains the id and the associated name
+    let ret = []
+    for (let gameId of gameIds){
+        helpers.isValidId(gameId);
+        gameId = gameId.trim();
+        const game = await get(gameId);
+        ret.push({_id: gameId, name: game.gameName})
+    }
+    return ret;
+}
+export default { create, getAll, get, remove, update,addUser, findGamesThatStartWith, getIDName };

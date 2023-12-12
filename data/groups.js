@@ -34,7 +34,17 @@ const create = async (groupName, groupDescription, groupLeader) => {
     group._id = group._id.toString();
     return group;
 };
-
+const getIDName = async (groupIds)=> {
+    //Given an array of IDs return an array of objects, each object contains the id and the associated name
+    let ret = []
+    for (let groupId of groupIds){
+        helpers.isValidId(groupId);
+        groupId = groupId.trim();
+        const group = await get(groupId);
+        ret.push({_id: groupId, name: group.groupName})
+    }
+    return ret;
+}
 const getAll = async () => {
     const groupCollection = await groups();
     let groupList = await groupCollection.find({}).project({ _id: 1, groupName: 1 }).toArray();
@@ -201,4 +211,4 @@ const findGroupsThatStartWith = async (search) => {
     //Returns the entire grouplist right now
     return groupList;
 };
-export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith };
+export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName };
