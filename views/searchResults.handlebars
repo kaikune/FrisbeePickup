@@ -9,7 +9,7 @@
         <a>Users:</a>
         <ul>
             {{#each users}}
-                <li href="/users/{{this._id}}">{{this.username}}</li>
+                 <li><a href="/users/{{this._id}}">{{this.username}}</a></li>
             {{/each}}
         </ul>
     </div>
@@ -19,7 +19,7 @@
         <a>Groups:</a>
         <ul>
             {{#each groups}}
-                <li href="/groups/{{this._id}}">{{this.groupName}}</li>
+                <li><a href="/groups/{{this._id}}">{{this.groupName}}</a></li>
             {{/each}}
         </ul>
     </div>
@@ -29,7 +29,7 @@
         <a>Upcoming Games:</a>
         <ul>
             {{#each games}}
-                <li href="/games/{{this._id}}">{{this.gameName}}</li>
+                <li><a href="/games/{{this._id}}">{{this.gameName}}</a></li>
             {{/each}}
         </ul>
     </div> 
