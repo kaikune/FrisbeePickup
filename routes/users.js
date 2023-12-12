@@ -1,15 +1,16 @@
 import { Router } from 'express';
 
-import { usersData, gamesData, groupsData } from "../data/index.js";
+import { usersData, gamesData, groupsData } from '../data/index.js';
+import * as helpers from '../helpers.js';
 
 const router = Router();
 
 router
-    .route("/")
+    .route('/')
     .get(async (req, res) => {
         let allUserObjs = await usersData.getAllUsers();
         // return res.json(allUsersRes);
-        return res.render("users", {users: allUserObjs});
+        return res.render('users', { users: allUserObjs });
     });
 
 router
@@ -19,19 +20,43 @@ router
             let userId = req.params.userId;
             let userObj = await usersData.getUser(userId);
 
-            let isOwner = (req.session.user != null) && (req.session.user._id.toString() == userId);
+            let isOwner = req.session.user != null && req.session.user._id.toString() == userId;
 
             // return res.json(userObj);
-            return res.render("user", {
+            return res.render('user', {
                 user: userObj,
                 friends: [],
                 groups: [],
                 games: [],
-                isOwner: isOwner
+                isOwner: isOwner,
             });
         } catch (e) {
             res.status(400);
-            res.json({error: e});
+            res.json({ error: e });
+        }
+    });
+
+router
+    .route('/:userId/friends')
+    .post(async (req, res) => {
+        let userId = req.params.userId;
+        let friendUserId = req.body.friendUserId;
+
+        try {
+            helpers.isValidId(userId);
+            helpers.isValidId(friendUserId);
+        } catch (e) {
+            res.status(400).json({ error: e });
+        }
+
+        try {
+            const userObj = await usersData.addFriend(userId, friendUserId);
+
+            return res.json(userObj);
+        } catch (e) {
+            // Uber bandaid
+            if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
+            else return res.status(400).json({ error: e });
         }
     });
 

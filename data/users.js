@@ -28,7 +28,7 @@ const findUsersThatStartWith = async (search) => {
     userList = userList.map(
         (user) =>
             (user = {
-                _id : user._id.toString(),
+                _id: user._id.toString(),
                 username: user.username,
                 emailAddress: user.emailAddress,
                 description: user.description,
@@ -144,6 +144,7 @@ const deleteUser = async (userId) => {
     const gameCollection = await games();
     const groupCollection = await groups();
     const userCollection = await users();
+
     // Remove user from all games
     const gameRemove = await gameCollection.updateMany(
         { 'players._id': new ObjectId(userId) },
@@ -171,14 +172,9 @@ const deleteUser = async (userId) => {
         },
         { returnDocument: 'after' }
     );
-    const userRemove = await userCollection.findOneAndDelete(
-        {_id: new ObjectId(userId)},
-        {returnDocument: 'after'}
-    );
+    const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
     if (!gameRemove || !groupRemove || !userRemove) throw 'Could not delete user';
 
-    
-    
     return { gameRemove, groupRemove, userRemove };
 };
 export const loginUser = async (emailAddress, password) => {
@@ -192,7 +188,7 @@ export const loginUser = async (emailAddress, password) => {
     helpers.validatePassword(password);
     const userCollection = await users();
     const user = await userCollection.findOne({ emailAddress: emailAddress });
-    if(!user){
+    if (!user) {
         throw 'Either password or email is invalid';
     }
     //Compare Passwords
@@ -202,7 +198,7 @@ export const loginUser = async (emailAddress, password) => {
     }
     //I dont know what we want to return for this so currently return everything besides password feel free to change
     return {
-        _id : user._id.toString(),
+        _id: user._id.toString(),
         username: user.username,
         emailAddress: emailAddress,
         description: user.description,
@@ -212,4 +208,22 @@ export const loginUser = async (emailAddress, password) => {
         groups: user.groups,
     };
 };
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith };
+
+const addFriend = async (userId, friendUserId) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.isValidId(friendUserId);
+    userId = userId.trim();
+    friendUserId = friendUserId.trim();
+
+    const user = await getUser(userId);
+    if (user.friends.includes(friendUserId)) throw 'User already a friend';
+
+    // Update record
+    const userCollection = await users();
+    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $push: { friends: friendUserId } });
+
+    if (!updatedInfo) throw 'Could not update user successfully';
+    return updatedInfo;
+};
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend };
