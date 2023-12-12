@@ -1,8 +1,8 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 
 import * as helpers from '../helpers.js';
-import { games ,users} from '../config/mongoCollections.js';
-import { usersData, groupsData } from "./index.js";
+import { games, users } from '../config/mongoCollections.js';
+import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 
 const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
@@ -27,6 +27,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         players: [],
         totalNumberOfPlayers: 0,
         group,
+        expired: false,
     };
 
     const gameCollection = await games();
@@ -41,56 +42,6 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
     return game;
 };
 
-const getAll = async () => {
-    const gameCollection = await games();
-    let gameList = await gameCollection.find({}).project({ _id: 1, gameName: 1 }).toArray();
-    if (!gameList) throw 'Could not get all games';
-    gameList = gameList.map((element) => {
-        element._id = element._id.toString();
-        return element;
-    });
-    return gameList;
-};
-const addUser = async (userId,gameId) => {
-    //Input validation
-    helpers.isValidId(userId);//maybe should check if is userid and not gameid etc
-    helpers.isValidId(gameId);
-    userId = userId.trim();
-    gameId = gameId.trim();
-
-    const game = await get(gameId);
-    if(!game){
-        throw "Could not find game"
-    }
-    if(game.maxCapacity <= game.players.length){
-        throw "Game is full";
-    }
-    if(game.players.includes(userId)){
-        throw "User is already in the game."
-    }
-    const user = await usersData.getUser(userId);
-    if(!user){
-        throw "Could not find user";
-    }
-    //Update game collection
-    const gameCollection = await games();
-    const userCollection = await users();
-    const updateGame = await gameCollection.updateOne(
-        { _id: new ObjectId(gameId) },
-        { 
-            $push: { players: userId },
-            $inc: { totalNumberOfPlayers: 1 } 
-        }
-    );
-    const updateUser = await userCollection.updateOne(
-        { _id: new ObjectId(userId) },
-        { $push: { games: gameId } }
-    );
-    if(!updateUser || !updateGame){
-        throw "Could not update user or game"
-    }
-    return {updateUser,updateGame};
-}
 const get = async (gameId) => {
     // Input Validation
     helpers.isValidId(gameId);
@@ -103,6 +54,62 @@ const get = async (gameId) => {
     game._id = game._id.toString();
     return game;
 };
+
+// Only gets all games in the future
+// Set includeExpired to true to get all previous games
+const getAll = async (includeExpired = false) => {
+    const query = includeExpired ? {} : { expired: false };
+
+    const gameCollection = await games();
+    let gameList = await gameCollection.find(query).toArray();
+
+    if (!gameList) throw 'Could not get all games';
+
+    gameList = gameList.map((element) => {
+        element._id = element._id.toString();
+        return element;
+    });
+    return gameList;
+};
+
+const addUser = async (userId, gameId) => {
+    //Input validation
+    helpers.isValidId(userId); //maybe should check if is userid and not gameid etc
+    helpers.isValidId(gameId);
+    userId = userId.trim();
+    gameId = gameId.trim();
+
+    const game = await get(gameId);
+    if (!game) {
+        throw 'Could not find game';
+    }
+    if (game.maxCapacity <= game.players.length) {
+        throw 'Game is full';
+    }
+    if (game.players.includes(userId)) {
+        throw 'User is already in the game.';
+    }
+    const user = await usersData.getUser(userId);
+    if (!user) {
+        throw 'Could not find user';
+    }
+    //Update game collection
+    const gameCollection = await games();
+    const userCollection = await users();
+    const updateGame = await gameCollection.updateOne(
+        { _id: new ObjectId(gameId) },
+        {
+            $push: { players: userId },
+            $inc: { totalNumberOfPlayers: 1 },
+        }
+    );
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $push: { games: gameId } });
+    if (!updateUser || !updateGame) {
+        throw 'Could not update user or game';
+    }
+    return { updateUser, updateGame };
+};
+
 const findGamesThatStartWith = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
@@ -125,6 +132,7 @@ const findGamesThatStartWith = async (search) => {
     //Returns the entire gamelist right now
     return gameList;
 };
+
 const remove = async (gameId) => {
     // Input Validation
     helpers.isValidId(gameId);
@@ -173,6 +181,7 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
         players: oldGame.players,
         totalNumberOfPlayers: oldGame.totalNumberOfPlayers,
         group,
+        expired: false,
     };
 
     const gameCollection = await games();
@@ -183,15 +192,32 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
 };
-const getIDName = async (gameIds)=> {
+const getIDName = async (gameIds) => {
     //Given an array of IDs return an array of objects, each object contains the id and the associated name
-    let ret = []
-    for (let gameId of gameIds){
+    let ret = [];
+    for (let gameId of gameIds) {
         helpers.isValidId(gameId);
         gameId = gameId.trim();
         const game = await get(gameId);
-        ret.push({_id: gameId, name: game.gameName})
+        ret.push({ _id: gameId, name: game.gameName });
     }
     return ret;
-}
-export default { create, getAll, get, remove, update,addUser, findGamesThatStartWith, getIDName };
+};
+// Goes through all future games to make sure they haven't passed and updates them if they are old
+const keepStatusUpdated = async () => {
+    const gamesList = await getAll();
+    const gameCollection = await games();
+
+    for (let game of gamesList) {
+        if (helpers.isDateInFuture(game.gameDate)) {
+            try {
+                await gameCollection.updateOne({ _id: new ObjectId(game._id) }, { $set: { expired: true } });
+            } catch (err) {
+                throw 'Unable to update status of old game';
+            }
+            console.log(`Expired game: ${game._id}`);
+        }
+    }
+};
+
+export default { create, getAll, get, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName };

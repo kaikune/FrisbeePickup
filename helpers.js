@@ -4,29 +4,29 @@ import { ObjectId } from 'mongodb';
 
 let stringHelper = function (string, stringName, minLength, maxLength) {
     if (string == null) {
-        throw stringName + " was not provided!";
+        throw stringName + ' was not provided!';
     }
-    if (typeof string != "string") {
-        throw stringName + " must be a string!";
+    if (typeof string != 'string') {
+        throw stringName + ' must be a string!';
     }
     string = string.trim();
     if (minLength != null && string.length < minLength) {
-        throw "The provided " + stringName + " isn't long enough!";
+        throw 'The provided ' + stringName + " isn't long enough!";
     }
     if (maxLength != null && string.length > maxLength) {
-        throw "The provided " + stringName + " is too long!";
+        throw 'The provided ' + stringName + ' is too long!';
     }
     return string;
-}
+};
 
-export function validateUser (username, emailAddress, password) {
-    username = stringHelper(username, "Username", 3, 10);
+export function validateUser(username, emailAddress, password) {
+    username = stringHelper(username, 'Username', 3, 10);
     username = username.toLowerCase();
-    emailAddress = stringHelper(emailAddress, "Email address", 1, null);
+    emailAddress = stringHelper(emailAddress, 'Email address', 1, null);
     emailAddress = emailAddress.toLowerCase();
-    password = stringHelper(password, "Password", 1, null);
+    password = stringHelper(password, 'Password', 1, null);
     if (!isValidEmail(emailAddress)) {
-        throw "User email is invalid!";
+        throw 'User email is invalid!';
     }
     validatePassword(password);
 }
@@ -95,9 +95,7 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
     if (gameName.length < 5) throw 'Event name less than 5 chars';
     if (gameDescription.length < 25) throw 'Event description less than 25 chars';
     if (!isValidDay(gameDate)) throw 'Event Date is not valid';
-    const date = new Date();
-    const currentDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    if (compareDates(currentDate, gameDate) === 1) throw 'Event Date has to be in the future';
+    if (isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
     if (!isValidTime(startTime) || !isValidTime(endTime)) throw 'Start and/or end time is not valid';
     if (!compareTimes(startTime, endTime)) throw 'Start time has to be 30min before end time';
 
@@ -192,8 +190,8 @@ export function isValidDay(eventDate) {
 }
 
 export function compareDates(day1, day2) {
-    if (!day1 || !day2) throw 'Error: Missing argument(s) to compareDay()';
-    if (typeof day1 !== 'string' || typeof day2 !== 'string') throw 'Error: Argument(s) sent to compareDay not a string';
+    if (!day1 || !day2) throw 'Error: Missing argument(s) to compareDates()';
+    if (typeof day1 !== 'string' || typeof day2 !== 'string') throw 'Error: Argument(s) sent to compareDates not a string';
 
     // Get number array of [month, day, year]
     day1 = day1.split('/').map((day) => Number(day));
@@ -211,6 +209,13 @@ export function compareDates(day1, day2) {
     }
     // day1 is less than day2
     return -1;
+}
+
+export function isDateInFuture(gameDate) {
+    let currentDate = new Date();
+    currentDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+
+    return compareDates(currentDate, gameDate) === 1;
 }
 
 export function isValidTime(time) {

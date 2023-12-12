@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+import { gamesData } from './data/index.js';
+
 import configRoutesFunction from './routes/index.js';
 
 const app = express();
@@ -53,6 +55,18 @@ app.use('/logout', (req, res, next) => {
     if (req.method !== 'GET') return next();
     if (!req.session.user) return res.redirect('/login');
 
+    return next();
+});
+
+// Update DB Middlware
+app.use('/groups', async (req, res, next) => {
+    if (req.method === 'GET') {
+        try {
+            await gamesData.keepStatusUpdated();
+        } catch (err) {
+            console.log(err);
+        }
+    }
     return next();
 });
 
