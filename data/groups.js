@@ -17,7 +17,7 @@ const create = async (groupName, groupDescription, groupLeader) => {
         description: groupDescription,
         groupLeader,
         comments: [],
-        players: [],
+        players: [groupLeader],
         totalNumberOfPlayers: 0,
     };
 
