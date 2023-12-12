@@ -4,11 +4,11 @@
             <p class="error">{{this}}</p>
         {{/each}}
     {{/if}}
-    {{#if friends}}
+    {{#if users}}
     <div class="response-list">
-        <a>Friends:</a>
+        <a>Users:</a>
         <ul>
-            {{#each friends}}
+            {{#each users}}
                 <li href="/users/{{this._id}}">{{this.username}}</li>
             {{/each}}
         </ul>

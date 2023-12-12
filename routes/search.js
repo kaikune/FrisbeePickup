@@ -25,15 +25,13 @@ router
         }
 
         try {
-            // Need to change to an actual search
-            groups = await groupsData.getAll();
+            groups = await groupsData.findGroupsThatStartWith(query);
         } catch (err) {
             errors.push(err);
         }
 
         try {
-            // Need to change to an actual search
-            games = await gamesData.getAll();
+            games = await gamesData.findGamesThatStartWith(query);
         } catch (err) {
             errors.push(err);
         }
