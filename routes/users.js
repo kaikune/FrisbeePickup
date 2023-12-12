@@ -21,17 +21,24 @@ router
             let userObj = await usersData.getUser(userId);
 
             let isOwner = req.session.user != null && req.session.user._id.toString() == userId;
-
-            // return res.json(userObj);
-            return res.render('user', {
+            let friends = await usersData.getIDName(userObj.friends);
+            let games = await gamesData.getIDName(userObj.games);
+            let groups = await groupsData.getIDName(userObj.groups);
+            console.log(games);
+            console.log(groups);
+            console.log(friends)
+            const ret = {
                 user: userObj,
-                friends: [],
-                groups: [],
-                games: [],
+                friends: friends,
+                groups: groups,
+                games: games,
                 isOwner: isOwner,
-            });
+            }
+        
+            // return res.json(userObj);
+            return res.render('user', ret);
         } catch (e) {
-            res.status(400);
+            res.status(400);    
             res.json({ error: e });
         }
     });
