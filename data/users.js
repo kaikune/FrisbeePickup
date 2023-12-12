@@ -88,7 +88,7 @@ const getIDName = async (userIds)=> {
     for (let userId of userIds){
         helpers.isValidId(userId);
         userId = userId.trim();
-        const user = await get(userId);
+        const user = await getUser(userId);
         ret.push({_id: userId, name: user.username})
     }
     return ret;
