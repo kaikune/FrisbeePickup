@@ -18,7 +18,7 @@ const create = async (groupName, groupDescription, groupLeader) => {
         groupLeader,
         comments: [],
         players: [groupLeader],
-        totalNumberOfPlayers: 0,
+        totalNumberOfPlayers: 1,
     };
 
     const groupCollection = await groups();
