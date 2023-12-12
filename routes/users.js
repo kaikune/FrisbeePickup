@@ -24,9 +24,6 @@ router
             let friends = await usersData.getIDName(userObj.friends);
             let games = await gamesData.getIDName(userObj.games);
             let groups = await groupsData.getIDName(userObj.groups);
-            console.log(games);
-            console.log(groups);
-            console.log(friends)
             const ret = {
                 user: userObj,
                 friends: friends,
