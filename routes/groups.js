@@ -30,10 +30,13 @@ router.route('/:groupId').get(async (req, res) => {
     try {
         let groupId = req.params.groupId;
         let groupObj = await groupsData.get(groupId);
-        // return res.json(groupObj);
+        let members = await usersData.getIDName(groupObj.players);
+        //let games = await gamesData.getIDName(groupObj.games);
+        let owner = await usersData.getUser(groupObj.groupLeader);
         return res.render('group', {
             group: groupObj,
-            members: [],
+            members: members,
+            owner: {_id: owner._id, username: owner.username}
         });
     } catch (e) {
         res.status(400);
