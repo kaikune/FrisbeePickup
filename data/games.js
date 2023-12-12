@@ -72,6 +72,19 @@ const getAll = async (includeExpired = false) => {
     return gameList;
 };
 
+// Get all games of given group
+// Set includeExpired to false to get only future games
+const getAllByGroup = async (groupId, includeExpired = true) => {
+    const gameList = await getAll(includeExpired);
+    let groupGames = [];
+
+    for (const game of gameList) {
+        if ((game.group = groupId)) groupGames.push(game);
+    }
+
+    return groupGames;
+};
+
 const addUser = async (userId, gameId) => {
     //Input validation
     helpers.isValidId(userId); //maybe should check if is userid and not gameid etc
@@ -220,4 +233,4 @@ const keepStatusUpdated = async () => {
     }
 };
 
-export default { create, getAll, get, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName };
+export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName };
