@@ -29,13 +29,15 @@ router
 router.route('/:groupId').get(async (req, res) => {
     try {
         let groupId = req.params.groupId;
-        let groupObj = await groupsData.get(groupId);
-        let members = await usersData.getIDName(groupObj.players);
-        //let games = await gamesData.getIDName(groupObj.games);
-        let owner = await usersData.getUser(groupObj.groupLeader);
+        const groupObj = await groupsData.get(groupId);
+        const members = await usersData.getIDName(groupObj.players);
+        let games = await gamesData.getAllByGroup(groupId);
+        games = games.map(game => ({_id: game._id, name: game.gameName}));
+        const owner = await usersData.getUser(groupObj.groupLeader);
         return res.render('group', {
             group: groupObj,
             members: members,
+            games: games,
             owner: {_id: owner._id, username: owner.username}
         });
     } catch (e) {
