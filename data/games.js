@@ -79,7 +79,7 @@ const getAllByGroup = async (groupId, includeExpired = true) => {
     let groupGames = [];
 
     for (const game of gameList) {
-        if ((game.group = groupId)) groupGames.push(game);
+        if ((game.group === groupId)) groupGames.push(game);
     }
 
     return groupGames;
