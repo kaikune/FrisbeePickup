@@ -9,7 +9,32 @@ const router = Router();
 router
     .route('/')
     .get(async (req, res) => {
-        res.render('searchForm');
+
+        let errors = [];
+        let users = [];
+        let groups = [];
+        let games = [];
+
+        try{
+            users = await usersData.getAllUsers();
+        }
+        catch(err){
+            errors.push(err);
+        }
+        try{
+            groups = await groupsData.getAll();
+        }
+        catch(err){
+            errors.push(err);
+        }
+        try{
+            games = await gamesData.getAll();
+        }
+        catch(err){
+            errors.push(err);
+        }
+
+        res.render('searchForm', {players: users, groups: groups, games: games});
     })
     .post(async (req, res) => {
         const query = req.body['search-form'];

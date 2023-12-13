@@ -175,6 +175,24 @@ footer{
 }
 /* END FOOTER */
 
+/* SEARCH LISTS STUFF */
+
+#list-collection {
+    width: 100%;
+}
+
+.list-of-all {
+    float: left;
+    width: 30%;
+}
+
+.list-header {
+    font-size: large;
+    font-weight: bold;
+}
+
+/* END SEARCH LISTS */
+
 .hidden {
     display: none;
 }

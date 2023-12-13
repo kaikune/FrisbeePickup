@@ -116,6 +116,10 @@ export async function seed(){
 }
 
 const db = await dbConnection();
+console.log("Connected")
 await db.dropDatabase(); //Clears database before insert
+console.log("Database cleared")
 await seed();
+console.log("Seed data entered")
 await closeConnection();
+console.log("finished")
