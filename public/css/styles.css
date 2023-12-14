@@ -139,6 +139,15 @@ header {
     padding: 5px
 }
 
+#create-user-form {
+    background-color: white;
+    color: #159dd8;
+    border-style: solid;
+    border-color: #0c9dd6;
+    width: 25%;
+    padding: 5px
+}
+
 #error-label {
     color: #AA210f;
     font-size: small;
@@ -193,6 +202,10 @@ footer{
 
 /* END SEARCH LISTS */
 
+/* MISC. STUFF */
+
 .hidden {
     display: none;
 }
+
+/* END MISC. */
