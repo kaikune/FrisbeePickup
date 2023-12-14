@@ -48,16 +48,18 @@ const createUser = async (username, emailAddress, password) => {
 
     username = username.trim();
     password = password.trim();
-    emailAddress = emailAddress.trim();
+    emailAddress = emailAddress.trim().toLowerCase();
 
-    // Search for users
+    // Search for users with same username or email
     const userCollection = await users();
-    const user = await userCollection.findOne({ emailAddress: emailAddress });
+    const user = await userCollection.findOne({
+        $or: [{ emailAddress: emailAddress }, { username: { $regex: new RegExp('^' + username + '$', 'i') } }],
+    });
 
-    // Check for existing email
     if (user) {
-        throw 'Email address already taken';
+        throw 'Username or Email address already taken';
     }
+
     const saltRounds = 16;
     const hashPass = await bcrypt.hash(password, saltRounds);
 
@@ -82,22 +84,25 @@ const createUser = async (username, emailAddress, password) => {
 
     return { insertedUser: true };
 };
-const getIDName = async (userIds)=> {
+
+const getIDName = async (userIds) => {
     //Given an array of IDs return an array of objects, each object contains the id and the associated name
-    let ret = []
-    for (let userId of userIds){
+    let ret = [];
+    for (let userId of userIds) {
         helpers.isValidId(userId);
         userId = userId.trim();
         const user = await getUser(userId);
-        ret.push({_id: userId, name: user.username})
+        ret.push({ _id: userId, name: user.username });
     }
     return ret;
-}
+};
+
 const updateUserBio = async (userId, username, profilePicture, description) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
+
     helpers.validateUserBio(username, profilePicture, description);
     username = username.trim();
     profilePicture = profilePicture.trim();
@@ -116,6 +121,7 @@ const updateUserBio = async (userId, username, profilePicture, description) => {
     const user = await getUser(userId);
     return user;
 };
+
 const getAllUsers = async () => {
     const userCollection = await users();
     let userList = await userCollection.find({}).toArray();
@@ -191,16 +197,18 @@ export const loginUser = async (emailAddress, password) => {
     //Input Validation
     if (!emailAddress || !password) throw 'Error: 1 or more fields missing';
     if (typeof emailAddress !== 'string' || typeof password !== 'string') throw 'Expected a string';
-    emailAddress = emailAddress.trim();
+    emailAddress = emailAddress.trim().toLowerCase();
     password = password.trim();
     if (emailAddress.length === 0 || password.length === 0) throw 'Cannot be empty spaces';
     if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
     helpers.validatePassword(password);
+
     const userCollection = await users();
     const user = await userCollection.findOne({ emailAddress: emailAddress });
     if (!user) {
         throw 'Either password or email is invalid';
     }
+
     //Compare Passwords
     const compare = await bcrypt.compare(password, user.password);
     if (!compare) {
@@ -237,4 +245,4 @@ const addFriend = async (userId, friendUserId) => {
     return updatedInfo;
 };
 
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend,getIDName };
+export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend, getIDName };
