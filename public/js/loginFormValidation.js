@@ -1,3 +1,5 @@
+import { isValidEmail, validatePassword } from "../../helpers";
+
 let loginForm = document.getElementById("login-form")
 
 if(loginForm){
@@ -5,8 +7,10 @@ if(loginForm){
     errorLabel.hidden = true;
     loginForm.addEventListener('submit', (event) => {
         try{
-        //Email Validation
-        //Password Validation
+            let emailAddress = document.getElementById("login-emailAddress");
+            let password = document.getElementById("password");
+            isValidEmail(emailAddress);
+            validatePassword(password)
         }
         catch(err){
             event.preventDefault();

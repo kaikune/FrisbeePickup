@@ -3,8 +3,14 @@
         <form id="create-group-form" class="create-form">
             <label class="form-label" for="group-name">Group Name:</label>
                 <input class="form-input" type="text" id="group-name" name="group-name">
-            <button type="submit" class="form-submit-button">Submit</button>
+                <br>
+            <label class="form-label" for="description">Description</label>
+                <input class="form-input" type="text" id="description" name="description">
+                <br>
+            <button type="submit" class="form-submit-button">Create</button>
         </form>
     </div>
+    <a class="status-label" hidden></a>
     <a class="error-label" hidden></a>
+    <script src='/public/js/groupValidation.js'></script>
 </main>

@@ -9,7 +9,7 @@ router
     .route('/')
     .get(async (req, res) => {
         let allGamesData = await gamesData.getAll();
-        return res.json(allGamesData);
+        return res.render('games');
     })
     .post(async (req, res) => {
         const gameName = req.body.gameName;
