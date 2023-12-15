@@ -41,7 +41,7 @@ router
     });
 
 router
-    .route('/:userId/friends')
+    .route('/:userId/friends/sendRequest')
     .post(async (req, res) => {
         let userId = req.params.userId;
         let friendUserId = req.body.friendUserId;
@@ -54,12 +54,84 @@ router
         }
 
         try {
-            const userObj = await usersData.addFriend(userId, friendUserId);
+            const userObj = await usersData.sendFriendRequest(userId, friendUserId);
 
             return res.json(userObj);
         } catch (e) {
             // Uber bandaid
             if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
+            else return res.status(400).json({ error: e });
+        }
+    });
+
+router
+    .route('/:userId/friends/acceptRequest')
+    .post(async (req, res) => {
+        let userId = req.params.userId;
+        let friendUserId = req.body.friendUserId;
+
+        try {
+            helpers.isValidId(userId);
+            helpers.isValidId(friendUserId);
+        } catch (e) {
+            res.status(400).json({ error: e });
+        }
+
+        try {
+            const userObj = await usersData.acceptFriendRequest(userId, friendUserId);
+
+            return res.json(userObj);
+        } catch (e) {
+            // Uber bandaid
+            if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
+            else return res.status(400).json({ error: e });
+        }
+    });
+
+router
+    .route('/:userId/friends/rejectRequest')
+    .post(async (req, res) => {
+        let userId = req.params.userId;
+        let friendUserId = req.body.friendUserId;
+
+        try {
+            helpers.isValidId(userId);
+            helpers.isValidId(friendUserId);
+        } catch (e) {
+            res.status(400).json({ error: e });
+        }
+
+        try {
+            const userObj = await usersData.rejectFriendRequest(userId, friendUserId);
+
+            return res.json(userObj);
+        } catch (e) {
+            // Uber bandaid
+            if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
+            else return res.status(400).json({ error: e });
+        }
+    });
+
+router
+    .route('/:userId/friends/removeFriend')
+    .post(async (req, res) => {
+        let userId = req.params.userId;
+        let friendUserId = req.body.friendUserId;
+
+        try {
+            helpers.isValidId(userId);
+            helpers.isValidId(friendUserId);
+        } catch (e) {
+            res.status(400).json({ error: e });
+        }
+
+        try {
+            const userObj = await usersData.removeFriend(userId, friendUserId);
+
+            return res.json(userObj);
+        } catch (e) {
+            // Uber bandaid
+            if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
             else return res.status(400).json({ error: e });
         }
     });

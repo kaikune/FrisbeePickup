@@ -74,6 +74,7 @@ const createUser = async (username, emailAddress, password) => {
         friends: [],
         games: [],
         groups: [],
+        friendRequests: [],
     };
 
     // Update the user
@@ -193,6 +194,7 @@ const deleteUser = async (userId) => {
 
     return { gameRemove, groupRemove, userRemove };
 };
+
 export const loginUser = async (emailAddress, password) => {
     //Input Validation
     if (!emailAddress || !password) throw 'Error: 1 or more fields missing';
@@ -224,25 +226,118 @@ export const loginUser = async (emailAddress, password) => {
         friends: user.friends,
         games: user.games,
         groups: user.groups,
+        friendRequests: user.friendRequests,
     };
 };
 
-const addFriend = async (userId, friendUserId) => {
+const sendFriendRequest = async (userId, friendUserId) => {
     // Input Validation
     helpers.isValidId(userId);
     helpers.isValidId(friendUserId);
     userId = userId.trim();
     friendUserId = friendUserId.trim();
 
-    const user = await getUser(userId);
-    if (user.friends.includes(friendUserId)) throw 'User already a friend';
+    if (userId === friendUserId) throw 'Cannot send friend request to yourself';
 
-    // Update record
+    // Check if user is already a friend or has already an existing friend request
+    const user = await getUser(userId);
+    const otherUser = await getUser(friendUserId);
+
+    if (user.friends.includes(friendUserId)) throw 'User already a friend';
+    if (user.friendRequests.includes(friendUserId)) throw 'You have a pending friend request from this user';
+    if (otherUser.friendRequests.includes(userId)) throw 'Already sent a friend request';
+
+    // Update other user's friend requests
     const userCollection = await users();
-    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $push: { friends: friendUserId } });
+    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(friendUserId) }, { $push: { friendRequests: userId } });
 
     if (!updatedInfo) throw 'Could not update user successfully';
+
     return updatedInfo;
 };
 
-export default { createUser, getAllUsers, getUser, deleteUser, updateUserBio, loginUser, findUsersThatStartWith, addFriend, getIDName };
+const acceptFriendRequest = async (userId, friendUserId) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.isValidId(friendUserId);
+    userId = userId.trim();
+    friendUserId = friendUserId.trim();
+
+    // Check if there is a request to accept
+    const userCollection = await users();
+    const user = await getUser(userId);
+
+    if (!user.friendRequests.includes(friendUserId)) throw 'User does not have a pending friend request from this user';
+
+    // Update friends for both users
+    const selfUpdatedInfo = await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+            $push: { friends: friendUserId },
+            $pull: { friendRequests: friendUserId },
+        }
+    );
+    const friendUpdatedInfo = await userCollection.updateOne({ _id: new ObjectId(friendUserId) }, { $push: { friends: userId } });
+
+    if (!selfUpdatedInfo || !friendUpdatedInfo) throw 'Could not update user(s) successfully';
+
+    return selfUpdatedInfo;
+};
+
+const rejectFriendRequest = async (userId, friendUserId) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.isValidId(friendUserId);
+    userId = userId.trim();
+    friendUserId = friendUserId.trim();
+
+    // Check if there is a request to reject
+    const userCollection = await users();
+    const user = await getUser(userId);
+
+    if (user.friendRequests.includes(friendUserId)) throw 'User does not have a pending friend request from this user';
+
+    // Remove friend request
+    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendRequests: friendUserId } });
+
+    if (!updatedInfo) throw 'Could not update user successfully';
+
+    return updatedInfo;
+};
+
+const removeFriend = async (userId, friendUserId) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.isValidId(friendUserId);
+    userId = userId.trim();
+    friendUserId = friendUserId.trim();
+
+    const userCollection = await users();
+
+    // Check if user is a friend
+    const user = await getUser(userId);
+    if (!user.friends.includes(friendUserId)) throw 'User is not a friend';
+
+    // Remove friend from both users
+    const selfUpdatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { friends: friendUserId } });
+    const friendUpdatedInfo = await userCollection.updateOne({ _id: new ObjectId(friendUserId) }, { $pull: { friends: userId } });
+
+    if (!selfUpdatedInfo || !friendUpdatedInfo) throw 'Could not update user(s) successfully';
+
+    return selfUpdatedInfo;
+};
+
+export default {
+    createUser,
+    getAllUsers,
+    getUser,
+    deleteUser,
+    updateUserBio,
+    loginUser,
+    findUsersThatStartWith,
+    sendFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
+    removeFriend,
+    getIDName,
+};
