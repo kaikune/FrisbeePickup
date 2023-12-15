@@ -69,8 +69,7 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
         maxCapacity == null ||
         gameDate == null ||
         startTime == null ||
-        endTime == null ||
-        group == null
+        endTime == null
     )
         throw 'All fields need to have valid values';
 
@@ -118,7 +117,7 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
     if (!states.includes(gameLocation.state)) throw 'State is not valid';
     if (gameLocation.zip.length !== 5 || isNaN(gameLocation.zip)) throw 'Zip code is not valid';
 
-    isValidId(group);
+    if (group) isValidId(group);
 }
 
 export function validateGroup(groupName, groupDescription, groupLeader) {
