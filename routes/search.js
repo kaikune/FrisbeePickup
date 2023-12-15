@@ -34,7 +34,7 @@ router
             errors.push(err);
         }
 
-        res.render('searchForm', {players: users, groups: groups, games: games});
+        res.render('searchForm', {title:"search", user:req.session.user, players: users, groups: groups, games: games});
     })
     .post(async (req, res) => {
         const query = req.body['search-form'];

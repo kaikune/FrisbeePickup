@@ -9,7 +9,7 @@ router
     .get(async (req, res) => {
         let allGroupObjs = await groupsData.getAll();
         // return res.json(allGroupsData);
-        return res.render('groups', { groups: allGroupObjs });
+        return res.render('groups', {title:"groups", user:req.session.user, groups: allGroupObjs});
     })
     .post(async (req, res) => {
         const groupName = req.body.groupName;
@@ -35,6 +35,7 @@ router.route('/:groupId').get(async (req, res) => {
         games = games.map(game => ({_id: game._id, name: game.gameName}));
         const owner = await usersData.getUser(groupObj.groupLeader);
         return res.render('group', {
+            title:"group", user:req.session.user, 
             group: groupObj,
             members: members,
             games: games,
