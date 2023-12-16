@@ -15,17 +15,20 @@ router
     .post(async (req, res) => {
         const gameName = req.body.gameName;
         const gameDescription = req.body.gameDescription;
-        const gameLocation = req.body.gameLocation;
+        const zip = req.body.zip;
+        const state = req.body.state;
+        const streetAddress = req.body.streetAddress;
+        const city = req.body.city;
         const maxCapacity = req.body.maxCapacity;
         const gameDate = req.body.gameDate;
         const startTime = req.body.startTime;
         const endTime = req.body.endTime;
         const group = req.body.group;
-
+        let gameLocation = {zip,state,streetAddress,city}
         try {
             helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
             const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
-
+            console.log(createResult)
             return res.json(createResult);
         } catch (err) {
             return res.status(400).json({ error: err });
