@@ -292,7 +292,18 @@ export const states = [
     'WY',
 ];
 
-
+function convertTo12Hour(timeString) {
+    //HTML uses 24 hours 
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const twelveHour = hours % 12 || 12;
+    return `${twelveHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+}
+function convertToMMDDYYYY(dateString) {
+    //HTML form uses different formating for the data so this used to convert back to ours
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
 export function testFunction(){
     console.log("Success!");
 }
