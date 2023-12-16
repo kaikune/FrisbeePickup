@@ -36,38 +36,17 @@ app.use(
     })
 );
 
+// Middleware that updates/stores currentUser object in app.locals for template usage.
 app.use("/", (req, res, next) => {
     app.locals.currentUser = req.session.user;
-    console.log(app.locals);
     return next();
 });
 
-/**
-// Logging and Authentication Middleware
-app.use('/', (req, res, next) => {
+// Logging middleware
+app.use("/", (req, res, next) => {
     const user = req.session.user;
-    const auth = user ? 'Authenticated' : 'Not Authenticated';
+    const auth = user ? 'Authenticated: ' + user.username : 'Not Authenticated';
     console.log(`[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${auth})`);
-
-    if (['/login', '/register', '/logout', '/'].includes(req.originalUrl)) return next();
-
-    if (user) {
-        if (!['/admin', '/protected', '/error'].includes(req.originalUrl)) {
-            if (user.role === 'admin') return res.redirect('/admin');
-            if (user.role === 'user') return res.redirect('/protected');
-        }
-    } else {
-        return res.redirect('/login');
-    }
-
-    return next();
-});
-
-// Logout Middleware
-app.use('/logout', (req, res, next) => {
-    if (req.method !== 'GET') return next();
-    if (!req.session.user) return res.redirect('/login');
-
     return next();
 });
 
@@ -82,7 +61,6 @@ app.use('/groups', async (req, res, next) => {
     }
     return next();
 });
-**/
 
 configRoutesFunction(app);
 
