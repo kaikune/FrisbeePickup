@@ -16,8 +16,8 @@
                     <div class="header-right dropdown" id="header-profile-box"> 
                         <a>Profile</a>
                         <div class="dropdown-content">
-                            {{#if user}}
-                            <a href="/users/{{user._id}}">View profile</a>
+                            {{#if currentUser}}
+                            <a href="/users/{{currentUser._id}}">View profile</a>
                             <a href="/logout">Logout</a>
                             {{else}}
                             <a href="/login">Login</a>

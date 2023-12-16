@@ -34,7 +34,7 @@ router
             errors.push(err);
         }
 
-        res.render('searchForm', {title:"search", user:req.session.user, players: users, groups: groups, games: games});
+        res.render('searchForm', {title:"Search", players: users, groups: groups, games: games});
     })
     .post(async (req, res) => {
         const query = req.body['search-form'];
@@ -61,7 +61,7 @@ router
             errors.push(err);
         }
 
-        res.render('searchResults', { users, groups, games, errors });
+        res.render('searchResults', { title: "Search Results", users, groups, games, errors });
     });
 
 export default router;

@@ -10,7 +10,7 @@ router
     .get(async (req, res) => {
         let allUserObjs = await usersData.getAllUsers();
         // return res.json(allUsersRes);
-        return res.render('users', {title:"games", user:req.session.user, users: allUserObjs });
+        return res.render('users', {title:"Users", users: allUserObjs });
     });
 
 router
@@ -25,8 +25,8 @@ router
             let games = await gamesData.getIDName(userObj.games);
             let groups = await groupsData.getIDName(userObj.groups);
             const ret = {
-                title:"user", 
-                user: userObj, //THIS CAUSES PROBLEMS WITH THE HEADER
+                title:"User", 
+                user: userObj,
                 friends: friends,
                 groups: groups,
                 games: games,

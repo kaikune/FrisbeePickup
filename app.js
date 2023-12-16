@@ -20,6 +20,12 @@ const __dirname = dirname(__filename);
 const staticDir = express.static(__dirname + '/public');
 app.use('/public', staticDir);
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+
 app.use(
     session({
         name: 'CoolSession',
@@ -30,6 +36,13 @@ app.use(
     })
 );
 
+app.use("/", (req, res, next) => {
+    app.locals.currentUser = req.session.user;
+    console.log(app.locals);
+    return next();
+});
+
+/**
 // Logging and Authentication Middleware
 app.use('/', (req, res, next) => {
     const user = req.session.user;
@@ -69,12 +82,7 @@ app.use('/groups', async (req, res, next) => {
     }
     return next();
 });
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
-app.set('view engine', 'handlebars');
+**/
 
 configRoutesFunction(app);
 

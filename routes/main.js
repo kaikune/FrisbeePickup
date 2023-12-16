@@ -7,16 +7,7 @@ const router = Router();
 router
     .route("/")
     .get(async (req, res) => {
-
-        
-        if(req.session.user){
-            return res.render("index", {title: "Home", user: req.session.user});
-        }
-        else{
-            return res.render("index", {title: "Home"});
-        }
-
-        
+        return res.render("index", {title: "Home"});
     });
 
 router  
