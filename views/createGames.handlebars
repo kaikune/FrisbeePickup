@@ -22,7 +22,19 @@
             <label class="form-label" for="max-players">Max players:</label>
                 <input class="form-input" type="text" id="max-players" name="max-players">
                 <br>
+            <label class="form-label" for="group">Group:</label>
+                <select class="form-input" id="group" name="group" required>
+                    {{#each groups}}
+                        <option value="{{this._id}}">{{this.groupName}}</option>
+                    {{/each}}
+                </select>
+                <br>
+            {{#if currentUser}}
             <button type="submit" class="form-submit-button">Submit</button>
+            {{ else }}
+            <p>To create a game, please <a href="/login">login</a>.</p>
+            {{/if}}
+            
         </form>
     </div>
         <a id="error-label" hidden>test</a> <br>
