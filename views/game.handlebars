@@ -21,7 +21,11 @@
     {{/if}}
 
     {{#if isOwner}}
-        <button class="edit-button">Edit</button>
-        <button class="delete-button">Delete</button>
+        <form action="/games/edit/{{game._id}}">
+            <button class="edit-button">Edit</button>
+        </form>
+        <form method="DELETE">
+            <button class="delete-button">Delete</button>
+        </form>
     {{/if}}
 </main>

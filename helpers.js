@@ -291,3 +291,8 @@ export const states = [
     'WV',
     'WY',
 ];
+
+
+export function testFunction(){
+    console.log("Success!");
+}

@@ -21,8 +21,12 @@
     </ul>
 
     {{#if isOwner}}
-        <button class="edit-button">Edit</button>
-        <button class="delete-button">Delete</button>
+        <form action="/users/edit/{{user._id}}">
+            <button class="edit-button">Edit</button>
+        </form>
+        <form method="DELETE">
+            <button class="delete-button">Delete</button>
+        </form>
     {{else if currentUser}}
         <button class="add-friend">Add Friend</button>
     {{ else }}

@@ -236,3 +236,7 @@ function convertTo12Hour(timeString) {
     const twelveHour = hours % 12 || 12;
     return `${twelveHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 }
+
+function editGame() {
+    
+}
