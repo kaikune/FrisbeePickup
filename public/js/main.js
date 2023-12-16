@@ -14,3 +14,5 @@ let stringHelper = function (string, stringName, minLength, maxLength) {
     }
     return string;
 };
+
+//console.log(sessionStorage);

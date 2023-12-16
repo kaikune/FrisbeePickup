@@ -9,7 +9,7 @@ if(createGroupForm){
         try{
             let groupName = document.getElementById("group-name")
             let groupDescription = document.getElementById("description")
-            //validateGroup(groupName, groupDescription, SOMETHING SO THAT IT VALIDATES)
+            //validateGroup(groupName, groupDescription)
             statusLabel.innerHTML = "Group Created"
             statusLabel.hidden = false;
         }

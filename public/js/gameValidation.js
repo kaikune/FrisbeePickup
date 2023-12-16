@@ -5,7 +5,7 @@ if(createGameForm){
     let statusLabel = document.getElementById("status-label")
     errorLabel.hidden = true;
 
-    loginForm.addEventListener('submit', (event) => {
+    createGameForm.addEventListener('submit', (event) => {
         try{
             let gameName = document.getElementById("game-name");
             let location = document.getElementById("location");
@@ -14,7 +14,7 @@ if(createGameForm){
             let startTime = document.getElementById("start-time");
             let endTime = document.getElementById("end-time");
             let maxPlayers = document.getElementById("max-players");
-            //validateGame(gameName, description, location, maxPlayers, date, startTime, endTime)
+            validateGame(gameName, description, location, maxPlayers, date, startTime, endTime)
             statusLabel.innerHTML = "Game Created"
             statusLabel.hidden = false;
         }
