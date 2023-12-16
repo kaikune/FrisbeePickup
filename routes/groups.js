@@ -69,4 +69,11 @@ router
         console.log("EDITING groups")
         return res.json({"response":"Success"})
     });
+
+router
+    .route('/delete/:gameId')
+    .post(async (req, res) => {
+        return res.json({"TODO":"Implement"})
+    });
+    
 export default router;

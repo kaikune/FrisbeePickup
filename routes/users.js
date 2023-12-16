@@ -147,5 +147,11 @@ router
         console.log("EDITING USER")
         return res.json({response:"Success"})
     });
+    
+router
+    .route('/delete/:gameId')
+    .post(async (req, res) => {
+        return res.json({"TODO":"Implement"})
+    });
 
 export default router;
