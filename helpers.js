@@ -99,21 +99,8 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
     if (typeof maxCapacity !== 'number') throw 'Max cap. and/or price not a number';
     if (maxCapacity <= 0) throw 'Max cap. should be > 0';
     if (maxCapacity.toString().split('.')[1]) throw 'Max cap. not a whole number';
-    if (typeof gameLocation !== 'object') throw 'Event location is not an object';
-    if (!gameLocation.streetAddress || !gameLocation.city || !gameLocation.state || !gameLocation.zip) throw 'Event location missing key(s)';
-    if (
-        typeof gameLocation.streetAddress !== 'string' ||
-        typeof gameLocation.city !== 'string' ||
-        typeof gameLocation.state !== 'string' ||
-        typeof gameLocation.zip !== 'string'
-    )
-        throw 'Event location values not string';
-    for (const key in gameLocation) gameLocation[key] = gameLocation[key].trim();
-    if (gameLocation.streetAddress.length < 3) throw "Event location's street address too short";
-    if (gameLocation.city.length < 3) throw "Event location's city name too short";
-    gameLocation.state = gameLocation.state.toUpperCase();
-    if (!states.includes(gameLocation.state)) throw 'State is not valid';
-    if (gameLocation.zip.length !== 5 || isNaN(gameLocation.zip)) throw 'Zip code is not valid';
+
+    validateLocation(gameLocation);
 
     if (group) isValidId(group);
 }
@@ -132,6 +119,31 @@ export function validateGroup(groupName, groupDescription, groupLeader) {
     if (groupName.length < 5) throw 'group name less than 5 chars';
     if (groupDescription.length < 25) throw 'group description less than 25 chars';
     isValidId(groupLeader);
+}
+
+export function validateLocation(gameLocation) {
+    if (!gameLocation) throw 'No location given';
+    if (typeof gameLocation !== 'object') throw 'Event location is not an object';
+    if (!gameLocation.streetAddress || !gameLocation.city || !gameLocation.state || !gameLocation.zip) throw 'Event location missing key(s)';
+    if (
+        typeof gameLocation.streetAddress !== 'string' ||
+        typeof gameLocation.city !== 'string' ||
+        typeof gameLocation.state !== 'string' ||
+        typeof gameLocation.zip !== 'string'
+    )
+        throw 'Event location values not string';
+    for (const key in gameLocation) gameLocation[key] = gameLocation[key].trim();
+    if (gameLocation.streetAddress.length < 3) throw "Event location's street address too short";
+    if (gameLocation.city.length < 3) throw "Event location's city name too short";
+    gameLocation.state = gameLocation.state.toUpperCase();
+    if (!states.includes(gameLocation.state)) throw 'State is not valid';
+    if (gameLocation.zip.length !== 5 || isNaN(gameLocation.zip)) throw 'Zip code is not valid';
+}
+
+export function isValidZip(zip) {
+    if (!zip) throw 'No zip code given';
+    if (typeof zip !== 'string') throw 'Zip code is not a string';
+    if (zip.length !== 5 || isNaN(zip)) throw 'Zip code is not valid';
 }
 
 export function isValidId(id) {
@@ -292,7 +304,6 @@ export const states = [
     'WY',
 ];
 
-
-export function testFunction(){
-    console.log("Success!");
+export function testFunction() {
+    console.log('Success!');
 }
