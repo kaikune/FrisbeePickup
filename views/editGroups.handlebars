@@ -1,0 +1,19 @@
+<!-- STILL NEED TO AUTO FILL WITH USERS CURRENT CONTENT -->
+<main>
+    <div class="form-wrapper">
+        <form id="create-group-form" class="create-form" method="PUT">
+            <label class="form-label" for="group-name">Group Name:</label>
+                <input class="form-input" type="text" id="group-name" name="groupName">
+                <br>
+            <label class="form-label" for="description">Description</label>
+                <input class="form-input" type="text" id="description" name="groupDescription">
+                <br>
+            {{#if currentUser}}
+            <button type="submit" class="form-submit-button">Create</button>
+            {{ else }}
+            <p>To create a group, please <a href="/login">login</a>.</p>
+            {{/if}}
+            
+        </form>
+    </div>
+</main>
