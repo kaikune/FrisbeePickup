@@ -1,13 +1,18 @@
 <main>
     <div class="form-wrapper">
-        <form id="create-group-form" class="create-form">
+        <form id="create-group-form" class="create-form" method="POST">
             <label class="form-label" for="group-name">Group Name:</label>
-                <input class="form-input" type="text" id="group-name" name="group-name">
+                <input class="form-input" type="text" id="group-name" name="groupName">
                 <br>
             <label class="form-label" for="description">Description</label>
-                <input class="form-input" type="text" id="description" name="description">
+                <input class="form-input" type="text" id="description" name="groupDescription">
                 <br>
+            {{#if currentUser}}
             <button type="submit" class="form-submit-button">Create</button>
+            {{ else }}
+            <p>To create a group, please <a href="/login">login</a>.</p>
+            {{/if}}
+            
         </form>
     </div>
     <a class="status-label" hidden></a>

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { usersData, gamesData, groupsData } from '../data/index.js';
-
+import * as helpers from '../helpers.js';
 const router = Router();
 
 router
@@ -13,13 +13,13 @@ router
     .post(async (req, res) => {
         const groupName = req.body.groupName;
         const groupDescription = req.body.groupDescription;
-        const groupLeader = req.body.groupLeader;
-
+        
+        if(!req.session.user) return res.status(400).json({ error: "Must be logged in" });
+        const groupLeader = req.session.user._id;
         try {
-            helpers.validateGroup(groupName, groupDescription, groupLeader);
-            const createResult = await groupsData.create(groupName, groupDescription, groupLeader);
-
-            return res.json(createResult);
+            helpers.validateGroup(groupName, groupDescription, groupLeader)
+            const createResult = await groupsData.create(groupName, groupDescription, groupLeader);     
+            res.redirect(`groups/${createResult._id}`);
         } catch (err) {
             return res.status(400).json({ error: err });
         }
