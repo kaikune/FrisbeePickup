@@ -19,19 +19,25 @@ router
         const state = req.body.state;
         const streetAddress = req.body.streetAddress;
         const city = req.body.city;
-        const maxCapacity = req.body.maxCapacity;
-        const gameDate = req.body.gameDate;
-        const startTime = req.body.startTime;
-        const endTime = req.body.endTime;
+        const maxCapacity = req.body.maxPlayers;
+        let gameDate = req.body.date;
+        let startTime = req.body.startTime;
+        let endTime = req.body.endTime;
         const group = req.body.group;
-        let gameLocation = {zip,state,streetAddress,city}
+        let gameLocation = {zip: zip,state: state,streetAddress: streetAddress,city: city}
         try {
-            helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
-            const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
+            let maxPlayersNumber = parseInt(maxCapacity.value, 10);
+            startTime = helpers.convertTo12Hour(startTime)
+            endTime = helpers.convertTo12Hour(endTime)
+            gameDate = helpers.convertToMMDDYYYY(gameDate);
+            helpers.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
+            const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
             console.log(createResult)
-            return res.json(createResult);
+            res.redirect(`games/${createResult._id}`);
         } catch (err) {
-            return res.status(400).json({ error: err });
+            console.error(err); // Log the error
+            return res.status(400).json({ error: err.message || 'An error occurred' });
+        
         }
     });
 
