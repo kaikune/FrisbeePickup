@@ -66,4 +66,13 @@ router.route('/:gameId').get(async (req, res) => {
     }
 });
 
+router
+    .route('/edit/:gameId')
+    .get(async (req, res) => {
+        return res.render("editGame", {title:"Edit Games", user:req.session.user});
+    })
+    .post(async (req, res) => {
+        console.log("EDITING Games")
+        return res.json({"response":"Success"})
+    });
 export default router;

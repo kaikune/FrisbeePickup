@@ -137,4 +137,15 @@ router
         }
     });
 
+router
+    .route('/edit/:userId')
+    .get(async (req, res) => {
+        console.log("Success!")
+        return res.render("editUser", {title:"Edit User", user:req.session.user});
+    })
+    .post(async (req, res) => {
+        console.log("EDITING USER")
+        return res.json({response:"Success"})
+    });
+
 export default router;

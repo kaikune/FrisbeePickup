@@ -38,7 +38,7 @@ router.route('/:groupId').get(async (req, res) => {
             group: groupObj,
             members: members,
             games: games,
-            owner: {_id: owner._id, username: owner.username}
+            owner: {_id: owner._id, username: owner.username},
         });
     } catch (e) {
         res.status(400);
@@ -59,4 +59,14 @@ router.route('/:groupId/comments').post(async (req, res) => {
         return res.status(400).json({ error: e });
     }
 });
+
+router
+    .route('/edit/:groupId')
+    .get(async (req, res) => {
+        return res.render("editGroups", {title:"Edit Groups", user:req.session.user});
+    })
+    .post(async (req, res) => {
+        console.log("EDITING groups")
+        return res.json({"response":"Success"})
+    });
 export default router;
