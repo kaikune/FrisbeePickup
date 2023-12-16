@@ -25,3 +25,7 @@ if(createGameForm){
         }
     })
 }
+
+function editGame() {
+    
+}
