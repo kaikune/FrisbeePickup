@@ -1,18 +1,18 @@
 <main>
-    <h1>{{game.gameName}}</h1>
-    <a>Game Info: {{game.description}}</a>
-    <a>Registered Players:</a>
+    <h1>Game: {{game.gameName}}</h1>
+    <p>Game Info: {{game.description}}</p>
+    <h3>Registered Players:</h3>
     <ul>
         {{#each players}}
-            <li href="/users/{{this._id}}">{{this.name}}</li>
+            <li><a href="/users/{{this._id}}">{{ this.name }}</a></li>
         {{/each}}
     </ul>
-    <a>Organizer: {{organizer}}</a>
+    <p>Organizer: {{organizer}}</p>
     {{#if hostGroup}}
-    <a href="/groups/{{hostGroup._id}}">Host Group: {{hostGroup.name}}</a>
+    <p>Host Group: <a href="/groups/{{hostGroup._id}}">{{hostGroup.groupName}}</a></p>   
     {{/if}}
-    <a>Date: {{dateTime}}</a>
-    <a>Location: {{location}}</a>
+    <p>Date: {{game.gameDate}} {{ game.startTime }} - {{ game.endTime }}</p>
+    <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
     <button class="join-button">Join Game</button>
 

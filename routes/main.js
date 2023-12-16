@@ -61,18 +61,4 @@ router
         return res.render("logout", {title: "Logout"});
     });
 
-router
-    .route("/auth")
-    .get(async (req, res) => {
-        if (req.session.user != null) {
-            return res.json({
-                status: "You are currently logged in as " + req.session.user.username + " (" + req.session.user.emailAddress + ")"
-            });
-        } else {
-            return res.json({
-                status: "You aren't logged in at the moment!"
-            });
-        }
-    });
-
 export default router;

@@ -34,8 +34,22 @@ router
 router.route('/:gameId').get(async (req, res) => {
     try {
         let gameId = req.params.gameId;
-        let gameRes = await gamesData.get(gameId);
-        return res.json(gameRes);
+        let gameObj = await gamesData.get(gameId);
+
+        let hostGroup = await groupsData.get(gameObj.group);
+
+        let playersArr = await usersData.getIDName(gameObj.players);
+
+        let isOwner = req.session.user != null && req.session.user.games.includes(gameId);
+
+        return res.render("game", {
+            title: "Game: " + gameObj.gameName,
+            game: gameObj,
+            players: playersArr,
+            organizer: "idk",
+            hostGroup: hostGroup,
+            isOwner: isOwner
+        });
     } catch (e) {
         res.status(400);
         res.json({ error: e });

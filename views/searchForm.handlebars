@@ -9,7 +9,8 @@
     <div id="list-collection">
         {{#if players}}
         <dl class="list-of-all" id="player-list">
-             <dt class="list-header">Players: </dt> <br>
+            <dt class="list-header">Players:</dt>
+            <br>
             {{#each players}}
             <dd id="player-list-element"><a href="/users/{{this._id}}">{{this.username}}</a></dd>
             {{/each}}
@@ -17,7 +18,8 @@
         {{/if}}
         {{#if games}}
         <dl class="list-of-all" id="game-list">
-            <dt class="list-header">Games: </dt> <br>
+            <dt class="list-header">Games:</dt>
+            <br>
             {{#each games}}
             <dd id="game-list-element"><a href="/games/{{this._id}}">{{this.gameName}}</a></dd>
             {{/each}}
@@ -25,7 +27,8 @@
         {{/if}}
         {{#if groups}}
         <dl class="list-of-all" id="group-list">
-            <dt class="list-header">Groups: </dt> <br>
+            <dt class="list-header">Groups:</dt>
+            <br>
             {{#each groups}}
             <dd id="group-list-element"><a href="/groups/{{this._id}}">{{this.groupName}}</a></dd>
             {{/each}}
