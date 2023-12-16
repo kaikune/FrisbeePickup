@@ -1,5 +1,3 @@
-import {validateGame} from "../../helpers";
-
 let createGameForm = document.getElementById("create-game-form");
 
 if(createGameForm){

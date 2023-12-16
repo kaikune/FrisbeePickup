@@ -1,7 +1,6 @@
-import { isValidEmail, validatePassword } from "../../helpers";
-
 let loginForm = document.getElementById("login-form")
 
+/** temporary
 if(loginForm){
     let errorLabel = document.getElementById("error-label")
     errorLabel.hidden = true;
@@ -19,3 +18,4 @@ if(loginForm){
         }
     })
 }
+**/

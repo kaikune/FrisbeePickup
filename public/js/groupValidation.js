@@ -1,5 +1,3 @@
-import {validateGroup} from "../../helpers";
-
 let createGroupForm = document.getElementById("create-group-form");
 
 if(createGroupForm){

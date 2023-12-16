@@ -15,7 +15,11 @@
         {{/each}}
     </ul>
 
+    {{#if currentUser }}
     <button class="join-button">Join Group</button>
+    {{ else }}
+    <p>To join this group, please <a href="/login">login</a>.</p>
+    {{/if}}
 
     {{#if isOwner}}
         <button class="edit-button">Edit</button>

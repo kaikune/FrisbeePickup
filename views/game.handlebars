@@ -14,7 +14,11 @@
     <p>Date: {{game.gameDate}} {{ game.startTime }} - {{ game.endTime }}</p>
     <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
+    {{#if currentUser}}
     <button class="join-button">Join Game</button>
+    {{ else }}
+    <p>To join this game, please <a href="/login">login</a>.</p>
+    {{/if}}
 
     {{#if isOwner}}
         <button class="edit-button">Edit</button>

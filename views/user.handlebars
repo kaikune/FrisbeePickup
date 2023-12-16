@@ -1,19 +1,19 @@
 <main>
     <h1>{{user.username}}</h1>
     <p>About me: {{user.description}}</p>
-    <a>Friends:</a>
+    <h3>Friends:</h3>
     <ul>
         {{#each friends}}
             <li><a href="/users/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
     </ul>
-    <a>Groups:</a>
+    <h3>Groups:</h3>
     <ul>
         {{#each groups}}
             <li><a href="/groups/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
     </ul>
-    <a>Upcoming Games:</a>
+    <h3>Upcoming Games:</h3>
     <ul>
         {{#each games}}
             <li><a href="/games/{{this._id}}">{{this.name}}</a></li>
@@ -22,7 +22,9 @@
 
     {{#if isOwner}}
         <button class="edit-button">Edit</button>
-    {{else}}
-        <button class="add-freind">Add Friend</button>
+    {{else if currentUser}}
+        <button class="add-friend">Add Friend</button>
+    {{ else }}
+    <p>To add this user as a friend, please <a href="/login">login</a>.</p>
     {{/if}}
 </main>
