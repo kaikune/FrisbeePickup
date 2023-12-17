@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { usersData, gamesData, groupsData } from '../data/index.js';
+import { usersData, gamesData, groupsData, weatherData } from '../data/index.js';
 import * as helpers from '../helpers.js';
 
 const router = Router();
@@ -51,6 +51,8 @@ router.route('/:gameId').get(async (req, res) => {
 
         let organizerArr = await usersData.getIDName([gameObj.organizer]);
 
+        const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
+
         return res.render("game", {
             title: "Game: " + gameObj.gameName,
             game: gameObj,
@@ -58,7 +60,8 @@ router.route('/:gameId').get(async (req, res) => {
             organizer: organizerArr[0],
             hostGroup: hostGroup,
             isOwner: isOwner,
-            isMember: isMember
+            isMember: isMember,
+            weather: weather
         });
     } catch (e) {
         res.status(400);

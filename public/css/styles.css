@@ -302,6 +302,31 @@ footer{
 }
 
 
+/* End Friend Request */
+
+/* Weather */
+
+.weather-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.forecast {
+    flex: 1 0 20%;
+    margin: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.forecast img {
+    width: 50%;
+    height: auto;
+}
+
+/* End Weather */
 
 /* MISC. STUFF */
 

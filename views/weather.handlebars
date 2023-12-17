@@ -1,0 +1,15 @@
+<div class="weather-info">
+    <h3>5 Day Weather Forecast</h3>
+
+    <div class="weather-data">
+        {{#each weather}}
+            <div "forecast">
+                <p>Time: {{this.date}} {{this.time}}</p>
+                <p>{{this.weather}}</p>
+                <img src="https://openweathermap.org/img/wn/{{this.icon}}@2x.png" alt="weather icon">
+                <p>Temperature: {{this.temp}} °F</p>
+                <p>Wind Speed: {{this.wind}} MPH</p>
+            </div>
+        {{/each}}
+    </div>
+</div>

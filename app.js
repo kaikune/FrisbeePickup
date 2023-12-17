@@ -23,7 +23,7 @@ app.use('/public', staticDir);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
+app.engine('handlebars', exphbs.engine({ defaultLayout: 'main', partialsDir: __dirname + '/views' }));
 app.set('view engine', 'handlebars');
 
 app.use(
@@ -37,13 +37,13 @@ app.use(
 );
 
 // Middleware that updates/stores currentUser object in app.locals for template usage.
-app.use("/", (req, res, next) => {
+app.use('/', (req, res, next) => {
     app.locals.currentUser = req.session.user;
     return next();
 });
 
 // Logging middleware
-app.use("/", (req, res, next) => {
+app.use('/', (req, res, next) => {
     const user = req.session.user;
     const auth = user ? 'Authenticated: ' + user.username : 'Not Authenticated';
     console.log(`[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (${auth})`);
@@ -51,34 +51,27 @@ app.use("/", (req, res, next) => {
 });
 
 // Any authentication redirecting that we explicitly add can be here.
-app.use("/", (req, res, next) => {
+app.use('/', (req, res, next) => {
     const user = req.session.user;
 
     // For safety. Prevents unauth'd users from methods other than GET, except for POST-ing to /login and /register.
-    if (user == null && req.method != "GET") {
-        if (!(req.method == "POST" && ["/login", "/register"].includes(req.originalUrl))) {
-            return res.redirect("/login");
+    if (user == null && req.method != 'GET') {
+        if (!(req.method == 'POST' && ['/login', '/register'].includes(req.originalUrl))) {
+            return res.redirect('/login');
         }
     }
 
-    let onlyAuthenticatedRoutes = [
-        "/logout",
-        "/create-game",
-        "/create-group"
-    ];
+    let onlyAuthenticatedRoutes = ['/logout', '/create-game', '/create-group'];
 
-    let onlyNonAuthenticatedRoutes = [
-        "/login",
-        "/register"
-    ];
+    let onlyNonAuthenticatedRoutes = ['/login', '/register'];
 
     if (user == null) {
         if (onlyAuthenticatedRoutes.includes(req.originalUrl)) {
-            return res.redirect("/login");
+            return res.redirect('/login');
         }
     } else {
         if (onlyNonAuthenticatedRoutes.includes(req.originalUrl)) {
-            return res.redirect("/");
+            return res.redirect('/');
         }
     }
     return next();
