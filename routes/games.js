@@ -71,17 +71,51 @@ router
     .get(async (req, res) => {
         let gameId = req.params.gameId;
         let gameObj = await gamesData.get(gameId);
+
         return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj});
     })
     .post(async (req, res) => {
-        console.log("EDITING Games")
-        return res.json({"TODO":"Implement"})
+        try {
+            let gameId = req.params.gameId;
+            let currentUser = req.session.user;
+            const gameObj = await gamesData.get(gameId);
+
+            /*
+            if (currentUser._id != gameObj.owner) {
+                throw Error("not allowed");
+            }
+            */
+
+            await gamesData.update(gameId, req.body.gameName, req.body.description, req.body.gameLocation, req.body.maxCapacity, req.body.gameDate, req.body.startTime, req.params.endTime, req.body.group);
+            return res.redirect("/games/" + gameId);
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 router
     .route('/delete/:gameId')
     .post(async (req, res) => {
-        return res.json({"TODO":"Implement"})
+        try {
+            let gameId = req.params.gameId;
+            let currentUser = req.session.user;
+            const gameObj = await gamesData.get(gameId);
+
+            /*
+            if (currentUser._id != gameObj.owner) {
+                throw Error("not allowed");
+            }
+            */
+
+            await gamesData.remove(gameId);
+            return res.json({"Deleted":true})
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 export default router;

@@ -28,7 +28,7 @@
         <form action="/games/edit/{{game._id}}">
             <button class="edit-button">Edit</button>
         </form>
-        <form method="DELETE">
+        <form action="/games/delete/{{game._id}}" method="POST">
             <button class="delete-button">Delete</button>
         </form>
     {{/if}}

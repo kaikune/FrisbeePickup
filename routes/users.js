@@ -138,29 +138,34 @@ router
 router
     .route('/edit/:userId')
     .get(async (req, res) => {
+        try{
+            let userId = req.params.userId;
 
-        let userId = req.params.userId;
+            if (req.session.user == null || req.session.user._id != userId) {
+                // temporary
+                res.status(400);
+                res.json({error: "not allowed"});
+            }
 
-        if (req.session.user == null || req.session.user._id != userId) {
-            // temporary
-            res.status(400);
-            res.json({error: "not allowed"});
+            // user obj will just be currentUser.
+            return res.render("editUser", {title:"Edit user"});
         }
-
-        // user obj will just be currentUser.
-        return res.render("editUser", {title:"Edit user"});
+        catch (err){
+            console.log(err);
+            res.status(400);
+            return res.json({error:err})
+        }
     })
     .post(async (req, res) => {
-
         try {
 
             let userId = req.params.userId;
             let currentUser = req.session.user;
-            if (currentUser._id != userId) {
+            if (currentUser._id !== userId) {
                 throw Error("not allowed");
             }
 
-            await usersData.editUser(currentUser._id, req.body.username, req.body.email, req.body.profilePicture, req.body.description);
+            await usersData.updateUserBio(currentUser._id, req.body.username, req.body.profilePicture, req.body.description);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             console.log(e);
@@ -170,9 +175,22 @@ router
     });
 
 router
-    .route('/delete/:gameId')
+    .route('/delete/:userId')
     .post(async (req, res) => {
-        return res.json({"TODO":"Implement"})
+        try {
+
+            let userId = req.params.userId;
+            let currentUser = req.session.user;
+            if (currentUser._id !== userId) {
+                throw Error("not allowed");
+            }
+            await usersData.deleteUser(currentUser._id);
+            return res.redirect("/logout")
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 export default router;

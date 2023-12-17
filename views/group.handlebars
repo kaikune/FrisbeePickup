@@ -27,7 +27,7 @@
         <form action="/groups/edit/{{group._id}}">
             <button class="edit-button">Edit</button>
         </form>
-        <form method="DELETE">
+        <form action="/groups/delete/{{group._id}}" method="POST">
             <button class="delete-button">Delete</button>
         </form>
     {{/if}}

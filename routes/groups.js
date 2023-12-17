@@ -70,17 +70,49 @@ router
     .get(async (req, res) => {
 
         let groupId = req.params.groupId;
+        const groupObj = await groupsData.get(groupId);
 
-        return res.render("editGroup", {title:"Edit group"});
+        return res.render("editGroup", {title:"Edit group", groupObj});
     })
     .post(async (req, res) => {
-        return res.json({"TODO":"Implement"});
+        try {
+            let groupId = req.params.groupId;
+            let currentUser = req.session.user;
+            let groupObj = await groupsData.get(groupId);
+
+            
+            if (currentUser._id !== groupObj.groupLeader) {
+                throw Error("not allowed");
+            }
+
+            await groupsData.update(groupId, req.body.groupName, req.body.description, currentUser._id);
+            return res.redirect("/users/" + currentUser._id);
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 router
     .route('/delete/:groupId')
     .post(async (req, res) => {
-        return res.json({"TODO":"Implement"});
+        try {
+            let groupId = req.params.groupId;
+            let currentUser = req.session.user;
+            let groupObj = await groupsData.get(groupId);
+
+            if (currentUser._id !== groupObj.groupLeader) {
+                throw Error("not allowed");
+            }
+
+            await groupsData.remove(groupId);
+            return res.json({"Deleted":true});
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 export default router;

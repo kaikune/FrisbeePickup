@@ -27,7 +27,7 @@
         <form action="/users/edit/{{user._id}}">
             <button class="edit-button">Edit</button>
         </form>
-        <form method="DELETE">
+        <form action="/users/delete/{{user._id}}" method="POST">
             <button class="delete-button">Delete</button>
         </form>
     {{else if currentUser}}

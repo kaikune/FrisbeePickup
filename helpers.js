@@ -17,7 +17,7 @@ export let stringHelper = function (string, stringName, minLength, maxLength) {
     return string;
 };
 
-/**
+
 export function validateUser(username, emailAddress, password) {
     username = stringHelper(username, 'Username', 3, 10);
     username = username.toLowerCase();
@@ -43,7 +43,7 @@ export function validateUserBio(username, profilePicture, description) {
     if (description.length < 0 || description.length > 300) throw 'Description is not a valid length';
     //TODO figure out the description
 }
-**/
+
 
 export function validatePassword(password) {
     if (password.length < 8) {
