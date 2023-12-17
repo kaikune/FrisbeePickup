@@ -58,9 +58,14 @@ export function formatAndValidateUser (userData, ignorePassword) {
 }
 
 
-const createUser = async (username, emailAddress, password) => {
-
-    let userData = {username, emailAddress, password, profilePicture:"", description:""};
+const createUser = async (username, emailAddress, password,pfp, description) => {
+    if(!pfp){
+        pfp = ""
+    }
+    if(!description){
+        description = "";
+    }
+    let userData = {username, emailAddress, password, profilePicture:pfp, description};
     userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
@@ -222,8 +227,12 @@ const deleteUser = async (userId) => {
         {},
         { $pull: { friendRequests: userId } }
     );
+    const updateFriendList = await userCollection.updateMany(
+        {},
+        { $pull: { friends: { userId: userId } } }
+    );
     const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
-    if (!updateFriendRequests || !updateGroupMessages || !gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
+    if (!updateFriendList || !updateFriendRequests || !updateGroupMessages || !gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
 
     return { gameRemove, groupRemove, userRemove };
 };
