@@ -25,7 +25,7 @@ router
             startTime = helpers.convertTo12Hour(startTime)
             endTime = helpers.convertTo12Hour(endTime)
             gameDate = helpers.convertToMMDDYYYY(gameDate);
-            helpers.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group, req.session.user._id);
+            // gamesData.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group, req.session.user._id);
             const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group,req.session.user._id);
             res.redirect(`games/${createResult._id}`);
         } catch (err) {
@@ -42,11 +42,11 @@ router.route('/:gameId').get(async (req, res) => {
 
         let hostGroup = await groupsData.get(gameObj.group);
         let players = gameObj.players;
-        players = players.filter(player => player !== gameObj.organizer)
+        // players = players.filter(player => player !== gameObj.organizer)
         let playersArr = await usersData.getIDName(players);
       
         let currentUser = req.session.user;
-        let isOwner = currentUser && currentUser.games.includes(gameId);
+        let isOwner = currentUser && gameObj.organizer == currentUser._id;
         let isMember = currentUser && gameObj.players.includes(currentUser._id);
 
         let organizerArr = await usersData.getIDName([gameObj.organizer]);

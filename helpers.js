@@ -32,55 +32,6 @@ export function validatePassword(password) {
     }
 }
 
-export function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) {
-    // Input Validation
-    if (
-        gameName == null ||
-        gameDescription == null ||
-        gameLocation == null ||
-        maxCapacity == null ||
-        gameDate == null ||
-        startTime == null ||
-        endTime == null || 
-        group == null ||
-        organizer == null
-    )
-        throw 'All fields need to have valid values';
-
-    if (
-        typeof gameName !== 'string' ||
-        typeof gameDescription !== 'string' ||
-        typeof gameDate !== 'string' ||
-        typeof startTime !== 'string' ||
-        typeof endTime !== 'string'
-    )
-        throw 'One or more string fields not given as string';
-
-    gameName = gameName.trim();
-    gameDescription = gameDescription.trim();
-    gameDate = gameDate.trim();
-    startTime = startTime.trim();
-    endTime = endTime.trim();
-    if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)
-        throw 'One or more string fields empty';
-
-    if (gameName.length < 5) throw 'Event name less than 5 chars';
-    if (gameDescription.length < 25) throw 'Event description less than 25 chars';
-    if (!isValidDay(gameDate)) throw 'Event Date is not valid';
-    if (isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
-    if (!isValidTime(startTime) || !isValidTime(endTime)) throw 'Start and/or end time is not valid';
-    if (!compareTimes(startTime, endTime)) throw 'Start time has to be 30min before end time';
-
-    if (typeof maxCapacity !== 'number') throw 'Max cap. and/or price not a number';
-    if (maxCapacity <= 0) throw 'Max cap. should be > 0';
-    if (maxCapacity.toString().split('.')[1]) throw 'Max cap. not a whole number';
-
-    validateLocation(gameLocation);
-
-    isValidId(group);
-    isValidId(organizer);
-}
-
 export function validateGroup(groupName, groupDescription, groupLeader) {
     // Input Validation
     if (groupName == null || groupDescription == null || groupLeader == null) throw 'All fields need to have valid values';

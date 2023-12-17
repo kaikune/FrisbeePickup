@@ -5,25 +5,45 @@ import { games, users } from '../config/mongoCollections.js';
 import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 
-const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
-    // Input Validation
-    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer);
+export function formatAndValidateGame (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
 
-    gameName = gameName.trim();
-    gameDescription = gameDescription.trim();
-    gameDate = gameDate.trim();
-    startTime = startTime.trim();
-    endTime = endTime.trim();
+    gameName = helpers.stringHelper(gameName, "Game name", 5, null);
+    gameDescription = helpers.stringHelper(gameDescription, "Game description", 25, null);
+    gameDate = helpers.stringHelper(gameDate, "Game date", 1, null);
+    startTime = helpers.stringHelper(startTime, "Start time", 1, null);
+    endTime = helpers.stringHelper(endTime, "End time", 1, null);
+
+    if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
+    if (helpers.isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
+    if (!helpers.isValidTime(startTime) || !helpers.isValidTime(endTime)) throw 'Start and/or end time is not valid';
+    if (!helpers.compareTimes(startTime, endTime)) throw 'Start time has to be 30min before end time';
+
+    if (maxCapacity == null || typeof maxCapacity !== 'number') throw 'Invalid max capacity!';
+    if (maxCapacity <= 0) throw 'Max cap. should be > 0';
+    if (maxCapacity % 1 != 0) throw 'Max cap. not a whole number';
+
+    helpers.validateLocation(gameLocation);
+
+    return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation};
+
+}
+
+const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
+
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
+
+    helpers.isValidId(group);
+    helpers.isValidId(organizer);
 
     // Add game to database
     let newgame = {
-        gameName,
-        description: gameDescription,
-        gameLocation,
-        maxCapacity,
-        gameDate,
-        startTime,
-        endTime,
+        gameName: gameData.gameName,
+        description: gameData.gameDescription,
+        gameLocation: gameData.gameLocation,
+        maxCapacity: gameData.maxCapacity,
+        gameDate: gameData.gameDate,
+        startTime: gameData.startTime,
+        endTime: gameData.endTime,
         players: [organizer],
         totalNumberOfPlayers: 0,
         group,
@@ -175,29 +195,20 @@ const remove = async (gameId) => {
 };
 
 const update = async (gameId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
-    // Input Validation
-    helpers.isValidId(gameId);
-    gameId = gameId.trim();
-
-    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
-
-    gameName = gameName.trim();
-    gameDescription = gameDescription.trim();
-    gameDate = gameDate.trim();
-    startTime = startTime.trim();
-    endTime = endTime.trim();
+    
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
     const oldGame = await get(gameId); // Check if game exists
 
     // Update record
     const updatedgame = {
-        gameName,
-        description: gameDescription,
-        gameLocation,
-        maxCapacity,
-        gameDate,
-        startTime,
-        endTime,
+        gameName: gameData.gameName,
+        description: gameData.gameDescription,
+        gameLocation: gameData.gameLocation,
+        maxCapacity: gameData.maxCapacity,
+        gameDate: gameData.gameDate,
+        startTime: gameData.startTime,
+        endTime: gameData.endTime,
         players: oldGame.players,
         totalNumberOfPlayers: oldGame.totalNumberOfPlayers,
         group,

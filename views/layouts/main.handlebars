@@ -14,17 +14,19 @@
                 <a href="/create-group"><div class="header-center" >Create group</div></a>
                 <a href="/create-game"><div class="header-center" >Create game</div></a>
                     <div class="header-right dropdown" id="header-profile-box"> 
-                        <a>Profile</a>
+                        {{#if currentUser}}
+                        <a>{{ currentUser.username }}</a>
                         <div class="dropdown-content">
-                            {{#if currentUser}}
-                            <a href="/users/{{currentUser._id}}">View profile - {{ currentUser.username }}</a>
+                            <a href="/users/{{currentUser._id}}">Profile</a>
                             <a href="/logout">Logout</a>
-                            {{else}}
+                        </div>
+                        {{else}}
+                        <a>Authentication</a>
+                        <div class="dropdown-content">
                             <a href="/login">Login</a>
                             <a href="/register">Register</a>
-                            {{/if}}
-
                         </div>
+                        {{/if}}
                     </div>
             </div>
         </header>
