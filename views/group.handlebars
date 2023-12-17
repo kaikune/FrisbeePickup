@@ -23,6 +23,20 @@
     <p>To join this group, please <a href="/login">login</a>.</p>
     {{/if}}
 
+    <div id="messages-wrapper">
+        <form action="/groups/{{group._id}}/comments" id="message-form" method="POST">
+            <label for="comment"></label>
+                <input type="text" id="comment" name="comment">
+            <button type="Submit" class="message-send">Send</button>
+        </form>
+        <br>
+        {{#each comment}}
+            <p class="message-text">comment.message</p>
+            <a class="message-sender">-comment.sender</a>
+        {{/each}}
+    </div>
+    
+
     {{#if isOwner}}
         <form action="/groups/edit/{{group._id}}">
             <button class="edit-button">Edit</button>
