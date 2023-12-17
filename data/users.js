@@ -58,7 +58,7 @@ export function formatAndValidateUser (userData, ignorePassword) {
 }
 
 
-const createUser = async (username, emailAddress, password) => {
+const createUser = async (username, emailAddress, password, profilePicture='', description='') => {
     // Input Validation
 
     /**
@@ -69,7 +69,7 @@ const createUser = async (username, emailAddress, password) => {
     emailAddress = emailAddress.trim().toLowerCase();
     **/
 
-    let userData = {username, emailAddress, password, profilePicture:"", description:""};
+    let userData = {username, emailAddress, password, profilePicture, description};
     userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
@@ -90,8 +90,8 @@ const createUser = async (username, emailAddress, password) => {
         _id: new ObjectId(),
         username,
         emailAddress,
-        description: '',
-        profilePicture: null,
+        description,
+        profilePicture,
         password: hashPass,
         friends: [],
         games: [],
