@@ -32,7 +32,6 @@ router
             gameDate = helpers.convertToMMDDYYYY(gameDate);
             helpers.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
             const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
-            console.log(createResult)
             res.redirect(`games/${createResult._id}`);
         } catch (err) {
             console.error(err); // Log the error

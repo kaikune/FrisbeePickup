@@ -25,7 +25,6 @@ if(createGameForm){
                 state: state.value,
                 zip: zip.value
             };
-            console.log(startTime)
             let maxPlayersNumber = parseInt(maxPlayers.value, 10);
             validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value)
             statusLabel.innerHTML = "Game Created"
@@ -66,7 +65,6 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
     endTime = endTime.trim();
     startTime = convertTo12Hour(startTime);
     endTime = convertTo12Hour(endTime);
-    console.log(startTime)
     if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)throw 'One or more string fields empty';
 
     if (gameName.length < 5) throw 'Event name less than 5 chars';
