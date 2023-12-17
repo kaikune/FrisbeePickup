@@ -269,4 +269,4 @@ const leaveGroup = async (userId, groupId) => {
     }
     return {updateUser, updateGroup}; 
 }
-export default { leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };
+export default { create, leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };
