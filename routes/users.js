@@ -151,8 +151,22 @@ router
         return res.render("editUser", {title:"Edit user"});
     })
     .post(async (req, res) => {
-        console.log("EDITING USER");
-        return res.json({"TODO":"Implement"});
+
+        try {
+
+            let userId = req.params.userId;
+            let currentUser = req.session.user;
+            if (currentUser._id != userId) {
+                throw Error("not allowed");
+            }
+
+            await usersData.editUser(currentUser._id, req.body.username, req.body.email, req.body.profilePicture, req.body.description);
+            return res.redirect("/users/" + currentUser._id);
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
     });
 
 router

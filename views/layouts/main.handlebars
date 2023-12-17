@@ -17,7 +17,7 @@
                         <a>Profile</a>
                         <div class="dropdown-content">
                             {{#if currentUser}}
-                            <a href="/users/{{currentUser._id}}">View profile</a>
+                            <a href="/users/{{currentUser._id}}">View profile - {{ currentUser.username }}</a>
                             <a href="/logout">Logout</a>
                             {{else}}
                             <a href="/login">Login</a>

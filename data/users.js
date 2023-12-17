@@ -41,14 +41,36 @@ const findUsersThatStartWith = async (search) => {
     return userList;
 };
 
+export function formatAndValidateUser (userData, ignorePassword) {
+    // Formats the data fields and checks if they are valid for user data fields. Doesn't check things like duplicate email, etc.
+    let username = helpers.stringHelper(userData.username, "Username", 3, 10);
+    let emailAddress = helpers.stringHelper(userData.emailAddress, "Email address", 1, null).toLowerCase();
+    let password;
+    if (!ignorePassword) {   //err...
+        password = helpers.stringHelper(userData.password, "Password", 1, null);
+        helpers.validatePassword(password);
+    } else {
+        password = userData.password;
+    }
+    let profilePicture = helpers.stringHelper(userData.profilePicture, "Profile picture", null, 2048);
+    let description = helpers.stringHelper(userData.description, "Description", null, 300);
+    return { username, emailAddress, password, profilePicture, description };
+}
+
+
 const createUser = async (username, emailAddress, password) => {
     // Input Validation
 
+    /**
     helpers.validateUser(username, emailAddress, password);
 
     username = username.trim();
     password = password.trim();
     emailAddress = emailAddress.trim().toLowerCase();
+    **/
+
+    let userData = {username, emailAddress, password, profilePicture:"", description:""};
+    userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
     const userCollection = await users();
@@ -98,24 +120,30 @@ const getIDName = async (userIds) => {
     return ret;
 };
 
-const updateUserBio = async (userId, username, profilePicture, description) => {
+const editUser = async (userId, username, emailAddress, profilePicture, description) => {
+
+    let userData = { username, emailAddress, password:"", profilePicture, description };
+    userData = formatAndValidateUser(userData, true);
+
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
 
+    /**
     helpers.validateUserBio(username, profilePicture, description);
     username = username.trim();
     profilePicture = profilePicture.trim();
     description = description.trim();
+    **/
     const userCollection = await users();
     await userCollection.updateOne(
         { _id: new ObjectId(userId) },
         {
             $set: {
-                username: username,
-                description: description,
-                profilePicture: profilePicture,
+                username: userData.username,
+                description: userData.description,
+                profilePicture: userData.profilePicture,
             },
         }
     );
@@ -195,7 +223,7 @@ const deleteUser = async (userId) => {
     return { gameRemove, groupRemove, userRemove };
 };
 
-export const loginUser = async (emailAddress, password) => {
+const loginUser = async (emailAddress, password) => {
     //Input Validation
     if (!emailAddress || !password) throw 'Error: 1 or more fields missing';
     if (typeof emailAddress !== 'string' || typeof password !== 'string') throw 'Expected a string';
@@ -332,7 +360,7 @@ export default {
     getAllUsers,
     getUser,
     deleteUser,
-    updateUserBio,
+    editUser,
     loginUser,
     findUsersThatStartWith,
     sendFriendRequest,
