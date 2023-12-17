@@ -41,18 +41,16 @@ router.route('/:gameId').get(async (req, res) => {
         let gameObj = await gamesData.get(gameId);
 
         let hostGroup = await groupsData.get(gameObj.group);
-        let players=  gameObj.players;
+        let players = gameObj.players;
         players = players.filter(player => player !== gameObj.organizer)
         let playersArr = await usersData.getIDName(players);
       
-        let isOwner = req.session.user != null && req.session.user.games.includes(gameId);
+        let currentUser = req.session.user;
+        let isOwner = currentUser && currentUser.games.includes(gameId);
+        let isMember = currentUser && gameObj.players.includes(currentUser._id);
+
         let organizerArr = await usersData.getIDName([gameObj.organizer]);
-        let isMember = false;
-        if(req.session.user){
-            if(gameObj.players.includes(req.session.user._id)){
-                isMember = true;
-            }
-        }
+
         return res.render("game", {
             title: "Game: " + gameObj.gameName,
             game: gameObj,

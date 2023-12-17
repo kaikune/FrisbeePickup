@@ -54,6 +54,13 @@ app.use("/", (req, res, next) => {
 app.use("/", (req, res, next) => {
     const user = req.session.user;
 
+    // For safety. Prevents unauth'd users from methods other than GET, except for POST-ing to /login and /register.
+    if (user == null && req.method != "GET") {
+        if (!(req.method == "POST" && ["/login", "/register"].includes(req.originalUrl))) {
+            return res.redirect("/login");
+        }
+    }
+
     let onlyAuthenticatedRoutes = [
         "/logout",
         "/create-game",
