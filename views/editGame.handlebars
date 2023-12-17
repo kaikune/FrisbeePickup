@@ -2,23 +2,23 @@
 <div class="form-wrapper">
     <form method="POST" id="edit-game-form" class="edit-form" action="/games/edit">
         <label class="form-label" for="game-name">Game Name:</label>
-            <input class="form-input" type="text" id="game-name" name="game-name" placeholder="{{gameObj.gameName}}">
+            <input class="form-input" type="text" id="game-name" name="game-name" value="{{gameObj.gameName}}">
             <br>
         <!-- NEED TO ADD LOCATION INFO -->
         <label class="form-label" for="description">Description:</label>
-            <input class="form-input" type="text" id="description" name="location" placeholder="{{gameObj.description}}">
+            <input class="form-input" type="text" id="description" name="location" value="{{gameObj.description}}">
             <br>
         <label class="form-label" for="date">Date:</label>
-            <input class="form-input" type="date" id="date" name="date" placeholder="{{gameObj.gameDate}}" >
+            <input class="form-input" type="date" id="date" name="date" value="{{gameObj.gameDate}}" >
             <br>
         <label class="form-label" for="start-time">Start Time:</label>
-            <input class="form-input" type="time" id="start-time" name="start-time" placeholder="{{gameObj.startTime}}">
+            <input class="form-input" type="time" id="start-time" name="start-time" value="{{gameObj.startTime}}">
             <br>
         <label class="form-label" for="end-time">End Time:</label>
-            <input class="form-input" type="time" id:"end-time" name="end-time" placeholder="{{gameObj.endTime}}">
+            <input class="form-input" type="time" id:"end-time" name="end-time" value="{{gameObj.endTime}}">
             <br>
         <label class="form-label" for="max-players">Max players:</label>
-            <input class="form-input" type="text" id="max-players" name="max-players" placeholder="{{gameObj.maxCapacity}}">
+            <input class="form-input" type="text" id="max-players" name="max-players" value="{{gameObj.maxCapacity}}">
             <br>
         <button type="submit" class="form-submit-button">Submit</button>
     </form>

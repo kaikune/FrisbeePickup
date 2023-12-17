@@ -1,5 +1,8 @@
 <main>
     <h1>{{user.username}}</h1>
+    {{#if user.profilePicture}}
+    <img src="{{ user.profilePicture }}">
+    {{/if}}
     <p>About me: {{user.description}}</p>
     <h3>Friends:</h3>
     <ul>

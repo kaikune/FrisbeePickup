@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-let stringHelper = function (string, stringName, minLength, maxLength) {
+export let stringHelper = function (string, stringName, minLength, maxLength) {
     if (string == null) {
         throw stringName + ' was not provided!';
     }
@@ -17,6 +17,7 @@ let stringHelper = function (string, stringName, minLength, maxLength) {
     return string;
 };
 
+/**
 export function validateUser(username, emailAddress, password) {
     username = stringHelper(username, 'Username', 3, 10);
     username = username.toLowerCase();
@@ -42,13 +43,13 @@ export function validateUserBio(username, profilePicture, description) {
     if (description.length < 0 || description.length > 300) throw 'Description is not a valid length';
     //TODO figure out the description
 }
+**/
+
 export function validatePassword(password) {
-    //Using
     if (password.length < 8) {
         throw 'Password must be at least 8 characters long.';
     }
     if (!/[A-Z]/.test(password)) {
-        console.log(password);
         throw 'Password must contain at least one uppercase letter.';
     }
     if (!/[0-9]/.test(password)) {
