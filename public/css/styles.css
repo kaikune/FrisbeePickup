@@ -279,13 +279,28 @@ footer{
     background-color: #EEEEEE;
 }
 
-.accept-button {
-    background-color: greenyellow;
+.button-wrapper {
+    align-content: center;
+    display: inline-block;
+    size: auto;
+    width: 9%;
 }
 
-.reject-button {
-    background-color: red;
+.request-sender {
+    color: black;
+    display: inline-block;
+    width: 80%;
 }
+.accept-button {
+    background-color: greenyellow;
+    display: inline-block;
+}
+
+.reject-button {   
+    background-color: red;
+    display: inline-block;
+}
+
 
 
 /* MISC. STUFF */
