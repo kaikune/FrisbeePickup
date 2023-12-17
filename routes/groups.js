@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { usersData, gamesData, groupsData } from '../data/index.js';
 import * as helpers from '../helpers.js';
+import groups from '../data/groups.js';
 const router = Router();
 
 router
@@ -57,7 +58,7 @@ router.route('/:groupId/comments').post(async (req, res) => {
     try {
         let groupId = req.params.groupId;
         let comment = req.body.comment;
-        let userId = req.body.userId;
+        let userId = req.session.user._id
 
         let groupRes = await groupsData.addComment(groupId, userId, comment);
         return res.json(groupRes);
@@ -109,12 +110,45 @@ router
             }
 
             await groupsData.remove(groupId);
-            return res.json({"Deleted":true});
+            return res.redirect("/");
         } catch (e) {
             console.log(e);
             res.status(400);
             return res.json({error: e});
         }
     });
+
+router
+    .route('/join/:groupId')
+    .post(async (req, res) => {
+        try {
+            let groupId = req.params.groupId;
+            let currentUser = req.session.user;
+
+            await groupsData.addUser(currentUser._id, groupId);
+            return res.redirect("/groups/" + groupId);
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
+    })
+
+router
+    .route('/leave/:groupId')
+    .post(async (req, res) => {
+        try{
+            let groupId = req.params.groupId;
+            let currentUser = req.session.user;
+
+            await groupsData.leaveGroup(currentUser._id, groupId);
+            return res.redirect("/groups/"+groupId);
+        }
+        catch(e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error:e});
+        }
+    })
 
 export default router;
