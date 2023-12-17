@@ -66,7 +66,6 @@ const createUser = async (username, emailAddress, password) => {
     username = username.trim();
     password = password.trim();
     emailAddress = emailAddress.trim().toLowerCase();
-    **/
 
     let userData = {username, emailAddress, password, profilePicture, description};
     userData = formatAndValidateUser(userData, false);
