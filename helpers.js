@@ -58,7 +58,7 @@ export function validatePassword(password) {
         throw 'Password must contain at least one special character.';
     }
 }
-export function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) {
+export function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) {
     // Input Validation
     if (
         gameName == null ||
@@ -67,7 +67,9 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
         maxCapacity == null ||
         gameDate == null ||
         startTime == null ||
-        endTime == null
+        endTime == null || 
+        group == null ||
+        organizer == null
     )
         throw 'All fields need to have valid values';
 
@@ -102,7 +104,8 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
 
     validateLocation(gameLocation);
 
-    if (group) isValidId(group);
+    isValidId(group);
+    isValidId(organizer);
 }
 
 export function validateGroup(groupName, groupDescription, groupLeader) {

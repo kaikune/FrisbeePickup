@@ -5,9 +5,9 @@ import { games, users } from '../config/mongoCollections.js';
 import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 
-const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
+const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
     // Input Validation
-    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group);
+    helpers.validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer);
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();
@@ -27,17 +27,24 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         players: [],
         totalNumberOfPlayers: 0,
         group,
+        organizer,
         expired: false,
     };
-
+    
     const gameCollection = await games();
+    
     const insertInfo = await gameCollection.insertOne(newgame);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add game';
 
     const newId = insertInfo.insertedId.toString();
-
+    
     const game = await gameCollection.findOne({ _id: new ObjectId(newId) });
     game._id = game._id.toString();
+    const userCollection = await users();
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(organizer) }, { $push: { games: game._id } });
+    if(!updateUser){
+        throw "Could not update the organzier"
+    }
     //await closeConnection(); // For testing purposes
     return game;
 };

@@ -89,8 +89,8 @@ router
             startTime = helpers.convertTo12Hour(startTime)
             endTime = helpers.convertTo12Hour(endTime)
             gameDate = helpers.convertToMMDDYYYY(gameDate);
-            helpers.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
-            const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group);
+            helpers.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group, req.session.user._id);
+            const createResult = await gamesData.create(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group,req.session.user._id);
             res.redirect(`games/${createResult._id}`);
         } catch (err) {
             console.error(err); // Log the error
@@ -109,12 +109,12 @@ router.route('/:gameId').get(async (req, res) => {
         let playersArr = await usersData.getIDName(gameObj.players);
 
         let isOwner = req.session.user != null && req.session.user.games.includes(gameId);
-
+        let organizerArr = await usersData.getIDName([gameObj.organizer]);
         return res.render("game", {
             title: "Game: " + gameObj.gameName,
             game: gameObj,
             players: playersArr,
-            organizer: "idk",
+            organizer: organizerArr[0],
             hostGroup: hostGroup,
             isOwner: isOwner
         });

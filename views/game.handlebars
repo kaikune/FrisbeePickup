@@ -7,7 +7,9 @@
             <li><a href="/users/{{this._id}}">{{ this.name }}</a></li>
         {{/each}}
     </ul>
-    <p>Organizer: {{organizer}}</p>
+    {{#if organizer}}
+    <p>Organizer: <a href="/users/{{organizer._id}}">{{organizer.name}}</a></p>
+    {{/if}}
     {{#if hostGroup}}
     <p>Host Group: <a href="/groups/{{hostGroup._id}}">{{hostGroup.groupName}}</a></p>   
     {{/if}}
