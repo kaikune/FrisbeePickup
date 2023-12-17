@@ -12,7 +12,11 @@
                 <input class="form-input" type="text" id="city" name="city" required>
                 <br>
             <label class="form-label" for="state">State:</label>
-                <input class="form-input" type="text" id="state" name="state" required>
+                <select class="form-input" type="text" id="state" name="state" required>
+                {{#each states}}
+                     <option value="{{this}}">{{this}}</option>
+                {{/each}}
+                </select>
                 <br>
             <label class="form-label" for="zip">Zipcode:</label>
                 <input class="form-input" type="text" id="zip" name="zip" required>
@@ -34,9 +38,13 @@
                 <br>
             <label class="form-label" for="group">Group:</label>
                 <select class="form-input" id="group" name="group" required>
-                    {{#each groups}}
-                        <option value="{{this._id}}">{{this.groupName}}</option>
-                    {{/each}}
+                       {{#if groups.length}}
+                            {{#each groups}}
+                                <option value="{{this._id}}">{{this.groupName}}</option>
+                            {{/each}}
+                        {{else}}
+                            <option value="NA">NA</option>
+                        {{/if}}
                 </select>
                 <br>
             {{#if currentUser}}

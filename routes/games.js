@@ -10,7 +10,66 @@ router
     .get(async (req, res) => {
         let allGamesData = await gamesData.getAll();
         let allGroupsData = await groupsData.getAll();
-        return res.render('createGames', {title:"Games", groups: allGroupsData});
+        if(!req.session.user){
+            allGroupsData = {};
+        }else{
+            let userId = req.session.user._id;
+            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+        }
+        const states = [
+            'AK',
+            'AL',
+            'AR',
+            'AZ',
+            'CA',
+            'CO',
+            'CT',
+            'DC',
+            'DE',
+            'FL',
+            'GA',
+            'HI',
+            'IA',
+            'ID',
+            'IL',
+            'IN',
+            'KS',
+            'KY',
+            'LA',
+            'MA',
+            'MD',
+            'ME',
+            'MI',
+            'MN',
+            'MO',
+            'MS',
+            'MT',
+            'NC',
+            'ND',
+            'NE',
+            'NH',
+            'NJ',
+            'NM',
+            'NV',
+            'NY',
+            'OH',
+            'OK',
+            'OR',
+            'PA',
+            'RI',
+            'SC',
+            'SD',
+            'TN',
+            'TX',
+            'UT',
+            'VA',
+            'VT',
+            'WA',
+            'WI',
+            'WV',
+            'WY',
+        ];
+        return res.render('createGames', {title:"Games", groups: allGroupsData, states: states});
     })
     .post(async (req, res) => {
         const gameName = req.body.gameName;
@@ -26,7 +85,7 @@ router
         const group = req.body.group;
         let gameLocation = {zip: zip,state: state,streetAddress: streetAddress,city: city}
         try {
-            let maxPlayersNumber = parseInt(maxCapacity.value, 10);
+            let maxPlayersNumber = parseInt(maxCapacity, 10);
             startTime = helpers.convertTo12Hour(startTime)
             endTime = helpers.convertTo12Hour(endTime)
             gameDate = helpers.convertToMMDDYYYY(gameDate);

@@ -55,6 +55,19 @@ const getAll = async () => {
     });
     return groupList;
 };
+const getAllGroupsbyUserID = async (userId) => {
+    helpers.isValidId(userId);
+    userId = userId.trim();
+    const groupCollection = await groups();
+    let groupList = await groupCollection.find({}).project({ _id: 1, groupName: 1, players: 1 }).toArray();
+    if (!groupList) throw 'Could not get all groups';
+    groupList = groupList.map((element) => {
+        element._id = element._id.toString();
+        return element;
+    });
+    groupList = groupList.filter(group => group.players.includes(userId));
+    return groupList
+}
 
 const get = async (groupId) => {
     // Input Validation
@@ -211,4 +224,4 @@ const findGroupsThatStartWith = async (search) => {
     //Returns the entire grouplist right now
     return groupList;
 };
-export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName };
+export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };

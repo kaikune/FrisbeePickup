@@ -19,6 +19,8 @@ if(createGameForm){
             let startTime = document.getElementById("start-time");
             let endTime = document.getElementById("end-time");
             let maxPlayers = document.getElementById("max-players");
+            let groupname = document.getElementById("group")
+            if(groupname.value === "NA") throw "Must be a part of a group to create a game"
             let location = {
                 streetAddress: streetAddress.value,
                 city: city.value,
