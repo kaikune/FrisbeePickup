@@ -165,7 +165,7 @@ router
                 throw Error("not allowed");
             }
 
-            await usersData.updateUserBio(currentUser._id, req.body.username, req.body.profilePicture, req.body.description);
+            req.session.user = await usersData.editUser(currentUser._id, req.body.username, currentUser.emailAddress, req.body.profilePicture, req.body.description);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             console.log(e);

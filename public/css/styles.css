@@ -231,6 +231,16 @@ footer{
 
 /* END SEARCH LISTS */
 
+/* PROFILE PICTURE STUFF */
+
+.profile-picture {
+    size: fixed;
+    width: 10%;
+    height: 10%;
+}
+
+/* END PROFILE PICTURE */
+
 /* MISC. STUFF */
 
 .hidden {

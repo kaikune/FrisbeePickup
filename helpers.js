@@ -17,34 +17,6 @@ export let stringHelper = function (string, stringName, minLength, maxLength) {
     return string;
 };
 
-
-export function validateUser(username, emailAddress, password) {
-    username = stringHelper(username, 'Username', 3, 10);
-    username = username.toLowerCase();
-    emailAddress = stringHelper(emailAddress, 'Email address', 1, null);
-    emailAddress = emailAddress.toLowerCase();
-    password = stringHelper(password, 'Password', 1, null);
-    if (!isValidEmail(emailAddress)) {
-        throw 'User email is invalid!';
-    }
-    validatePassword(password);
-}
-
-export function validateUserBio(username, profilePicture, description) {
-    if (!username || !profilePicture || !description) {
-        throw 'All fields need to have valid values';
-    }
-    if (typeof username !== 'string' || typeof profilePicture !== 'string' || typeof description !== 'string') throw 'All fields need to be strings';
-    username = username.trim().toLowerCase();
-    profilePicture = profilePicture.trim().toLowerCase();
-    description = description.trim().toLowerCase();
-    if (username.length === 0 || profilePicture.length === 0 || description.length === 0) throw '1 or more fields is an empty string';
-    if (username.length < 3 || username.length > 10) throw 'Username is not a valid length';
-    if (description.length < 0 || description.length > 300) throw 'Description is not a valid length';
-    //TODO figure out the description
-}
-
-
 export function validatePassword(password) {
     if (password.length < 8) {
         throw 'Password must be at least 8 characters long.';
@@ -59,6 +31,7 @@ export function validatePassword(password) {
         throw 'Password must contain at least one special character.';
     }
 }
+
 export function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) {
     // Input Validation
     if (

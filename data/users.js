@@ -59,15 +59,8 @@ export function formatAndValidateUser (userData, ignorePassword) {
 
 
 const createUser = async (username, emailAddress, password) => {
-    // Input Validation
 
-    helpers.validateUser(username, emailAddress, password);
-
-    username = username.trim();
-    password = password.trim();
-    emailAddress = emailAddress.trim().toLowerCase();
-
-    let userData = {username, emailAddress, password, profilePicture, description};
+    let userData = {username, emailAddress, password, profilePicture:"", description:""};
     userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
@@ -81,15 +74,15 @@ const createUser = async (username, emailAddress, password) => {
     }
 
     const saltRounds = 16;
-    const hashPass = await bcrypt.hash(password, saltRounds);
+    const hashPass = await bcrypt.hash(userData.password, saltRounds);
 
     // Create user
     const newUser = {
         _id: new ObjectId(),
-        username,
-        emailAddress,
-        description,
-        profilePicture,
+        username: userData.username,
+        emailAddress: userData.emailAddress,
+        description: userData.description,
+        profilePicture: userData.profilePicture,
         password: hashPass,
         friends: [],
         games: [],
@@ -118,17 +111,17 @@ const getIDName = async (userIds) => {
     return ret;
 };
 
-const updateUserBio = async (userId, username, profilePicture, description) => {
+const editUser = async (userId, username, emailAddress, profilePicture, description) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
 
-    helpers.validateUserBio(username, profilePicture, description);
-    username = username.trim();
-    profilePicture = profilePicture.trim();
-    description = description.trim();
+    let userData = {username, emailAddress, password: "", profilePicture, description};
+    userData = formatAndValidateUser(userData, true);
+
     const userCollection = await users();
+
     await userCollection.updateOne(
         { _id: new ObjectId(userId) },
         {
@@ -352,7 +345,7 @@ export default {
     getAllUsers,
     getUser,
     deleteUser,
-    updateUserBio,
+    editUser,
     loginUser,
     findUsersThatStartWith,
     sendFriendRequest,
