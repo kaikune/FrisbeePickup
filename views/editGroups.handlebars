@@ -3,10 +3,10 @@
     <div class="form-wrapper">
         <form id="create-group-form" class="create-form" method="POST" action="/groups/edit">
             <label class="form-label" for="group-name">Group Name:</label>
-                <input class="form-input" type="text" id="group-name" name="groupName">
+                <input class="form-input" type="text" id="group-name" name="groupName" placeholder="{{groupObj.groupName}}">
                 <br>
             <label class="form-label" for="description">Description</label>
-                <input class="form-input" type="text" id="description" name="groupDescription">
+                <input class="form-input" type="text" id="description" name="groupDescription" placeholder="{{groupObj.description}}">
                 <br>
             {{#if currentUser}}
             <button type="submit" class="form-submit-button">Create</button>

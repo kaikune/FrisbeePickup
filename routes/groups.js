@@ -63,11 +63,13 @@ router.route('/:groupId/comments').post(async (req, res) => {
 router
     .route('/edit/:groupId')
     .get(async (req, res) => {
-        return res.render("editGroups", {title:"Edit Groups", user:req.session.user});
+        let groupId = req.params.groupId;
+        const groupObj = await groupsData.get(groupId);
+        return res.render("editGroups", {title:"Edit Groups", user:req.session.user, groupObj: groupObj});
     })
     .post(async (req, res) => {
         console.log("EDITING groups")
-        return res.json({"response":"Success"})
+        return res.json({"TODO":"Implement"})
     });
 
 router
@@ -75,5 +77,5 @@ router
     .post(async (req, res) => {
         return res.json({"TODO":"Implement"})
     });
-    
+
 export default router;

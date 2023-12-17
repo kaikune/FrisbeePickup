@@ -4,10 +4,10 @@
         <form id="create-user-form" class="create-form" method="POST" action="/users/edit/{{user._id}}">
             <h3>Register</h3>
             <label class="form-label" for="username">Username:</label>
-                <input class="form-input" type="text" id="username" name="username" required>
+                <input class="form-input" type="text" id="username" name="username" placeholder="{{userObj.username}}">
                 <br>
             <label class="form-label" for="description">Description:</label>
-                <input class="form-input" type="text" id="description" name="description">
+                <input class="form-input" type="text" id="description" name="description" placeholder="{{userObj.description}}">
                 <br>
             <button type="submit" class="form-submit-button">Submit</button>
         </form>

@@ -127,11 +127,13 @@ router.route('/:gameId').get(async (req, res) => {
 router
     .route('/edit/:gameId')
     .get(async (req, res) => {
-        return res.render("editGame", {title:"Edit Games", user:req.session.user});
+        let gameId = req.params.gameId;
+        let gameObj = await gamesData.get(gameId);
+        return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj});
     })
     .post(async (req, res) => {
         console.log("EDITING Games")
-        return res.json({"response":"Success"})
+        return res.json({"TODO":"Implement"})
     });
 
 router

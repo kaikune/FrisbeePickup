@@ -140,14 +140,16 @@ router
 router
     .route('/edit/:userId')
     .get(async (req, res) => {
-        console.log("Success!")
-        return res.render("editUser", {title:"Edit User", user:req.session.user});
+        let userId = req.params.userId;
+        let userObj = await usersData.getUser(userId);
+
+        return res.render("editUser", {title:"Edit User", user:req.session.user, userObj: userObj});
     })
     .post(async (req, res) => {
         console.log("EDITING USER")
-        return res.json({response:"Success"})
+        return res.json({"TODO":"Implement"})
     });
-    
+
 router
     .route('/delete/:gameId')
     .post(async (req, res) => {
