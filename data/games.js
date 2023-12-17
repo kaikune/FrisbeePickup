@@ -186,6 +186,15 @@ const remove = async (gameId) => {
         },
         { returnDocument: 'after' }
     );
+    const userCollection = await users();
+    const userUpdateResult = await userCollection.updateMany(
+        { games: gameId }, 
+        { $pull: { games: gameId } }
+    );
+    
+    if(!userUpdateResult){
+        throw "Could not remove gameid from users";
+    }
     if (!deletionInfo) {
         throw `Could not delete game with id of ${gameId}`;
     }

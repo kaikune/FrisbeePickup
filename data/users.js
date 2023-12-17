@@ -188,6 +188,11 @@ const deleteUser = async (userId) => {
         },
         { returnDocument: 'after' }
     );
+    const updateOrganizer = await gameCollection.updateMany(
+        {organizer: userId},
+        { $set: { organizer: null } },
+        { returnDocument: 'after' }
+    );
 
     // Remove user from all groups
     const groupRemove = await groupCollection.updateMany(
@@ -200,10 +205,17 @@ const deleteUser = async (userId) => {
             },
             $inc: { totalNumberOfPlayers: -1 },
         },
+        {groupLeader: userId},
+        { $set: { groupLeader: null } },
+        { returnDocument: 'after' }
+    );
+    const updateGroupLeader = await groupCollection.updateMany(
+        {groupLeader: userId},
+        { $set: { groupLeader: null } },
         { returnDocument: 'after' }
     );
     const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
-    if (!gameRemove || !groupRemove || !userRemove) throw 'Could not delete user';
+    if (!gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
 
     return { gameRemove, groupRemove, userRemove };
 };

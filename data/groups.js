@@ -1,7 +1,7 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 
 import * as helpers from '../helpers.js';
-import { groups, users } from '../config/mongoCollections.js';
+import { groups, users ,games} from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { usersData, gamesData } from './index.js';
 const create = async (groupName, groupDescription, groupLeader) => {
@@ -98,7 +98,22 @@ const remove = async (groupId) => {
     if (!deletionInfo) {
         throw `Could not delete group with id of ${groupId}`;
     }
-
+    const userCollection = await users();
+    const userUpdateResult = await userCollection.updateMany(
+        { groups: groupId }, 
+        { $pull: { groups: groupId } }
+    );
+    if(!userUpdateResult){
+        throw "Could not remove groupid from users"
+    }
+    const gameCollection = await games();
+    const gameUpdateResult = await gameCollection.updateMany(
+        { group: groupId }, 
+        { $set: { group: null } } 
+    );
+    if(!gameUpdateResult){
+        throw "Could not remove groupid from game"
+    }
     const res = { groupName: deletionInfo.groupName, deleted: true };
     return res;
 };
