@@ -41,15 +41,18 @@
             {{/each}}
         </div>
 
-        <form action="/users/edit/{{user._id}}">
-            <button class="edit-button">Edit</button>
+        <form action="/users/edit/{{user._id}}" method="POST">
+            <button type="submit" class="edit-button">Edit</button>
         </form>
         <form action="/users/delete/{{user._id}}" method="POST">
-            <button class="delete-button">Delete</button>
+            <button type="submit" class="delete-button">Delete</button>
         </form>
     {{else if currentUser}}
-        <button class="add-friend">Add Friend</button>
+        <!-- <form action="/users/{{user._id}}/friends/sendRequest" method="POST">
+            <button type="submit" class="add-friend">Add Friend</button>
+        </form>
+        -->
     {{ else }}
-    <p>To add this user as a friend, please <a href="/login">login</a>.</p>
+        <p>To add this user as a friend, please <a href="/login">login</a>.</p>
     {{/if}}
 </main>
