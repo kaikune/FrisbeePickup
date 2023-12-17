@@ -87,7 +87,6 @@ export function validateGame(gameName, gameDescription, gameLocation, maxCapacit
     gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
-
     if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)
         throw 'One or more string fields empty';
 
@@ -312,7 +311,7 @@ export function convertTo12Hour(timeString) {
     const [hours, minutes] = timeString.split(':').map(Number);
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const twelveHour = hours % 12 || 12;
-    return `${twelveHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    return `${twelveHour.toString()}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 }
 export function convertToMMDDYYYY(dateString) {
     //HTML form uses different formating for the data so this used to convert back to ours

@@ -129,17 +129,24 @@ function compareTimes(time1, time2) {
     time1 = time1.split(':'); // Splits into [HR, MN(AM|PM)]
     time1.push(time1[1].substr(-2, 2)); // [HR, MN(AM|PM), (AM|PM)]
     time1[1] = time1[1].substr(0, 2); // [HR, MN, (AM|PM)]
+
+    if(time1[0] === '12') {
+        time1[0] = time1[2] === 'AM' ? '0' : '12';
+    }else if (time1[2] === 'PM') {
+        time1[0] = (Number(time1[0]) + 12).toString();
+    }
     time1[0] = Number(time1[0]) * 60 + Number(time1[1]); // [Minutes, __, (AM|PM)]
 
     time2 = time2.split(':');
     time2.push(time2[1].substr(-2, 2));
     time2[1] = time2[1].substr(0, 2);
-    time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
-
-    if (time1[2] === time2[2]) {
-        return time1[0] + 30 <= time2[0];
+    if(time2[0] === '12') {
+        time2[0] = time2[2] === 'AM' ? '0' : '12';
+    }else if (time2[2] === 'PM') {
+        time2[0] = (Number(time2[0]) + 12).toString();
     }
-    return time1[2] === 'PM' ? false : true; // Compares AM PM
+    time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
+    return time1[0] + 30 <= time2[0];
 }
 function isValidDay(eventDate) {
     if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(eventDate)) return 0;
@@ -234,7 +241,7 @@ function convertTo12Hour(timeString) {
     const [hours, minutes] = timeString.split(':').map(Number);
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const twelveHour = hours % 12 || 12;
-    return `${twelveHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    return `${twelveHour.toString()}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 }
 
 function editGame() {
