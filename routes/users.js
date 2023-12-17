@@ -24,12 +24,16 @@ router
             let friends = await usersData.getIDName(userObj.friends);
             let games = await gamesData.getIDName(userObj.games);
             let groups = await groupsData.getIDName(userObj.groups);
+            
+            let requests = await usersData.getIDName(userObj.friendRequests)
+
             const ret = {
                 title:"User", 
                 user: userObj,
                 friends: friends,
                 groups: groups,
                 games: games,
+                requests: requests,
                 isOwner: isOwner,
             }
             return res.render('user', ret);
@@ -42,19 +46,18 @@ router
 router
     .route('/:userId/friends/sendRequest')
     .post(async (req, res) => {
-        let userId = req.params.userId;
-        let friendUserId = req.body.friendUserId;
+        let senderId = req.session.user._id;
+        let friendUserId = req.params.userId;
 
         try {
-            helpers.isValidId(userId);
+            helpers.isValidId(senderId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            res.status(400).json({ error: e });
+            return res.status(400).json({ error: e });
         }
 
         try {
-            const userObj = await usersData.sendFriendRequest(userId, friendUserId);
-
+            const userObj = await usersData.sendFriendRequest(senderId, friendUserId);
             return res.json(userObj);
         } catch (e) {
             // Uber bandaid
@@ -73,7 +76,7 @@ router
             helpers.isValidId(userId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            res.status(400).json({ error: e });
+            return res.status(400).json({ error: e });
         }
 
         try {
@@ -97,7 +100,7 @@ router
             helpers.isValidId(userId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            res.status(400).json({ error: e });
+            return res.status(400).json({ error: e });
         }
 
         try {

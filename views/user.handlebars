@@ -28,30 +28,29 @@
 
         <div id="friend-request-wrapper">
             <h3>Incoming Friend Requests</h3>
-            {{#each request}}
+            {{#each requests}}
                 <div id="friend-request">
-                    <a class="request-sender">{{request.sender.name}}</a>
-                    <form action="/users/{{user._id}}/friends/acceptRequest">
+                    <a class="request-sender">{{this.name}}</a>
+                    <form action="/users/{{user._id}}/friends/acceptRequest" method="POST">
                         <button type="submit" class="accept-button">Accept</button>
                     </form>
-                    <form action="/users/{{user._id}}/friends/rejectRequest">
+                    <form action="/users/{{user._id}}/friends/rejectRequest" method="POST">
                         <button type="submit" class="reject-button">Reject</button>
                     </form>
                 </div>
             {{/each}}
         </div>
 
-        <form action="/users/edit/{{user._id}}" method="POST">
+        <form action="/users/edit/{{user._id}}" method="GET">
             <button type="submit" class="edit-button">Edit</button>
         </form>
         <form action="/users/delete/{{user._id}}" method="POST">
             <button type="submit" class="delete-button">Delete</button>
         </form>
     {{else if currentUser}}
-        <!-- <form action="/users/{{user._id}}/friends/sendRequest" method="POST">
+        <form action="/users/{{user._id}}/friends/sendRequest" method="POST">
             <button type="submit" class="add-friend">Add Friend</button>
         </form>
-        -->
     {{ else }}
         <p>To add this user as a friend, please <a href="/login">login</a>.</p>
     {{/if}}
