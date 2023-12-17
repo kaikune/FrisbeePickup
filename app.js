@@ -50,6 +50,33 @@ app.use("/", (req, res, next) => {
     return next();
 });
 
+// Any authentication redirecting that we explicitly add can be here.
+app.use("/", (req, res, next) => {
+    const user = req.session.user;
+
+    let onlyAuthenticatedRoutes = [
+        "/logout",
+        "/create-game",
+        "/create-group"
+    ];
+
+    let onlyNonAuthenticatedRoutes = [
+        "/login",
+        "/register"
+    ];
+
+    if (user == null) {
+        if (onlyAuthenticatedRoutes.includes(req.originalUrl)) {
+            return res.redirect("/login");
+        }
+    } else {
+        if (onlyNonAuthenticatedRoutes.includes(req.originalUrl)) {
+            return res.redirect("/");
+        }
+    }
+    return next();
+});
+
 // Update DB Middlware
 app.use('/groups', async (req, res, next) => {
     if (req.method === 'GET') {

@@ -59,7 +59,8 @@ router
     .route("/logout")
     .get(async (req, res) => {
         req.session.user = null;
-        return res.render("logout", {title: "Logout"});
+        // Overwrites currentUser bc middleware sets it to user and we don't want that
+        return res.render("logout", {title: "Logged out", currentUser: null});
     });
 
 router
