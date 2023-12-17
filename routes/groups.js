@@ -30,8 +30,10 @@ router.route('/:groupId').get(async (req, res) => {
         const members = await usersData.getIDName(players);
         let games = await gamesData.getAllByGroup(groupId);
         games = games.map(game => ({_id: game._id, name: game.gameName}));
-        const owner = await usersData.getUser(groupObj.groupLeader);
-
+        let owner = null;
+        if(groupObj.groupLeader !== null){
+            owner = await usersData.getUser(groupObj.groupLeader);
+        }
         let currentUser = req.session.user;
         let isMember = currentUser && groupObj.players.includes(currentUser._id);
         let isOwner = currentUser && owner._id == currentUser._id;
@@ -80,13 +82,13 @@ router
             let currentUser = req.session.user;
             let groupObj = await groupsData.get(groupId);
 
-            
+
             if (currentUser._id !== groupObj.groupLeader) {
                 throw Error("not allowed");
             }
-
-            await groupsData.update(groupId, req.body.groupName, req.body.description, currentUser._id);
-            return res.redirect("/users/" + currentUser._id);
+   
+            await groupsData.update(groupId, req.body.groupName, req.body.groupDescription, currentUser._id);
+            return res.redirect("/groups/" + groupId);
         } catch (e) {
             console.log(e);
             res.status(400);
