@@ -21,7 +21,12 @@
         <form action="/join/{{game._id}}" method="POST">
             <button type="submit" class="join-button">Join Game</button>
         </form>
+    {{else}}
+        <form action="/games/leave/{{game.id}}" method="POST">
+            <button type="submit">Leave Game</button>
+        </form>
     {{/unless}}
+        
     {{ else }}
     <p>To join this game, please <a href="/login">login</a>.</p>
     {{/if}}

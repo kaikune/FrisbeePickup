@@ -118,4 +118,37 @@ router
         }
     });
 
+router
+    .route('/join/:gameId')
+    .post(async (req, res) => {
+        try {
+            let gameId = req.params.gameId;
+            let currentUser = req.session.user;
+
+            await gamesData.addUser(currentUser._id, gameId);
+            return res.redirect("/games/" + gameId);
+        } catch (e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error: e});
+        }
+    });
+
+router
+    .route('/leave/:gameId')
+    .post(async (req, res) => {
+        try{
+            let gameId = req.params.gameId;
+            let currentUser = req.session.user;
+
+            await gamesData.leaveGame(currentUser._id, gameId);
+            return res.redirect("/games/"+gameId);
+        }
+        catch(e) {
+            console.log(e);
+            res.status(400);
+            return res.json({error:e});
+        }
+    });
+
 export default router;

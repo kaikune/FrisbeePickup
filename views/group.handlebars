@@ -22,7 +22,7 @@
         <form action="/groups/join/{{group._id}}" method="POST">
             <button class="join-button">Join Group</button>
         </form>
-    {{/unless}}
+    {{else}}
         <div id="messages-wrapper">
             <form action="/groups/{{group._id}}/comments" id="message-form" method="POST">
                 <label for="comment"></label>
@@ -39,6 +39,8 @@
         <form action="/groups/leave/{{group.id}}" method="POST">
             <button type="submit">Leave Group</button>
         </form>
+    {{/unless}}
+        
     {{ else }}
     <p>To join this group, please <a href="/login">login</a>.</p>
     {{/if}}
