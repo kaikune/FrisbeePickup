@@ -54,17 +54,22 @@ export async function seed(){
         ["ameliaR", "ameliaR@site.com", "Ame3li@R3"],
         ["oliverP", "oliverP@domain.com", "Ol3i@verP"]
     ];
+
+    console.log("Creating all users...")
+
     const userPromises = userData.map(user => usersData.createUser(user[0], user[1], user[2]));
     await Promise.all(userPromises);
 
     const allUsers = await usersData.getAllUsers();
 
+    console.log("Creating all groups...")
     const group1 = await groupsData.create("Frisbee Enthusiasts Group", "A community for all Frisbee lovers", allUsers[0]._id);
     const group2 = await groupsData.create("Ultimate Frisbee Competitors", "Focused on competitive ultimate Frisbee games and tournaments", allUsers[1]._id);
     const group3 = await groupsData.create("Frisbee Skills Workshop", "Workshops and training sessions to improve Frisbee skills", allUsers[2]._id);
     const group4 = await groupsData.create("Youth Frisbee Club", "Engaging youth in Frisbee activities and games", allUsers[3]._id);
     const group5 = await groupsData.create("Casual Frisbee Meetups", "Casual and fun Frisbee meetups for all skill levels", allUsers[4]._id);
 
+    console.log("Creating all games...")
     const game1 = await gamesData.create("Sunset Frisbee Fun", "Relaxed Frisbee game at sunset", { streetAddress: "101 Beach Blvd", city: "Santa Monica", state: "CA", zip: "90401" }, 15, "12/12/2024", "5:00 PM", "7:00 PM", group1._id, allUsers[0]._id);
     const game2 = await gamesData.create("Morning Frisbee in the Park", "Start your day with a fun Frisbee game", { streetAddress: "500 Park Ave", city: "New York", state: "NY", zip: "10001" }, 20, "12/20/2024", "8:00 AM", "10:00 AM", group1._id,allUsers[0]._id);
 
@@ -83,36 +88,45 @@ export async function seed(){
     const allGroups = [group1, group2, group3, group4, group5];
     const allGames = [game1,game2,game3,game4,game5,game6,game7,game8,game9,game10];
     
+    console.log("Adding users to groups, games, and friends...")
     for(let i = 5; i<userData.length; i++){
         if(i % 5 === 0){
             await groupsData.addUser(allUsers[i]._id,group1._id);
             await gamesData.addUser(allUsers[i]._id,game1._id);
             await gamesData.addUser(allUsers[i]._id,game2._id);
+            await usersData.sendFriendRequest(allUsers[i]._id,allUsers[0]._id);
+            await usersData.acceptFriendRequest(allUsers[0]._id,allUsers[i]._id);
         }else if(i % 5 === 1){
             await groupsData.addUser(allUsers[i]._id,group2._id);
             await gamesData.addUser(allUsers[i]._id,game3._id);
             await gamesData.addUser(allUsers[i]._id,game4._id);
+            await usersData.sendFriendRequest(allUsers[i]._id,allUsers[1]._id);
+            await usersData.acceptFriendRequest(allUsers[1]._id,allUsers[i]._id);
         }
         else if(i % 5 === 2){
             await groupsData.addUser(allUsers[i]._id,group3._id);
             await gamesData.addUser(allUsers[i]._id,game5._id);
             await gamesData.addUser(allUsers[i]._id,game6._id);
+            await usersData.sendFriendRequest(allUsers[i]._id,allUsers[2]._id);
+            await usersData.acceptFriendRequest(allUsers[2]._id,allUsers[i]._id);
         }
         else if(i % 5 === 3){
             await groupsData.addUser(allUsers[i]._id,group4._id);
             await gamesData.addUser(allUsers[i]._id,game7._id);
             await gamesData.addUser(allUsers[i]._id,game8._id);
+            await usersData.sendFriendRequest(allUsers[i]._id,allUsers[3]._id);
+            await usersData.acceptFriendRequest(allUsers[3]._id,allUsers[i]._id);
         }
         else if(i % 5 === 4){
             await groupsData.addUser(allUsers[i]._id,group5._id);
             await gamesData.addUser(allUsers[i]._id,game9._id);
             await gamesData.addUser(allUsers[i]._id,game10._id);
+            await usersData.sendFriendRequest(allUsers[i]._id,allUsers[4]._id);
+            await usersData.acceptFriendRequest(allUsers[4]._id,allUsers[i]._id);
         }
     }
 
     console.log("Done inserting all data.");
-
-
 }
 
 const db = await dbConnection();
