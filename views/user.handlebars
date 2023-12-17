@@ -25,6 +25,22 @@
     </ul>
 
     {{#if isOwner}}
+
+        <div id="friend-request-wrapper">
+            <h3>Incoming Friend Requests</h3>
+            {{#each request}}
+                <div id="friend-request">
+                    <a class="request-sender">{{request.sender.name}}</a>
+                    <form action="/users/{{user._id}}/friends/acceptRequest">
+                        <button type="submit" class="accept-button">Accept</button>
+                    </form>
+                    <form action="/users/{{user._id}}/friends/rejectRequest">
+                        <button type="submit" class="reject-button">Reject</button>
+                    </form>
+                </div>
+            {{/each}}
+        </div>
+
         <form action="/users/edit/{{user._id}}">
             <button class="edit-button">Edit</button>
         </form>

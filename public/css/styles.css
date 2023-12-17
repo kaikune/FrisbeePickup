@@ -241,6 +241,53 @@ footer{
 
 /* END PROFILE PICTURE */
 
+/* Messages Stuff */
+
+#messages-wrapper {
+    margin: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    size: fixed;
+    width: 50%;
+    height: 10%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #000000;
+    overflow: auto;
+}
+
+.message-sender {
+    font-size: smaller;
+    color: #AAAAAA;
+}
+
+/* End Messages */
+
+/* Friend Request Stuff */
+
+#friend-request-wrapper {
+    size:fixed;
+    width: 50%;
+    height: 25%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #AAAAAA;
+    overflow: auto;
+}
+
+#friend-request {
+    background-color: #EEEEEE;
+}
+
+.accept-button {
+    background-color: greenyellow;
+}
+
+.reject-button {
+    background-color: red;
+}
+
+
 /* MISC. STUFF */
 
 .hidden {
