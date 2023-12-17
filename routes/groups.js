@@ -8,7 +8,7 @@ router
     .route('/')
     .get(async (req, res) => {
         let allGroupObjs = await groupsData.getAll();
-        return res.render('create', {title:"Groups", groups: allGroupObjs});
+        return res.render('createGroups', {title:"Groups", groups: allGroupObjs});
     })
     .post(async (req, res) => {
         const groupName = req.body.groupName;
