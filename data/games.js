@@ -243,6 +243,7 @@ const getIDName = async (gameIds) => {
     }
     return ret;
 };
+
 // Goes through all future games to make sure they haven't passed and updates them if they are old
 const keepStatusUpdated = async () => {
     const gamesList = await getAll();
@@ -259,5 +260,35 @@ const keepStatusUpdated = async () => {
         }
     }
 };
+const leaveGame = async (userId, gameId) => {
+    helpers.isValidId(userId);
+    helpers.isValidId(gameId);
+    const game = await get(gameId);
+    const user = await usersData.getUser(userId);
+    if(!game) throw "Could not find game";
+    if(!user) throw "Could not find user";
+    if(!game.players.includes(userId)) throw "User is not a part of this group";
+    if(!user.games.includes(gameId)) throw "User is not a part of this group";
 
-export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName };
+    const gameCollection = await games();
+    const userCollection = await users();
+
+    const updateUser = await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { games: gameId } }
+    );
+
+    const updateGame = await gameCollection.updateOne(
+        { _id: new ObjectId(gameId)},
+        { 
+            $pull: { players: userId },
+            $inc: { totalNumberOfPlayers: -1 }  
+        }
+    );
+    if (updateUser.modifiedCount === 0 || updateGame.modifiedCount === 0) {
+        throw "Could not update user or game";
+    }
+    return {updateUser, updateGame}; 
+}
+
+export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName, leaveGame };
