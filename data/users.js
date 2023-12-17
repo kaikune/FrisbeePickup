@@ -214,8 +214,16 @@ const deleteUser = async (userId) => {
         { $set: { groupLeader: null } },
         { returnDocument: 'after' }
     );
+    const updateGroupMessages = await groupCollection.updateMany(
+        {},
+        { $pull: { comments: { userId: userId } } }
+    );
+    const updateFriendRequests = await userCollection.updateMany(
+        {},
+        { $pull: { friendRequests: userId } }
+    );
     const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
-    if (!gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
+    if (!updateFriendRequests || !updateGroupMessages || !gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
 
     return { gameRemove, groupRemove, userRemove };
 };
