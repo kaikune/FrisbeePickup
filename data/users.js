@@ -359,7 +359,20 @@ const removeFriend = async (userId, friendUserId) => {
 
     return selfUpdatedInfo;
 };
-
+const isUserLeader = async (userId) => {
+    //Returns True if user is owner of at least one game or group otherwise False
+    const gameCollection = await games();
+    const groupCollection = await groups();
+    const gameOrganizer = await gameCollection.findOne({ organizer: userId });
+    if (gameOrganizer) {
+        return true; 
+    }
+    const groupLeader = await groupCollection.findOne({ groupLeader: userId });
+    if(groupLeader){
+        return true;
+    }
+    return false;
+}
 export default {
     createUser,
     getAllUsers,
@@ -373,4 +386,7 @@ export default {
     rejectFriendRequest,
     removeFriend,
     getIDName,
+    isUserLeader
 };
+
+
