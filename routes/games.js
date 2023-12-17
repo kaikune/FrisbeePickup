@@ -84,7 +84,7 @@ router
     .get(async (req, res) => {
         let gameId = req.params.gameId;
         let gameObj = await gamesData.get(gameId);
-        return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj});
+        return res.render("editGames", {title:"Edit Games", user:req.session.user, gameObj});
     })
     .post(async (req, res) => {
         console.log("EDITING Games")

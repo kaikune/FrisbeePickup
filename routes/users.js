@@ -9,8 +9,8 @@ router
     .route('/')
     .get(async (req, res) => {
         let allUserObjs = await usersData.getAllUsers();
-        // return res.json(allUsersRes);
-        return res.render('users', {title:"Users", users: allUserObjs });
+        return res.json(allUserObjs);
+        // return res.render('user', {title:"Users", users: allUserObjs });
     });
 
 router
@@ -32,8 +32,6 @@ router
                 games: games,
                 isOwner: isOwner,
             }
-        
-            // return res.json(userObj);
             return res.render('user', ret);
         } catch (e) {
             res.status(400);    
@@ -140,14 +138,21 @@ router
 router
     .route('/edit/:userId')
     .get(async (req, res) => {
-        let userId = req.params.userId;
-        let userObj = await usersData.getUser(userId);
 
-        return res.render("editUser", {title:"Edit User", user:req.session.user, userObj: userObj});
+        let userId = req.params.userId;
+
+        if (req.session.user == null || req.session.user._id != userId) {
+            // temporary
+            res.status(400);
+            res.json({error: "not allowed"});
+        }
+
+        // user obj will just be currentUser.
+        return res.render("editUser", {title:"Edit user"});
     })
     .post(async (req, res) => {
-        console.log("EDITING USER")
-        return res.json({"TODO":"Implement"})
+        console.log("EDITING USER");
+        return res.json({"TODO":"Implement"});
     });
 
 router

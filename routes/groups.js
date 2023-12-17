@@ -68,4 +68,23 @@ router.route('/:groupId/comments').post(async (req, res) => {
         return res.status(400).json({ error: e });
     }
 });
+
+router
+    .route('/edit/:groupId')
+    .get(async (req, res) => {
+
+        let groupId = req.params.groupId;
+
+        return res.render("editGroups", {title:"Edit group"});
+    })
+    .post(async (req, res) => {
+        return res.json({"TODO":"Implement"});
+    });
+
+router
+    .route('/delete/:groupId')
+    .post(async (req, res) => {
+        return res.json({"TODO":"Implement"});
+    });
+
 export default router;
