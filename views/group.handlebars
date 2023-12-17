@@ -16,7 +16,9 @@
     </ul>
 
     {{#if currentUser }}
+    {{#unless isMember}}
     <button class="join-button">Join Group</button>
+    {{/unless}}
     {{ else }}
     <p>To join this group, please <a href="/login">login</a>.</p>
     {{/if}}

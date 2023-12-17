@@ -24,7 +24,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         gameDate,
         startTime,
         endTime,
-        players: [],
+        players: [organizer],
         totalNumberOfPlayers: 0,
         group,
         organizer,

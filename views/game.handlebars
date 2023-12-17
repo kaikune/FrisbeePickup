@@ -17,7 +17,9 @@
     <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
     {{#if currentUser}}
+    {{#unless isMember}}
     <button class="join-button">Join Game</button>
+    {{/unless}}
     {{ else }}
     <p>To join this game, please <a href="/login">login</a>.</p>
     {{/if}}
