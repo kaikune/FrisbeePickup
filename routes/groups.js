@@ -6,10 +6,6 @@ const router = Router();
 
 router
     .route('/')
-    .get(async (req, res) => {
-        let allGroupObjs = await groupsData.getAll();
-        return res.render('createGroup', {title:"Create group", groups: allGroupObjs});
-    })
     .post(async (req, res) => {
         const groupName = req.body.groupName;
         const groupDescription = req.body.groupDescription;
@@ -75,7 +71,7 @@ router
 
         let groupId = req.params.groupId;
 
-        return res.render("editGroups", {title:"Edit group"});
+        return res.render("editGroup", {title:"Edit group"});
     })
     .post(async (req, res) => {
         return res.json({"TODO":"Implement"});

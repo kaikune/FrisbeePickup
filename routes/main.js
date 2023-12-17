@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { usersData, gamesData, groupsData } from "../data/index.js";
+import * as helpers from '../helpers.js';
 
 const router = Router();
 
@@ -60,5 +61,26 @@ router
         req.session.user = null;
         return res.render("logout", {title: "Logout"});
     });
+
+router
+    .route("/create-group")
+    .get(async (req, res) => {
+        let allGroupObjs = await groupsData.getAll();
+        return res.render('createGroup', {title:"Create group", groups: allGroupObjs});
+    })
+
+router
+    .route("/create-game")
+    .get(async (req, res) => {
+        let allGamesData = await gamesData.getAll();
+        let allGroupsData = await groupsData.getAll();
+        if(!req.session.user){
+            allGroupsData = {};
+        }else{
+            let userId = req.session.user._id;
+            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+        }
+        return res.render('createGame', {title:"Create game", groups: allGroupsData, states: helpers.states});
+    })
 
 export default router;

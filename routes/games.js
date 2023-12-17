@@ -7,17 +7,6 @@ const router = Router();
 
 router
     .route('/')
-    .get(async (req, res) => {
-        let allGamesData = await gamesData.getAll();
-        let allGroupsData = await groupsData.getAll();
-        if(!req.session.user){
-            allGroupsData = {};
-        }else{
-            let userId = req.session.user._id;
-            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
-        }
-        return res.render('createGame', {title:"Create game", groups: allGroupsData, states: helpers.states});
-    })
     .post(async (req, res) => {
         const gameName = req.body.gameName;
         const gameDescription = req.body.gameDescription;
@@ -84,7 +73,7 @@ router
     .get(async (req, res) => {
         let gameId = req.params.gameId;
         let gameObj = await gamesData.get(gameId);
-        return res.render("editGames", {title:"Edit Games", user:req.session.user, gameObj});
+        return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj});
     })
     .post(async (req, res) => {
         console.log("EDITING Games")
