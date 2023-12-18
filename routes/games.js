@@ -23,7 +23,7 @@ router.route('/').post(async (req, res) => {
         startTime = helpers.convertTo12Hour(startTime);
         endTime = helpers.convertTo12Hour(endTime);
         gameDate = helpers.convertToMMDDYYYY(gameDate);
-        // gamesData.validateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, group, req.session.user._id);
+        gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime);
         const createResult = await gamesData.create(
             gameName,
             gameDescription,
@@ -45,6 +45,8 @@ router.route('/').post(async (req, res) => {
 router.route('/:gameId').get(async (req, res) => {
     try {
         let gameId = req.params.gameId;
+
+        helpers.isValidId(gameId);
         let gameObj = await gamesData.get(gameId);
         let hostGroup = null;
         if (gameObj.group !== null) {
@@ -84,6 +86,7 @@ router
     .get(async (req, res) => {
         try {
             let gameId = req.params.gameId;
+            helpers.isValidId(gameId);
             let gameObj = await gamesData.get(gameId);
             let allGroupsData = null;
             if (req.session.user) {
@@ -100,6 +103,7 @@ router
         try {
             let gameId = req.params.gameId;
             let currentUser = req.session.user;
+            helpers.isValidId(gameId);
             const gameObj = await gamesData.get(gameId);
 
             let maxPlayersNumber = parseInt(req.body.maxPlayers, 10);
@@ -107,6 +111,15 @@ router
             let endTime = helpers.convertTo12Hour(req.body.endTime);
             let gameDate = helpers.convertToMMDDYYYY(req.body.date);
             let gameLocation = { zip: req.body.zip, state: req.body.state, streetAddress: req.body.streetAddress, city: req.body.city };
+            gamesData.formatAndValidateGame(
+                req.body.gameName,
+                req.body.gameDescription,
+                gameLocation,
+                maxPlayersNumber,
+                gameDate,
+                startTime,
+                endTime
+            );
 
             await gamesData.update(
                 gameId,
@@ -132,6 +145,8 @@ router.route('/delete/:gameId').post(async (req, res) => {
     try {
         let gameId = req.params.gameId;
         let currentUser = req.session.user;
+
+        helpers.isValidId(gameId);
         const gameObj = await gamesData.get(gameId);
 
         /*
@@ -153,6 +168,8 @@ router.route('/join/:gameId').post(async (req, res) => {
         let gameId = req.params.gameId;
         let currentUser = req.session.user;
 
+        helpers.isValidId(gameId);
+
         await gamesData.addUser(currentUser._id, gameId);
         return res.redirect('/games/' + gameId);
     } catch (e) {
@@ -165,6 +182,8 @@ router.route('/leave/:gameId').post(async (req, res) => {
     try {
         let gameId = req.params.gameId;
         let currentUser = req.session.user;
+
+        helpers.isValidId(gameId);
 
         await gamesData.leaveGame(currentUser._id, gameId);
         return res.redirect('/games/' + gameId);
