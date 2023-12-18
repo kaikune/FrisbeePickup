@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { usersData, gamesData, groupsData, weatherData } from '../data/index.js';
+import { usersData, gamesData, groupsData } from '../data/index.js';
 import * as helpers from '../helpers.js';
 
 const router = Router();
@@ -51,8 +51,6 @@ router.route('/:gameId').get(async (req, res) => {
 
         let organizerArr = await usersData.getIDName([gameObj.organizer]);
 
-        const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
-
         return res.render("game", {
             title: "Game: " + gameObj.gameName,
             game: gameObj,
@@ -60,8 +58,7 @@ router.route('/:gameId').get(async (req, res) => {
             organizer: organizerArr[0],
             hostGroup: hostGroup,
             isOwner: isOwner,
-            isMember: isMember,
-            weather: weather
+            isMember: isMember
         });
     } catch (e) {
         res.status(400);
@@ -74,8 +71,13 @@ router
     .get(async (req, res) => {
         let gameId = req.params.gameId;
         let gameObj = await gamesData.get(gameId);
+        let allGroupsData = null;
+        if(req.session.user){
+            let userId = req.session.user._id;
+            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+        }
 
-        return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj});
+        return res.render("editGame", {title:"Edit Games", user:req.session.user, gameObj, states: helpers.states, groups: allGroupsData});
     })
     .post(async (req, res) => {
         try {
@@ -83,13 +85,14 @@ router
             let currentUser = req.session.user;
             const gameObj = await gamesData.get(gameId);
 
-            /*
-            if (currentUser._id != gameObj.owner) {
-                throw Error("not allowed");
-            }
-            */
+            let maxPlayersNumber = parseInt(req.body.maxPlayers, 10);
+            let startTime = helpers.convertTo12Hour(req.body.startTime)
+            let endTime = helpers.convertTo12Hour(req.body.endTime)
+            let gameDate = helpers.convertToMMDDYYYY(req.body.date);
+            let gameLocation = {zip: req.body.zip, state: req.body.state,streetAddress: req.body.streetAddress,city: req.body.city}
 
-            await gamesData.update(gameId, req.body.gameName, req.body.description, req.body.gameLocation, req.body.maxCapacity, req.body.gameDate, req.body.startTime, req.params.endTime, req.body.group);
+            await gamesData.update(gameId,req.session.user._id, req.body.gameName, req.body.gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime,req.body.group);
+            //meId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, grou
             return res.redirect("/games/" + gameId);
         } catch (e) {
             console.log(e);

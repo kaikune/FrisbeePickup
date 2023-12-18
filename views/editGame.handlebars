@@ -1,25 +1,55 @@
 <!-- STILL NEED TO AUTO FILL WITH USERS CURRENT CONTENT -->
 <div class="form-wrapper">
-    <form method="POST" id="edit-game-form" class="edit-form" action="/games/edit/{{gameObj._id}}">
+    <form method="POST" id="create-game-form" class="edit-form" action="/games/edit/{{gameObj._id}}">
         <label class="form-label" for="game-name">Game Name:</label>
-            <input class="form-input" type="text" id="game-name" name="game-name" value="{{gameObj.gameName}}">
+            <input class="form-input" type="text" id="game-name" name="gameName" value="{{gameObj.gameName}}">
             <br>
         <!-- NEED TO ADD LOCATION INFO -->
+        <label class="form-label" for="street-address">Street Address:</label>
+                <input class="form-input" type="text" id="street-address" name="streetAddress" value="{{gameObj.description}}">
+                <br>
+            <label class="form-label" for="city">City:</label>
+                <input class="form-input" type="text" id="city" name="city" value="{{gameObj.gameLocation.city}}">
+                <br>
+            <label class="form-label" for="state">State:</label>
+                <select class="form-input" type="text" id="state" name="state" required>
+                {{#each states}}
+                     <option value="{{this}}">{{this}}</option>
+                {{/each}}
+                </select>
+                <br>
+            <label class="form-label" for="zip">Zipcode:</label>
+                <input class="form-input" type="text" id="zip" name="zip" value="{{gameObj.gameLocation.zip}}">
+                <br>
         <label class="form-label" for="description">Description:</label>
-            <input class="form-input" type="text" id="description" name="location" value="{{gameObj.description}}">
+            <input class="form-input" type="text" id="description" name="gameDescription" value="{{gameObj.description}}">
             <br>
         <label class="form-label" for="date">Date:</label>
             <input class="form-input" type="date" id="date" name="date" value="{{gameObj.gameDate}}" >
             <br>
         <label class="form-label" for="start-time">Start Time:</label>
-            <input class="form-input" type="time" id="start-time" name="start-time" value="{{gameObj.startTime}}">
+            <input class="form-input" type="time" id="start-time" name="startTime" value="{{gameObj.startTime}}">
             <br>
         <label class="form-label" for="end-time">End Time:</label>
-            <input class="form-input" type="time" id:"end-time" name="end-time" value="{{gameObj.endTime}}">
+            <input class="form-input" type="time" id="end-time" name="endTime" value="{{gameObj.endTime}}">
             <br>
         <label class="form-label" for="max-players">Max players:</label>
-            <input class="form-input" type="text" id="max-players" name="max-players" value="{{gameObj.maxCapacity}}">
+            <input class="form-input" type="text" id="max-players" name="maxPlayers" value="{{gameObj.maxCapacity}}">
             <br>
+            <label class="form-label" for="group">Group:</label>
+                <select class="form-input" id="group" name="group" required>
+                       {{#if groups.length}}
+                            {{#each groups}}
+                                <option value="{{this._id}}">{{this.groupName}}</option>
+                            {{/each}}
+                        {{else}}
+                            <option value="N/A">N/A</option>
+                        {{/if}}
+                </select>
+                <br>
         <button type="submit" class="form-submit-button">Submit</button>
     </form>
+     <a id="error-label" hidden>test</a> <br>
+        <a id="status-label" hidden>test2</a> <br>
+    <script src='/public/js/gameValidation.js'></script>
 </div>
