@@ -239,6 +239,9 @@ function isValidTime(time) {
 }
 function convertTo12Hour(timeString) {
     const [hours, minutes] = timeString.split(':').map(Number);
+    if(hours === 0){
+        throw "Hours cannot be 0"
+    }
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const twelveHour = hours % 12 || 12;
     return `${twelveHour.toString()}:${minutes.toString().padStart(2, '0')} ${ampm}`;
