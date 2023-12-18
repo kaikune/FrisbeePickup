@@ -203,7 +203,7 @@ const remove = async (gameId) => {
     return res;
 };
 
-const update = async (gameId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
+const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
     
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
@@ -212,6 +212,7 @@ const update = async (gameId, gameName, gameDescription, gameLocation, maxCapaci
     // Update record
     const updatedgame = {
         gameName: gameData.gameName,
+        organizer: userId,
         description: gameData.gameDescription,
         gameLocation: gameData.gameLocation,
         maxCapacity: gameData.maxCapacity,
