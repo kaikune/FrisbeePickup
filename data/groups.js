@@ -1,5 +1,3 @@
-// This data file should export all functions using the ES6 standard as shown in the lecture code
-
 import * as helpers from '../helpers.js';
 import { groups, users ,games} from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
@@ -192,7 +190,7 @@ const removeComment = async (groupId, commentId) => {
 
 const addUser = async (userId, groupId) => {
     //Input validation
-    helpers.isValidId(userId); //maybe should check if is userid and not groupid etc
+    helpers.isValidId(userId);
     helpers.isValidId(groupId);
     userId = userId.trim();
     groupId = groupId.trim();
@@ -226,7 +224,6 @@ const addUser = async (userId, groupId) => {
     if (!updateGame || !updateUser) {
         throw 'Could not update either game or user';
     }
-    //console.log(updateUserResult)
     return { updateGame, updateUser };
 };
 

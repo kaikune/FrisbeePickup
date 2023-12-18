@@ -1,5 +1,3 @@
-// This data file should export all functions using the ES6 standard as shown in the lecture code
-
 import * as helpers from '../helpers.js';
 import { games, users } from '../config/mongoCollections.js';
 import { usersData, groupsData } from './index.js';

@@ -19,13 +19,11 @@ let addRow = function (parentElement, linkText, linkTarget) {
     a.innerHTML = linkText;
     dd.appendChild(a);
     parentElement.appendChild(dd);
-    // console.log(li);
 };
 
 (function ($) {
 
     let executeSearch = function () {
-        console.log("whats up");
         usersUL.replaceChildren();
         groupsUL.replaceChildren();
         gamesUL.replaceChildren();
@@ -70,8 +68,5 @@ let addRow = function (parentElement, linkText, linkTarget) {
     });
 
     executeSearch();
-
-
-    
 
 })(window.jQuery);

@@ -5,14 +5,6 @@ import * as helpers from '../helpers.js';
 
 const router = Router();
 
-// router
-//     .route('/')
-//     .get(async (req, res) => {
-//         let allUserObjs = await usersData.getAllUsers();
-//         return res.json(allUserObjs);
-//         // return res.render('user', {title:"Users", users: allUserObjs });
-//     });
-
 router
     .route('/:userId')
     .get(async (req, res) => {
@@ -27,8 +19,6 @@ router
                 }
             }
             
-            
-
             let isOwner = req.session.user != null && req.session.user._id.toString() == userId;
             let friends = await usersData.getIDName(userObj.friends);
             let games = await gamesData.getIDName(userObj.games);
