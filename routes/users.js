@@ -58,7 +58,8 @@ router
 
         try {
             const userObj = await usersData.sendFriendRequest(senderId, friendUserId);
-            return res.json(userObj);
+            //return res.json(userObj);
+            return res.redirect("/users/" + friendUserId);
         } catch (e) {
             // Uber bandaid
             if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
@@ -82,7 +83,8 @@ router
         try {
             const userObj = await usersData.acceptFriendRequest(userId, friendUserId);
 
-            return res.json(userObj);
+            //return res.json(userObj);
+            return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
             if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
@@ -106,7 +108,8 @@ router
         try {
             const userObj = await usersData.rejectFriendRequest(userId, friendUserId);
 
-            return res.json(userObj);
+            //return res.json(userObj);
+            return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
             if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
@@ -130,7 +133,8 @@ router
         try {
             const userObj = await usersData.removeFriend(userId, friendUserId);
 
-            return res.json(userObj);
+            //return res.json(userObj);
+            return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
             if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
