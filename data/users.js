@@ -198,22 +198,32 @@ const deleteUser = async (userId) => {
     );
 
     // Remove user from all groups
-    const groupRemove = await groupCollection.updateMany(
-        { players: userId },
-        {
+
+    const updateGroupLeader = await groupCollection.updateMany(
+        {groupLeader: userId},
+        { 
+            $set: { 
+                groupLeader: null 
+            },
             $pull: {
-                players: 
-                     userId, // remove user,
+                players: userId, // remove user,
             },
             $inc: { totalNumberOfPlayers: -1 },
         },
         { returnDocument: 'after' }
     );
-    const updateGroupLeader = await groupCollection.updateMany(
-        {groupLeader: userId},
-        { $set: { groupLeader: null } },
+    
+    const groupRemove = await groupCollection.updateMany(
+        { players: userId },
+        {
+            $pull: {
+                players: userId, // remove user,
+            },
+            $inc: { totalNumberOfPlayers: -1 },
+        },
         { returnDocument: 'after' }
     );
+
     const updateGroupMessages = await groupCollection.updateMany(
         {},
         { $pull: { comments: { userId: userId } } }
