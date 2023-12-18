@@ -30,9 +30,9 @@
                 <button type="Submit" class="message-send">Send</button>
             </form>
             <br>
-            {{#each comment}}
-                <p class="message-text">comment.message</p>
-                <a class="message-sender">-comment.sender</a>
+            {{#each group.comments}}
+                <p class="message-text">{{this.commentText}}</p>
+                <a class="message-sender">-{{this.sender.name}}</a>
             {{/each}}
         </div>
 

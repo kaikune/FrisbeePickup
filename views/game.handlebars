@@ -18,7 +18,7 @@
 
     {{#if currentUser}}
     {{#unless isMember}}
-        <form action="/join/{{game._id}}" method="POST">
+        <form action="/games/join/{{game._id}}" method="POST">
             <button type="submit" class="join-button">Join Game</button>
         </form>
     {{else}}
