@@ -222,7 +222,7 @@ const deleteUser = async (userId) => {
     );
     const updateFriendList = await userCollection.updateMany(
         {},
-        { $pull: { friends: { userId: userId } } }
+        { $pull: { friends: userId  } }
     );
     const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
     if (!updateFriendList || !updateFriendRequests || !updateGroupMessages || !gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
