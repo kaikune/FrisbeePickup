@@ -365,3 +365,16 @@ export function convertToMMDDYYYY(dateString) {
 export function testFunction() {
     console.log('Success!');
 }
+
+export function isValidNum(string){
+    if(!string){
+        throw "String expected"
+    }
+    if(typeof string !== 'string'){
+        throw "String expected"
+    }
+    const number = Number(string);
+    if (isNaN(number)) {
+        throw "Max cap is not a number"
+    }
+}

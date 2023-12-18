@@ -27,6 +27,7 @@ if(createGameForm){
                 state: state.value,
                 zip: zip.value
             };
+            isValidNum(maxPlayers.value)
             let maxPlayersNumber = parseInt(maxPlayers.value, 10);
             validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value)
             statusLabel.innerHTML = "Game Created"
@@ -249,4 +250,17 @@ function convertTo12Hour(timeString) {
 
 function editGame() {
     
+}
+
+function isValidNum(string){
+    if(!string){
+        throw "String expected"
+    }
+    if(typeof string !== 'string'){
+        throw "String expected"
+    }
+    const number = Number(string);
+    if (isNaN(number)) {
+        throw "Max cap is not a number"
+    }
 }
