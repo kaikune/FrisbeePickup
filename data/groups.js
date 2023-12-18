@@ -239,4 +239,34 @@ const findGroupsThatStartWith = async (search) => {
     //Returns the entire grouplist right now
     return groupList;
 };
-export default { create, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };
+const leaveGroup = async (userId, groupId) => {
+    helpers.isValidId(userId);
+    helpers.isValidId(groupId);
+    const group = await get(groupId);
+    const user = await usersData.getUser(userId);
+    if(!group) throw "Could not find group";
+    if(!user) throw "Could not find user";
+    if(!group.players.includes(userId)) throw "User is not a part of this group";
+    if(!user.groups.includes(groupId)) throw "User is not a part of this group";
+
+    const groupCollection = await groups();
+    const userCollection = await users();
+
+    const updateUser = await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { groups: groupId } }
+    );
+
+    const updateGroup = await groupCollection.updateOne(
+        { _id: new ObjectId(groupId)},
+        { 
+            $pull: { players: userId },
+            $inc: { totalNumberOfPlayers: -1 }  
+        }
+    );
+    if (updateUser.modifiedCount === 0 || updateGroup.modifiedCount === 0) {
+        throw "Could not update user or group";
+    }
+    return {updateUser, updateGroup}; 
+}
+export default { create, leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };
