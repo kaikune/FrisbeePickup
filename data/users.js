@@ -60,7 +60,7 @@ export function formatAndValidateUser (userData, ignorePassword) {
 
 const createUser = async (username, emailAddress, password,pfp, description) => {
     if(!pfp){
-        pfp = ""
+        pfp = "https://www.dinosstorage.com/wp-content/uploads/2021/04/flying-disc-emoji-clipart-md.png";
     }
     if(!description){
         description = "";
