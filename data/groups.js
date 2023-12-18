@@ -177,6 +177,21 @@ const addComment = async (groupId, userId, comment) => {
     return updatedInfo;
 };
 
+const removeComment = async (groupId, commentId) => {
+    helpers.isValidId(groupId);
+    helpers.isValidId(commentId);
+    groupId = groupId.trim();
+    commentId = commentId.trim();
+
+    console.log(commentId)
+
+    const groupCollection = await groups();
+    const removedComment = await groupCollection.updateOne({_id: new ObjectId(groupId)}, { $pull: { comments: { _id: new ObjectId(commentId)} } })
+    if(!removedComment) {throw 'Could not delete comment successfully'}
+    else{console.log(removedComment)}
+    return removedComment;
+}
+
 const addUser = async (userId, groupId) => {
     //Input validation
     helpers.isValidId(userId); //maybe should check if is userid and not groupid etc
@@ -269,4 +284,4 @@ const leaveGroup = async (userId, groupId) => {
     }
     return {updateUser, updateGroup}; 
 }
-export default { create, leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID };
+export default { create, leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID, removeComment };

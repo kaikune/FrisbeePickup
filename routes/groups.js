@@ -42,6 +42,9 @@ router.route('/:groupId').get(async (req, res) => {
         groupObj.comments.forEach(async comment => {
             try{
                 comment.sender = (await usersData.getIDName([comment.userId]))[0]
+                if (req.session.user._id === comment.userId) {
+                    comment.isSender = true;
+                }
             }
             catch{
                 comment.sender = null;
@@ -76,6 +79,20 @@ router.route('/:groupId/comments').post(async (req, res) => {
         return res.status(400).json({ error: e });
     }
 });
+
+router.route('/:groupId/comments/delete').post(async (req, res) => {
+    try{
+        let groupId = req.params.groupId;
+        let commentId = req.body.commentId;
+
+        await groupsData.removeComment(groupId, commentId);
+        return res.redirect('/groups/' + groupId);
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(400).json({error: err})
+    }
+})
 
 router
     .route('/edit/:groupId')
