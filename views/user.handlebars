@@ -50,9 +50,11 @@
             <button type="submit" class="delete-button">Delete</button>
         </form>
     {{else if currentUser}}
+        {{#if notFriend}}
         <form action="/users/{{user._id}}/friends/sendRequest" method="POST">
             <button type="submit" class="add-friend">Add Friend</button>
         </form>
+        {{/if}}
     {{ else }}
         <p>To add this user as a friend, please <a href="/login">login</a>.</p>
     {{/if}}
