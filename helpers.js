@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import xss from 'xss';
 
 export let stringHelper = function (string, stringName, minLength, maxLength) {
     if (string == null) {
@@ -14,7 +15,7 @@ export let stringHelper = function (string, stringName, minLength, maxLength) {
     if (maxLength != null && string.length > maxLength) {
         throw 'The provided ' + stringName + ' is too long!';
     }
-    return string;
+    return xss(string);
 };
 
 export function validatePassword(password) {
