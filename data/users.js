@@ -365,6 +365,7 @@ const removeFriend = async (userId, friendUserId) => {
 };
 const isUserLeader = async (userId) => {
     //Returns True if user is owner of at least one game or group otherwise False
+    helpers.isValidId(userId);
     const gameCollection = await games();
     const groupCollection = await groups();
     const gameOrganizer = await gameCollection.findOne({ organizer: userId });

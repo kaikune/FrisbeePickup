@@ -12,6 +12,7 @@ router
         if (term == null) {
             return res.render("search", {title: "Search"});
         }
+        helpers.stringHelper(term, 'Search term');
         term = term.trim();
 
         let usersList, groupsList, gamesList;
