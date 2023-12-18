@@ -184,12 +184,9 @@ const removeComment = async (groupId, commentId) => {
     groupId = groupId.trim();
     commentId = commentId.trim();
 
-    console.log(commentId)
-
     const groupCollection = await groups();
     const removedComment = await groupCollection.updateOne({_id: new ObjectId(groupId)}, { $pull: { comments: { _id: new ObjectId(commentId)} } })
     if(!removedComment) {throw 'Could not delete comment successfully'}
-    else{console.log(removedComment)}
     return removedComment;
 }
 
