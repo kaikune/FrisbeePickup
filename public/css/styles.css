@@ -257,8 +257,22 @@ footer{
 }
 
 .message-sender {
+    display: inline-block;
     font-size: smaller;
     color: #AAAAAA;
+}
+
+.message-text {
+    display: block;
+}
+
+.delete-comment-button {
+    display: inline-block;
+}
+
+.message {
+    margin: 5px;
+    background-color: #F0F0F0;
 }
 
 /* End Messages */

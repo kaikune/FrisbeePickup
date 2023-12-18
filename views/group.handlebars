@@ -31,14 +31,16 @@
             </form>
             <br>
             {{#each group.comments}}
-                <p class="message-text">{{this.commentText}}</p>
+                <div class="message">
+                <a class="message-text">{{this.commentText}}</a>
                 <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
                 {{#if this.isSender}}
-                <form action="/groups/{{../group._id}}/comments/delete" method="post">
+                <form action="/groups/{{../group._id}}/comments/delete" method="post" class="button-wrapper">
                     <input type="hidden" name="commentId" value="{{this._id}}">
                     <button type="submit" class="delete-comment-button">Delete</button>
                 </form>
                 {{/if}}
+                </div>
             {{/each}}
         </div>
 
