@@ -3,8 +3,8 @@
 
     <div class="weather-data">
         {{#each weather}}
-            <div "forecast">
-                <p>Time: {{this.date}} {{this.time}}</p>
+            <div class="forecast">
+                <p>Date: {{this.date}}</p>
                 <p>{{this.weather}}</p>
                 <img src="https://openweathermap.org/img/wn/{{this.icon}}@2x.png" alt="weather icon">
                 <p>Temperature: {{this.temp}} °F</p>

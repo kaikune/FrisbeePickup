@@ -328,7 +328,7 @@ footer{
 }
 
 .forecast {
-    flex: 1 0 20%;
+    flex: 1 0 10%;
     margin: 10px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
