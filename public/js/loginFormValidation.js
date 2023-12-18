@@ -1,11 +1,11 @@
 let loginForm = document.getElementById("login-form");
 
-if(loginForm){
+if (loginForm) {
     let errorLabel = document.getElementById("error-label");
     errorLabel.hidden = true;
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        try{
+        try {
             let emailAddress = document.getElementById("login-emailAddress").value.toLowerCase();
             let password = document.getElementById("login-password").value;
             if (!isValidEmail(emailAddress)) {
@@ -14,9 +14,9 @@ if(loginForm){
             validatePassword(password);
             event.currentTarget.submit();
         }
-        catch(err){
+        catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;
         }
-    })
+    });
 }

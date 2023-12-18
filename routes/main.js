@@ -50,7 +50,6 @@ router
             return res.redirect("/login");
 
         } catch (e) {
-            console.log(e);
             res.status(400);
             res.json({error: e});
         }
