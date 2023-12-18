@@ -56,30 +56,42 @@ router
 router  
     .route("/logout")
     .get(async (req, res) => {
-        req.session.user = null;
-        // Overwrites currentUser bc middleware sets it to user and we don't want that
-        return res.render("logout", {title: "Logged out", currentUser: null});
+        try {
+            req.session.user = null;
+            // Overwrites currentUser bc middleware sets it to user and we don't want that
+            return res.render("logout", {title: "Logged out", currentUser: null});
+        } catch (e) {
+            return res.status(400).render('error', {title: "Error", error: e});
+        }
     });
 
 router
     .route("/create-group")
     .get(async (req, res) => {
-        let allGroupObjs = await groupsData.getAll();
-        return res.render('createGroup', {title:"Create group", groups: allGroupObjs});
+        try {
+            let allGroupObjs = await groupsData.getAll();
+            return res.render('createGroup', {title:"Create group", groups: allGroupObjs});
+        } catch (e) {
+            return res.status(400).render('error', {title: "Error", error: e});
+        }
     })
 
 router
     .route("/create-game")
     .get(async (req, res) => {
-        let allGamesData = await gamesData.getAll();
-        let allGroupsData = await groupsData.getAll();
-        if(!req.session.user){
-            allGroupsData = {};
-        }else{
-            let userId = req.session.user._id;
-            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+        try {
+            let allGamesData = await gamesData.getAll();
+            let allGroupsData = await groupsData.getAll();
+            if(!req.session.user){
+                allGroupsData = {};
+            }else{
+                let userId = req.session.user._id;
+                allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+            }
+            return res.render('createGame', {title:"Create game", groups: allGroupsData, states: helpers.states});
+        } catch (e) {
+            return res.status(400).render('error', {title: "Error", error: e});
         }
-        return res.render('createGame', {title:"Create game", groups: allGroupsData, states: helpers.states});
     })
 
 export default router;

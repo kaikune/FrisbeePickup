@@ -96,11 +96,14 @@ router.route('/:groupId/comments/delete').post(async (req, res) => {
 router
     .route('/edit/:groupId')
     .get(async (req, res) => {
+        try {
+            let groupId = req.params.groupId;
+            const groupObj = await groupsData.get(groupId);
 
-        let groupId = req.params.groupId;
-        const groupObj = await groupsData.get(groupId);
-
-        return res.render("editGroup", {title:"Edit group", groupObj});
+            return res.render("editGroup", {title:"Edit group", groupObj});
+        } catch (e) {
+            return res.status(400).render('error', { error: e });
+        }
     })
     .post(async (req, res) => {
         try {

@@ -82,15 +82,19 @@ router.route('/:gameId').get(async (req, res) => {
 router
     .route('/edit/:gameId')
     .get(async (req, res) => {
-        let gameId = req.params.gameId;
-        let gameObj = await gamesData.get(gameId);
-        let allGroupsData = null;
-        if (req.session.user) {
-            let userId = req.session.user._id;
-            allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
-        }
+        try {
+            let gameId = req.params.gameId;
+            let gameObj = await gamesData.get(gameId);
+            let allGroupsData = null;
+            if (req.session.user) {
+                let userId = req.session.user._id;
+                allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
+            }
 
-        return res.render('editGame', { title: 'Edit Games', user: req.session.user, gameObj, states: helpers.states, groups: allGroupsData });
+            return res.render('editGame', { title: 'Edit Games', user: req.session.user, gameObj, states: helpers.states, groups: allGroupsData });
+        } catch (e) {
+            return res.status(400).render('error', { error: e });
+        }
     })
     .post(async (req, res) => {
         try {
