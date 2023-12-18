@@ -334,7 +334,7 @@ const rejectFriendRequest = async (userId, friendUserId) => {
     const userCollection = await users();
     const user = await getUser(userId);
 
-    if (user.friendRequests.includes(friendUserId)) throw 'User does not have a pending friend request from this user';
+    if (!user.friendRequests.includes(friendUserId)) throw 'User does not have a pending friend request from this user';
 
     // Remove friend request
     const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { friendRequests: friendUserId } });
