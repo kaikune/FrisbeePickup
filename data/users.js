@@ -182,14 +182,10 @@ const deleteUser = async (userId) => {
 
     // Remove user from all games
     const gameRemove = await gameCollection.updateMany(
-        { 'players._id': new ObjectId(userId) },
+        { players: userId },
         {
-            $pull: {
-                players: {
-                    _id: new ObjectId(userId), // remove user
-                },
-            },
-            $inc: { totalNumberOfPlayers: -1 },
+            $pull: {players: userId},
+            $inc: {totalNumberOfPlayers: -1 }
         },
         { returnDocument: 'after' }
     );
@@ -201,12 +197,11 @@ const deleteUser = async (userId) => {
 
     // Remove user from all groups
     const groupRemove = await groupCollection.updateMany(
-        { 'players.id': new ObjectId(userId) },
+        { players: userId },
         {
             $pull: {
-                players: {
-                    _id: new ObjectId(userId), // remove user
-                },
+                players: 
+                     userId, // remove user,
             },
             $inc: { totalNumberOfPlayers: -1 },
         },
