@@ -43,10 +43,11 @@
                 </div>
             {{/each}}
         </div>
-
+        {{#unless isOwner}}
         <form action="/groups/leave/{{group._id}}" method="POST">
             <button type="submit">Leave Group</button>
         </form>
+        {{/unless}}
     {{/unless}}
         
     {{ else }}

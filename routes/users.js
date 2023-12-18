@@ -17,8 +17,17 @@ router
     .route('/:userId')
     .get(async (req, res) => {
         try {
+
             let userId = req.params.userId;
+            let notFriend = true;
             let userObj = await usersData.getUser(userId);
+            if(req.session.user){
+                if(req.session.user.friends.includes(userId) || userObj.friendRequests.includes(req.session.user._id)){
+                    notFriend = false;
+                }
+            }
+            
+            
 
             let isOwner = req.session.user != null && req.session.user._id.toString() == userId;
             let friends = await usersData.getIDName(userObj.friends);
@@ -35,6 +44,7 @@ router
                 games: games,
                 requests: requests,
                 isOwner: isOwner,
+                notFriend: notFriend
             }
             return res.render('user', ret);
         } catch (e) {  

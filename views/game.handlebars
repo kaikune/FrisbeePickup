@@ -22,9 +22,11 @@
             <button type="submit" class="join-button">Join Game</button>
         </form>
     {{else}}
+    {{#unless isOwner}}
         <form action="/games/leave/{{game._id}}" method="POST">
             <button type="submit">Leave Game</button>
         </form>
+    {{/unless}}
     {{/unless}}
         
     {{ else }}

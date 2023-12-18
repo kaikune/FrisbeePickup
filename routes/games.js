@@ -38,8 +38,10 @@ router.route('/:gameId').get(async (req, res) => {
     try {
         let gameId = req.params.gameId;
         let gameObj = await gamesData.get(gameId);
-
-        let hostGroup = await groupsData.get(gameObj.group);
+        let hostGroup = null;
+        if(gameObj.group !== null){
+            hostGroup = await groupsData.get(gameObj.group);
+        }
         let players = gameObj.players;
         // players = players.filter(player => player !== gameObj.organizer)
         let playersArr = await usersData.getIDName(players);
@@ -47,8 +49,10 @@ router.route('/:gameId').get(async (req, res) => {
         let currentUser = req.session.user;
         let isOwner = currentUser && gameObj.organizer == currentUser._id;
         let isMember = currentUser && gameObj.players.includes(currentUser._id);
-
-        let organizerArr = await usersData.getIDName([gameObj.organizer]);
+        let organizerArr = [null];
+        if(gameObj.organizer !== null){
+            organizerArr = await usersData.getIDName([gameObj.organizer]);
+        }
         
         const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
 
