@@ -207,8 +207,6 @@ const deleteUser = async (userId) => {
             },
             $inc: { totalNumberOfPlayers: -1 },
         },
-        {groupLeader: userId},
-        { $set: { groupLeader: null } },
         { returnDocument: 'after' }
     );
     const updateGroupLeader = await groupCollection.updateMany(
