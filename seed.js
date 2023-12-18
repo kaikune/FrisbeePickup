@@ -69,6 +69,14 @@ export async function seed(){
     const group4 = await groupsData.create("Youth Frisbee Club", "Engaging youth in Frisbee activities and games", allUsers[3]._id);
     const group5 = await groupsData.create("Casual Frisbee Meetups", "Casual and fun Frisbee meetups for all skill levels", allUsers[4]._id);
 
+    console.log("Adding comments to group...")
+    await groupsData.addComment(group1._id, allUsers[0]._id, "This is a great group!");
+    await groupsData.addComment(group2._id, allUsers[1]._id, "I love this group!");
+    await groupsData.addComment(group3._id, allUsers[2]._id, "This group is awesome!");
+    await groupsData.addComment(group4._id, allUsers[3]._id, "I'm so glad I joined this group!");
+    await groupsData.addComment(group5._id, allUsers[4]._id, "This group is so much fun!");
+    
+    
     console.log("Creating all games...")
     const game1 = await gamesData.create("Sunset Frisbee Fun", "Relaxed Frisbee game at sunset", { streetAddress: "101 Beach Blvd", city: "Santa Monica", state: "CA", zip: "90401" }, 15, "12/12/2024", "5:00 PM", "7:00 PM", group1._id, allUsers[0]._id);
     const game2 = await gamesData.create("Morning Frisbee in the Park", "Start your day with a fun Frisbee game", { streetAddress: "500 Park Ave", city: "New York", state: "NY", zip: "10001" }, 20, "12/20/2024", "8:00 AM", "10:00 AM", group1._id,allUsers[0]._id);

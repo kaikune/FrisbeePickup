@@ -12,7 +12,7 @@ const configRoutesFunction = (app) => {
     app.use('/', mainRoutes);
 
     app.use('*', (req, res) => {
-        return res.status(404).json({ error: 'Not Found' });
+        return res.status(404).render('error', { error: 'Not Found' });
     });
 };
 

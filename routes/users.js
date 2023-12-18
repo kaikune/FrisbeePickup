@@ -5,13 +5,13 @@ import * as helpers from '../helpers.js';
 
 const router = Router();
 
-router
-    .route('/')
-    .get(async (req, res) => {
-        let allUserObjs = await usersData.getAllUsers();
-        return res.json(allUserObjs);
-        // return res.render('user', {title:"Users", users: allUserObjs });
-    });
+// router
+//     .route('/')
+//     .get(async (req, res) => {
+//         let allUserObjs = await usersData.getAllUsers();
+//         return res.json(allUserObjs);
+//         // return res.render('user', {title:"Users", users: allUserObjs });
+//     });
 
 router
     .route('/:userId')

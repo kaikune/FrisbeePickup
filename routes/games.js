@@ -67,8 +67,7 @@ router.route('/:gameId').get(async (req, res) => {
             weather: weather
         });
     } catch (e) {
-        res.status(400);
-        res.json({ error: e });
+        res.status(400).render('error', { error: e });
     }
 });
 
@@ -102,8 +101,7 @@ router
             return res.redirect("/games/" + gameId);
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 
@@ -122,11 +120,10 @@ router
             */
 
             await gamesData.remove(gameId);
-            return res.json({"Deleted":true})
+            return res.redirect(`/games/${gameId}`)
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 
@@ -141,8 +138,7 @@ router
             return res.redirect("/games/" + gameId);
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 
@@ -158,8 +154,7 @@ router
         }
         catch(e) {
             console.log(e);
-            res.status(400);
-            return res.json({error:e});
+            return res.status(400).render('error', {error:e});
         }
     });
 

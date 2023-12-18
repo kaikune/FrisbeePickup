@@ -25,24 +25,24 @@
     </ul>
 
     {{#if isOwner}}
-
-        <div id="friend-request-wrapper">
-            <h3>Incoming Friend Requests</h3>
-            {{#each requests}}
-                <div id="friend-request">
-                    <a class="request-sender">{{this.name}}</a>
-                    <form action="/users/{{../user._id}}/friends/acceptRequest" method="POST" class="button-wrapper">
-                        <input type="hidden" name="friendUserId" value="{{this._id}}">
-                        <button type="submit" class="accept-button">Accept</button>
-                    </form>
-                    <form action="/users/{{../user._id}}/friends/rejectRequest" method="POST" class="button-wrapper">
-                        <input type="hidden" name="friendUserId" value="{{this._id}}">
-                        <button type="submit" class="reject-button">Reject</button>
-                    </form>
-                </div>
-            {{/each}}
-        </div>
-
+        {{#if requests}}
+            <div id="friend-request-wrapper">
+                <h3>Incoming Friend Requests</h3>
+                {{#each requests}}
+                    <div id="friend-request">
+                        <a class="request-sender">{{this.name}}</a>
+                        <form action="/users/{{../user._id}}/friends/acceptRequest" method="POST" class="button-wrapper">
+                            <input type="hidden" name="friendUserId" value="{{this._id}}">
+                            <button type="submit" class="accept-button">Accept</button>
+                        </form>
+                        <form action="/users/{{../user._id}}/friends/rejectRequest" method="POST" class="button-wrapper">
+                            <input type="hidden" name="friendUserId" value="{{this._id}}">
+                            <button type="submit" class="reject-button">Reject</button>
+                        </form>
+                    </div>
+                {{/each}}
+            </div>
+        {{/if}}
         <form action="/users/edit/{{user._id}}" method="GET">
             <button type="submit" class="edit-button">Edit</button>
         </form>
