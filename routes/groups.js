@@ -39,6 +39,15 @@ router.route('/:groupId').get(async (req, res) => {
         let isMember = currentUser && groupObj.players.includes(currentUser._id);
         let isOwner = currentUser && owner._id == currentUser._id;
 
+        groupObj.comments.forEach(async comment => {
+            try{
+                comment.sender = (await usersData.getIDName([comment.userId]))[0]
+            }
+            catch{
+                comment.sender = null;
+            }
+        });
+        
         return res.render('group', {
             title:"Group: " + groupObj.groupName,
             group: groupObj,
@@ -61,7 +70,7 @@ router.route('/:groupId/comments').post(async (req, res) => {
         let userId = req.session.user._id
 
         let groupRes = await groupsData.addComment(groupId, userId, comment);
-        return res.json(groupRes);
+        return res.redirect("/groups/" + groupId);
     } catch (e) {
         if (e === 'Could not update group successfully') return res.status(500).json({ error: e });
         return res.status(400).json({ error: e });
