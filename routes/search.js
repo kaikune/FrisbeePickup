@@ -46,64 +46,7 @@ router
 
         let data = {users: usersList, groups: groupsList, games: gamesList};
 
-        /**
-
-        let errors = [];
-        let users = [];
-        let groups = [];
-        let games = [];
-
-        try{
-            users = await usersData.getAllUsers();
-        }
-        catch(err){
-            errors.push(err);
-        }
-        try{
-            groups = await groupsData.getAll();
-        }
-        catch(err){
-            errors.push(err);
-        }
-        try{
-            games = await gamesData.getAll();
-        }
-        catch(err){
-            errors.push(err);
-        }
-        **/
-
-        // res.render('searchForm', {title:"Search", players: users, groups: groups, games: games});
         return res.json(data);
     });
-    /**
-    .post(async (req, res) => {
-        const query = req.body['search-form'];
-        let errors = [];
-        let users = [];
-        let groups = [];
-        let games = [];
-
-        try {
-            users = await usersData.findUsersThatStartWith(query);
-        } catch (err) {
-            errors.push(err);
-        }
-
-        try {
-            groups = await groupsData.findGroupsThatStartWith(query);
-        } catch (err) {
-            errors.push(err);
-        }
-
-        try {
-            games = await gamesData.findGamesThatStartWith(query);
-        } catch (err) {
-            errors.push(err);
-        }
-
-        res.render('searchResults', { title: "Search Results", users, groups, games, errors });
-    });
-    **/
 
 export default router;
