@@ -28,8 +28,7 @@ router
             return res.redirect("/");
 
         } catch (e) {
-            res.status(400);
-            res.json({error: e});
+            return res.status(400).render('error', {title: "Error", error: e});
         }
     });
 
@@ -50,8 +49,7 @@ router
             return res.redirect("/login");
 
         } catch (e) {
-            res.status(400);
-            res.json({error: e});
+            return res.status(400).render('error', {title: "Error", error: e});
         }
     });
 

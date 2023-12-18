@@ -37,9 +37,8 @@ router
                 isOwner: isOwner,
             }
             return res.render('user', ret);
-        } catch (e) {
-            res.status(400);    
-            res.json({ error: e });
+        } catch (e) {  
+            res.status(400).render('error', { error: e });
         }
     });
 
@@ -53,17 +52,16 @@ router
             helpers.isValidId(senderId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', { error: e });
         }
 
         try {
             const userObj = await usersData.sendFriendRequest(senderId, friendUserId);
-            //return res.json(userObj);
             return res.redirect("/users/" + friendUserId);
         } catch (e) {
             // Uber bandaid
-            if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
-            else return res.status(400).json({ error: e });
+            if (e === 'Could not update user successfully') return res.status(500).render('error', { error: e });
+            else return res.status(400).render('error', { error: e });
         }
     });
 
@@ -77,18 +75,17 @@ router
             helpers.isValidId(userId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', { error: e });
         }
 
         try {
             const userObj = await usersData.acceptFriendRequest(userId, friendUserId);
 
-            //return res.json(userObj);
             return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
-            if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
-            else return res.status(400).json({ error: e });
+            if (e === 'Could not update user(s) successfully') return res.status(500).render('error', { error: e });
+            else return res.status(400).render('error', { error: e });
         }
     });
 
@@ -102,18 +99,17 @@ router
             helpers.isValidId(userId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', { error: e });
         }
 
         try {
             const userObj = await usersData.rejectFriendRequest(userId, friendUserId);
 
-            //return res.json(userObj);
             return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
-            if (e === 'Could not update user successfully') return res.status(500).json({ error: e });
-            else return res.status(400).json({ error: e });
+            if (e === 'Could not update user successfully') return res.status(500).render('error', { error: e });
+            else return res.status(400).render('error', { error: e });
         }
     });
 
@@ -127,18 +123,17 @@ router
             helpers.isValidId(userId);
             helpers.isValidId(friendUserId);
         } catch (e) {
-            res.status(400).json({ error: e });
+            res.status(400).render('error', { error: e });
         }
 
         try {
             const userObj = await usersData.removeFriend(userId, friendUserId);
 
-            //return res.json(userObj);
             return res.redirect("/users/" + userId);
         } catch (e) {
             // Uber bandaid
-            if (e === 'Could not update user(s) successfully') return res.status(500).json({ error: e });
-            else return res.status(400).json({ error: e });
+            if (e === 'Could not update user(s) successfully') return res.status(500).render('error', { error: e });
+            else return res.status(400).render('error', { error: e });
         }
     });
 
@@ -149,9 +144,7 @@ router
             let userId = req.params.userId;
 
             if (req.session.user == null || req.session.user._id != userId) {
-                // temporary
-                res.status(400);
-                res.json({error: "not allowed"});
+                return res.status(400).render('error', {error: "Not allowed"});
             }
 
             // user obj will just be currentUser.
@@ -159,8 +152,7 @@ router
         }
         catch (err){
             console.log(err);
-            res.status(400);
-            return res.json({error:err})
+            return res.status(400).render('error', {error:err})
         }
     })
     .post(async (req, res) => {
@@ -176,8 +168,7 @@ router
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 
@@ -195,8 +186,7 @@ router
             return res.redirect("/logout")
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 

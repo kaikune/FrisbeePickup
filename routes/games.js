@@ -30,8 +30,7 @@ router
             res.redirect(`games/${createResult._id}`);
         } catch (err) {
             console.error(err); // Log the error
-            return res.status(400).json({ error: err.message || 'An error occurred' });
-        
+            return res.status(400).render('error', { error: err.message || 'An error occurred' });
         }
     });
 

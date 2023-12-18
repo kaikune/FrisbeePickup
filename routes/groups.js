@@ -11,14 +11,14 @@ router
         const groupName = req.body.groupName;
         const groupDescription = req.body.groupDescription;
         
-        if(!req.session.user) return res.status(400).json({ error: "Must be logged in" });
+        if(!req.session.user) return res.status(400).render('error', { error: "Must be logged in" });
         const groupLeader = req.session.user._id;
         try {
             helpers.validateGroup(groupName, groupDescription, groupLeader)
             const createResult = await groupsData.create(groupName, groupDescription, groupLeader);     
             res.redirect(`groups/${createResult._id}`);
         } catch (err) {
-            return res.status(400).json({ error: err });
+            return res.status(400).render('error', { error: err });
         }
     });
 
@@ -61,8 +61,7 @@ router.route('/:groupId').get(async (req, res) => {
             isOwner: isOwner
         });
     } catch (e) {
-        res.status(400);
-        res.json({ error: e });
+        return res.status(400).render('error', { error: e });
     }
 });
 
@@ -75,8 +74,8 @@ router.route('/:groupId/comments').post(async (req, res) => {
         let groupRes = await groupsData.addComment(groupId, userId, comment);
         return res.redirect("/groups/" + groupId);
     } catch (e) {
-        if (e === 'Could not update group successfully') return res.status(500).json({ error: e });
-        return res.status(400).json({ error: e });
+        if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });
+        return res.status(400).render('error', { error: e });
     }
 });
 
@@ -90,7 +89,7 @@ router.route('/:groupId/comments/delete').post(async (req, res) => {
     }
     catch (err) {
         console.log(err)
-        return res.status(400).json({error: err})
+        return res.status(400).render('error', {error: err})
     }
 })
 
@@ -118,8 +117,7 @@ router
             return res.redirect("/groups/" + groupId);
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     });
 
@@ -139,8 +137,7 @@ router
             return res.redirect("/");
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status.render('error', {error: e});
         }
     });
 
@@ -155,8 +152,7 @@ router
             return res.redirect("/groups/" + groupId);
         } catch (e) {
             console.log(e);
-            res.status(400);
-            return res.json({error: e});
+            return res.status(400).render('error', {error: e});
         }
     })
 
@@ -172,8 +168,7 @@ router
         }
         catch(e) {
             console.log(e);
-            res.status(400);
-            return res.json({error:e});
+            return res.status(400).render('error', {error:e});
         }
     })
 
