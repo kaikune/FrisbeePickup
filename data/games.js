@@ -3,7 +3,7 @@ import { games, users } from '../config/mongoCollections.js';
 import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 
-export function formatAndValidateGame (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
+const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
 
     gameName = helpers.stringHelper(gameName, "Game name", 5, null);
     gameDescription = helpers.stringHelper(gameDescription, "Game description", 25, null);
@@ -290,4 +290,4 @@ const leaveGame = async (userId, gameId) => {
     return {updateUser, updateGame}; 
 }
 
-export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName, leaveGame };
+export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName, leaveGame, formatAndValidateGame };

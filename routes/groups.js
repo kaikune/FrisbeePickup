@@ -25,6 +25,7 @@ router
 router.route('/:groupId').get(async (req, res) => {
     try {
         let groupId = req.params.groupId;
+        helpers.isValidId(groupId);
         const groupObj = await groupsData.get(groupId);
         let players=  groupObj.players;
         players = players.filter(player => player !== groupObj.groupLeader)
@@ -71,6 +72,10 @@ router.route('/:groupId/comments').post(async (req, res) => {
         let comment = req.body.comment;
         let userId = req.session.user._id
 
+        helpers.isValidId(groupId);
+        helpers.isValidId(userId);
+        helpers.stringHelper(comment, "Comment", 1, 1000);
+
         let groupRes = await groupsData.addComment(groupId, userId, comment);
         return res.redirect("/groups/" + groupId);
     } catch (e) {
@@ -83,6 +88,9 @@ router.route('/:groupId/comments/delete').post(async (req, res) => {
     try{
         let groupId = req.params.groupId;
         let commentId = req.body.commentId;
+
+        helpers.isValidId(groupId);
+        helpers.isValidId(commentId);
 
         await groupsData.removeComment(groupId, commentId);
         return res.redirect('/groups/' + groupId);
@@ -98,6 +106,8 @@ router
     .get(async (req, res) => {
         try {
             let groupId = req.params.groupId;
+
+            helpers.isValidId(groupId);
             const groupObj = await groupsData.get(groupId);
 
             return res.render("editGroup", {title:"Edit group", groupObj});
@@ -109,6 +119,8 @@ router
         try {
             let groupId = req.params.groupId;
             let currentUser = req.session.user;
+
+            helpers.isValidId(groupId);
             let groupObj = await groupsData.get(groupId);
 
 
@@ -130,6 +142,8 @@ router
         try {
             let groupId = req.params.groupId;
             let currentUser = req.session.user;
+
+            helpers.isValidId(groupId);
             let groupObj = await groupsData.get(groupId);
 
             if (currentUser._id !== groupObj.groupLeader) {
@@ -151,6 +165,7 @@ router
             let groupId = req.params.groupId;
             let currentUser = req.session.user;
 
+            helpers.isValidId(groupId);
             await groupsData.addUser(currentUser._id, groupId);
             return res.redirect("/groups/" + groupId);
         } catch (e) {
@@ -166,6 +181,7 @@ router
             let groupId = req.params.groupId;
             let currentUser = req.session.user;
 
+            helpers.isValidId(groupId);
             await groupsData.leaveGroup(currentUser._id, groupId);
             return res.redirect("/groups/"+groupId);
         }
