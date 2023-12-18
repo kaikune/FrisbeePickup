@@ -30,13 +30,13 @@
                 <button type="Submit" class="message-send">Send</button>
             </form>
             <br>
-            {{#each group.comments}}
-                <p class="message-text">{{this.commentText}}</p>
-                <a class="message-sender">-{{this.sender.name}}</a>
+            {{#each comment}}
+                <p class="message-text">comment.message</p>
+                <a class="message-sender">-comment.sender</a>
             {{/each}}
         </div>
 
-        <form action="/groups/leave/{{group.id}}" method="POST">
+        <form action="/groups/leave/{{group._id}}" method="POST">
             <button type="submit">Leave Group</button>
         </form>
     {{/unless}}
