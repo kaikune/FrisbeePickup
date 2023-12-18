@@ -152,12 +152,12 @@ router.route('/delete/:gameId').post(async (req, res) => {
 
         let owner = await usersData.getUser(gameObj.organizer)
 
-        if (currentUser._id !== owner) {
+        if (currentUser._id !== owner._id) {
             throw Error("not allowed");
         }
 
         await gamesData.remove(gameId);
-        return res.redirect(`/games/${gameId}`);
+        return res.redirect(`/`);
     } catch (e) {
         console.log(e);
         return res.status(400).render('error', { error: e });
