@@ -21,6 +21,9 @@ router
 
             let emailAddress = req.body["login-emailAddress"];
             let password = req.body["login-password"];
+
+            helpers.isValidEmail(emailAddress.toLowerCase());
+            helpers.validatePassword(password);
             
             let userInfo = await usersData.loginUser(emailAddress, password);
             req.session.user = userInfo;
@@ -43,6 +46,10 @@ router
             let emailAddress = req.body.emailAddress;
             let password = req.body.password;
             let username = req.body.username;
+
+            helpers.isValidEmail(emailAddress.toLowerCase());
+            helpers.validatePassword(password);
+            helpers.stringHelper(username, "Username", 3, 10);
 
             let createUserRes = await usersData.createUser(username, emailAddress, password);
 

@@ -44,12 +44,16 @@ export function formatAndValidateUser (userData, ignorePassword) {
     let username = helpers.stringHelper(userData.username, "Username", 3, 10);
     let emailAddress = helpers.stringHelper(userData.emailAddress, "Email address", 1, null).toLowerCase();
     let password;
+
+    helpers.isValidEmail(emailAddress);
+    
     if (!ignorePassword) {   //err...
         password = helpers.stringHelper(userData.password, "Password", 1, null);
         helpers.validatePassword(password);
     } else {
         password = userData.password;
     }
+    
     let profilePicture = helpers.stringHelper(userData.profilePicture, "Profile picture", null, 2048);
     let description = helpers.stringHelper(userData.description, "Description", null, 300);
     return { username, emailAddress, password, profilePicture, description };
