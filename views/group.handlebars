@@ -32,7 +32,7 @@
             <br>
             {{#each group.comments}}
                 <p class="message-text">{{this.commentText}}</p>
-                <a class="message-sender">-{{this.sender.name}}</a>
+                <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
                 {{#if this.isSender}}
                 <form action="/groups/{{../group._id}}/comments/delete" method="post">
                     <input type="hidden" name="commentId" value="{{this._id}}">
