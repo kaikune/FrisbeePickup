@@ -19,6 +19,7 @@ router.route('/').post(async (req, res) => {
     const group = req.body.group;
     let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
     try {
+        helpers.isValidNum(req.body.maxPlayers);
         let maxPlayersNumber = parseInt(maxCapacity, 10);
         startTime = helpers.convertTo12Hour(startTime);
         endTime = helpers.convertTo12Hour(endTime);
@@ -105,7 +106,7 @@ router
             let currentUser = req.session.user;
             helpers.isValidId(gameId);
             const gameObj = await gamesData.get(gameId);
-
+            helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(req.body.maxPlayers, 10);
             let startTime = helpers.convertTo12Hour(req.body.startTime);
             let endTime = helpers.convertTo12Hour(req.body.endTime);

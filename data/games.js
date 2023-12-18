@@ -43,7 +43,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         startTime: gameData.startTime,
         endTime: gameData.endTime,
         players: [organizer],
-        totalNumberOfPlayers: 0,
+        totalNumberOfPlayers: 1,
         group,
         organizer,
         expired: false,
