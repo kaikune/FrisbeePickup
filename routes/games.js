@@ -122,7 +122,8 @@ router
             */
 
             await gamesData.remove(gameId);
-            return res.json({"Deleted":true})
+            //return res.json({"Deleted":true})
+            return res.redirect("/");
         } catch (e) {
             console.log(e);
             res.status(400);
