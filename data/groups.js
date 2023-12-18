@@ -4,6 +4,7 @@ import * as helpers from '../helpers.js';
 import { groups, users ,games} from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { usersData, gamesData } from './index.js';
+import xss from 'xss';
 const create = async (groupName, groupDescription, groupLeader) => {
     // Input Validation
     helpers.validateGroup(groupName, groupDescription, groupLeader);
@@ -13,8 +14,8 @@ const create = async (groupName, groupDescription, groupLeader) => {
 
     // Add group to database
     let newgroup = {
-        groupName,
-        description: groupDescription,
+        groupName: xss(groupName),
+        description: xss(groupDescription),
         groupLeader,
         comments: [],
         players: [groupLeader],
@@ -132,8 +133,8 @@ const update = async (groupId, groupName, groupDescription, groupLeader) => {
 
     // Update record
     const updatedgroup = {
-        groupName,
-        description: groupDescription,
+        groupName: xss(groupName),
+        description: xss(groupDescription),
         groupLeader,
         comments: oldGroup.comments,
         players: oldGroup.players,
@@ -167,7 +168,7 @@ const addComment = async (groupId, userId, comment) => {
         _id: new ObjectId(),
         userId,
         timestamp: new Date(),
-        commentText: comment,
+        commentText: xss(comment),
     };
 
     const groupCollection = await groups();
