@@ -8,6 +8,46 @@ router
     .route('/')
     .get(async (req, res) => {
 
+        let term = req.query.term;
+        if (term == null) {
+            return res.render("search", {title: "Search"});
+        }
+        term = term.trim();
+
+        let usersList, groupsList, gamesList;
+
+        try {
+            if (term == "") {
+                usersList = await usersData.getAllUsers();
+            } else {
+                usersList = await usersData.findUsersThatStartWith(term);
+            }
+        } catch (e) {
+            usersList = [];
+        }
+        try {
+            if (term == "") {
+                groupsList = await groupsData.getAll();
+            } else {
+                groupsList = await groupsData.findGroupsThatStartWith(term);
+            }
+        } catch (e) {
+            groupsList = [];
+        }
+        try {
+            if (term == "") {
+                gamesList = await gamesData.getAll();
+            } else {
+                gamesList = await gamesData.findGamesThatStartWith(term);
+            }
+        } catch (e) {
+            gamesList = [];
+        }
+
+        let data = {users: usersList, groups: groupsList, games: gamesList};
+
+        /**
+
         let errors = [];
         let users = [];
         let groups = [];
@@ -31,9 +71,12 @@ router
         catch(err){
             errors.push(err);
         }
+        **/
 
-        res.render('searchForm', {title:"Search", players: users, groups: groups, games: games});
-    })
+        // res.render('searchForm', {title:"Search", players: users, groups: groups, games: games});
+        return res.json(data);
+    });
+    /**
     .post(async (req, res) => {
         const query = req.body['search-form'];
         let errors = [];
@@ -61,5 +104,6 @@ router
 
         res.render('searchResults', { title: "Search Results", users, groups, games, errors });
     });
+    **/
 
 export default router;
