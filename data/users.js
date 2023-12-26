@@ -3,7 +3,7 @@ import { users, games, groups } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 
-const findUsersThatStartWith = async (search) => {
+const searchUsers = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
     if (!search) {
@@ -17,7 +17,7 @@ const findUsersThatStartWith = async (search) => {
         throw 'Empty string is not valid';
     }
     const userCollection = await users();
-    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    const reg = new RegExp(`${search}`, 'i'); // 'i' for case-insensitive
     let userList = await userCollection.find({ username: reg }).limit(resultSize).toArray();
     if (!userList || userList.length === 0) {
         throw "Couldn't find any users with that name";
@@ -39,41 +39,41 @@ const findUsersThatStartWith = async (search) => {
     return userList;
 };
 
-export function formatAndValidateUser (userData, ignorePassword) {
+export function formatAndValidateUser(userData, ignorePassword) {
     // Formats the data fields and checks if they are valid for user data fields. Doesn't check things like duplicate email, etc.
-    let username = helpers.stringHelper(userData.username, "Username", 3, 10);
-    let emailAddress = helpers.stringHelper(userData.emailAddress, "Email address", 1, null).toLowerCase();
+    let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
+    let emailAddress = helpers.stringHelper(userData.emailAddress, 'Email address', 1, null).toLowerCase();
     let password;
 
     helpers.isValidEmail(emailAddress);
-    
-    if (!ignorePassword) {   //err...
-        password = helpers.stringHelper(userData.password, "Password", 1, null);
+
+    if (!ignorePassword) {
+        //err...
+        password = helpers.stringHelper(userData.password, 'Password', 1, null);
         helpers.validatePassword(password);
     } else {
         password = userData.password;
     }
-    
-    let profilePicture = helpers.stringHelper(userData.profilePicture, "Profile picture", null, 2048);
-    let description = helpers.stringHelper(userData.description, "Description", null, 300);
+
+    let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
+    let description = helpers.stringHelper(userData.description, 'Description', null, 300);
     return { username, emailAddress, password, profilePicture, description };
 }
 
-
-const createUser = async (username, emailAddress, password,pfp, description) => {
-    if(!pfp){
-        pfp = "https://www.dinosstorage.com/wp-content/uploads/2021/04/flying-disc-emoji-clipart-md.png";
+const createUser = async (username, emailAddress, password, pfp, description) => {
+    if (!pfp) {
+        pfp = 'https://www.dinosstorage.com/wp-content/uploads/2021/04/flying-disc-emoji-clipart-md.png';
     }
-    if(!description){
-        description = "";
+    if (!description) {
+        description = '';
     }
-    let userData = {username, emailAddress, password, profilePicture:pfp, description};
+    let userData = { username, emailAddress, password, profilePicture: pfp, description };
     userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
     const userCollection = await users();
     const user = await userCollection.findOne({
-        $or: [{ emailAddress: emailAddress }, { username: { $regex: new RegExp('^' + username + '$', 'i') } }],
+        $or: [{ emailAddress: { $regex: new RegExp(`^${emailAddress}$`, 'i') } }, { username: { $regex: new RegExp(`^${username}$`, 'i') } }],
     });
 
     if (user) {
@@ -124,7 +124,7 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
 
-    let userData = {username, emailAddress, password: "", profilePicture, description};
+    let userData = { username, emailAddress, password: '', profilePicture, description };
     userData = formatAndValidateUser(userData, true);
 
     const userCollection = await users();
@@ -134,6 +134,7 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
         {
             $set: {
                 username: username,
+                emailAddress: emailAddress,
                 description: description,
                 profilePicture: profilePicture,
             },
@@ -186,24 +187,20 @@ const deleteUser = async (userId) => {
     const gameRemove = await gameCollection.updateMany(
         { players: userId },
         {
-            $pull: {players: userId},
-            $inc: {totalNumberOfPlayers: -1 }
+            $pull: { players: userId },
+            $inc: { totalNumberOfPlayers: -1 },
         },
         { returnDocument: 'after' }
     );
-    const updateOrganizer = await gameCollection.updateMany(
-        {organizer: userId},
-        { $set: { organizer: null } },
-        { returnDocument: 'after' }
-    );
+    const updateOrganizer = await gameCollection.updateMany({ organizer: userId }, { $set: { organizer: null } }, { returnDocument: 'after' });
 
     // Remove user from all groups
 
     const updateGroupLeader = await groupCollection.updateMany(
-        {groupLeader: userId},
-        { 
-            $set: { 
-                groupLeader: null 
+        { groupLeader: userId },
+        {
+            $set: {
+                groupLeader: null,
             },
             $pull: {
                 players: userId, // remove user,
@@ -212,7 +209,7 @@ const deleteUser = async (userId) => {
         },
         { returnDocument: 'after' }
     );
-    
+
     const groupRemove = await groupCollection.updateMany(
         { players: userId },
         {
@@ -224,20 +221,21 @@ const deleteUser = async (userId) => {
         { returnDocument: 'after' }
     );
 
-    const updateGroupMessages = await groupCollection.updateMany(
-        {},
-        { $pull: { comments: { userId: userId } } }
-    );
-    const updateFriendRequests = await userCollection.updateMany(
-        {},
-        { $pull: { friendRequests: userId } }
-    );
-    const updateFriendList = await userCollection.updateMany(
-        {},
-        { $pull: { friends: userId  } }
-    );
+    const updateGroupMessages = await groupCollection.updateMany({}, { $pull: { comments: { userId: userId } } });
+    const updateFriendRequests = await userCollection.updateMany({}, { $pull: { friendRequests: userId } });
+    const updateFriendList = await userCollection.updateMany({}, { $pull: { friends: userId } });
     const userRemove = await userCollection.findOneAndDelete({ _id: new ObjectId(userId) }, { returnDocument: 'after' });
-    if (!updateFriendList || !updateFriendRequests || !updateGroupMessages || !gameRemove || !updateGroupLeader || !updateOrganizer|| !groupRemove || !userRemove) throw 'Could not delete user';
+    if (
+        !updateFriendList ||
+        !updateFriendRequests ||
+        !updateGroupMessages ||
+        !gameRemove ||
+        !updateGroupLeader ||
+        !updateOrganizer ||
+        !groupRemove ||
+        !userRemove
+    )
+        throw 'Could not delete user';
 
     return { gameRemove, groupRemove, userRemove };
 };
@@ -380,14 +378,14 @@ const isUserLeader = async (userId) => {
     const groupCollection = await groups();
     const gameOrganizer = await gameCollection.findOne({ organizer: userId });
     if (gameOrganizer) {
-        return true; 
+        return true;
     }
     const groupLeader = await groupCollection.findOne({ groupLeader: userId });
-    if(groupLeader){
+    if (groupLeader) {
         return true;
     }
     return false;
-}
+};
 export default {
     createUser,
     getAllUsers,
@@ -395,13 +393,11 @@ export default {
     deleteUser,
     editUser,
     loginUser,
-    findUsersThatStartWith,
+    searchUsers,
     sendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
     removeFriend,
     getIDName,
-    isUserLeader
+    isUserLeader,
 };
-
-

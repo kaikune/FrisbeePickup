@@ -4,12 +4,11 @@ import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 
 const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
-
-    gameName = helpers.stringHelper(gameName, "Game name", 5, null);
-    gameDescription = helpers.stringHelper(gameDescription, "Game description", 25, null);
-    gameDate = helpers.stringHelper(gameDate, "Game date", 1, null);
-    startTime = helpers.stringHelper(startTime, "Start time", 1, null);
-    endTime = helpers.stringHelper(endTime, "End time", 1, null);
+    gameName = helpers.stringHelper(gameName, 'Game name', 5, null);
+    gameDescription = helpers.stringHelper(gameDescription, 'Game description', 25, null);
+    gameDate = helpers.stringHelper(gameDate, 'Game date', 1, null);
+    startTime = helpers.stringHelper(startTime, 'Start time', 1, null);
+    endTime = helpers.stringHelper(endTime, 'End time', 1, null);
 
     if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
     if (helpers.isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
@@ -22,12 +21,10 @@ const formatAndValidateGame = function (gameName, gameDescription, gameLocation,
 
     helpers.validateLocation(gameLocation);
 
-    return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation};
-
-}
+    return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation };
+};
 
 const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
-
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
     helpers.isValidId(group);
@@ -48,20 +45,20 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         organizer,
         expired: false,
     };
-    
+
     const gameCollection = await games();
-    
+
     const insertInfo = await gameCollection.insertOne(newgame);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add game';
 
     const newId = insertInfo.insertedId.toString();
-    
+
     const game = await gameCollection.findOne({ _id: new ObjectId(newId) });
     game._id = game._id.toString();
     const userCollection = await users();
     const updateUser = await userCollection.updateOne({ _id: new ObjectId(organizer) }, { $push: { games: game._id } });
-    if(!updateUser){
-        throw "Could not update the organzier"
+    if (!updateUser) {
+        throw 'Could not update the organzier';
     }
     //await closeConnection(); // For testing purposes
     return game;
@@ -104,7 +101,7 @@ const getAllByGroup = async (groupId, includeExpired = true) => {
     let groupGames = [];
 
     for (const game of gameList) {
-        if ((game.group === groupId)) groupGames.push(game);
+        if (game.group === groupId) groupGames.push(game);
     }
 
     return groupGames;
@@ -148,7 +145,7 @@ const addUser = async (userId, gameId) => {
     return { updateUser, updateGame };
 };
 
-const findGamesThatStartWith = async (search) => {
+const searchGames = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
     if (!search) {
@@ -162,7 +159,7 @@ const findGamesThatStartWith = async (search) => {
         throw 'Empty string is not valid';
     }
     const gameCollection = await games();
-    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    const reg = new RegExp(`${search}`, 'i'); // 'i' for case-insensitive
     let gameList = await gameCollection.find({ gameName: reg }).limit(resultSize).toArray();
     if (!gameList || gameList.length === 0) {
         throw "Couldn't find any games with that name";
@@ -185,13 +182,10 @@ const remove = async (gameId) => {
         { returnDocument: 'after' }
     );
     const userCollection = await users();
-    const userUpdateResult = await userCollection.updateMany(
-        { games: gameId }, 
-        { $pull: { games: gameId } }
-    );
-    
-    if(!userUpdateResult){
-        throw "Could not remove gameid from users";
+    const userUpdateResult = await userCollection.updateMany({ games: gameId }, { $pull: { games: gameId } });
+
+    if (!userUpdateResult) {
+        throw 'Could not remove gameid from users';
     }
     if (!deletionInfo) {
         throw `Could not delete game with id of ${gameId}`;
@@ -202,7 +196,6 @@ const remove = async (gameId) => {
 };
 
 const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
-    
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
     const oldGame = await get(gameId); // Check if game exists
@@ -264,30 +257,40 @@ const leaveGame = async (userId, gameId) => {
     helpers.isValidId(gameId);
     const game = await get(gameId);
     const user = await usersData.getUser(userId);
-    if(!game) throw "Could not find game";
-    if(!user) throw "Could not find user";
-    if(!game.players.includes(userId)) throw "User is not a part of this group";
-    if(!user.games.includes(gameId)) throw "User is not a part of this group";
+    if (!game) throw 'Could not find game';
+    if (!user) throw 'Could not find user';
+    if (!game.players.includes(userId)) throw 'User is not a part of this group';
+    if (!user.games.includes(gameId)) throw 'User is not a part of this group';
 
     const gameCollection = await games();
     const userCollection = await users();
 
-    const updateUser = await userCollection.updateOne(
-        { _id: new ObjectId(userId) },
-        { $pull: { games: gameId } }
-    );
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { games: gameId } });
 
     const updateGame = await gameCollection.updateOne(
-        { _id: new ObjectId(gameId)},
-        { 
+        { _id: new ObjectId(gameId) },
+        {
             $pull: { players: userId },
-            $inc: { totalNumberOfPlayers: -1 }  
+            $inc: { totalNumberOfPlayers: -1 },
         }
     );
     if (updateUser.modifiedCount === 0 || updateGame.modifiedCount === 0) {
-        throw "Could not update user or game";
+        throw 'Could not update user or game';
     }
-    return {updateUser, updateGame}; 
-}
+    return { updateUser, updateGame };
+};
 
-export default { create, getAll, get, getAllByGroup, remove, update, addUser, findGamesThatStartWith, keepStatusUpdated, getIDName, leaveGame, formatAndValidateGame };
+export default {
+    create,
+    getAll,
+    get,
+    getAllByGroup,
+    remove,
+    update,
+    addUser,
+    searchGames,
+    keepStatusUpdated,
+    getIDName,
+    leaveGame,
+    formatAndValidateGame,
+};

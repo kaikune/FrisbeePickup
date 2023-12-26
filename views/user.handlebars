@@ -2,7 +2,7 @@
     <h1>{{user.username}}</h1>
     <p>Email: {{ user.emailAddress }}</p>
     {{#if user.profilePicture}}
-    <img src="{{ user.profilePicture }}" class="profile-picture">
+    <img src="{{ user.profilePicture }}" class="profile-picture" alt="Your profile picture">
     {{/if}}
     <p>About me: {{user.description}}</p>
     <h3>Friends:</h3>

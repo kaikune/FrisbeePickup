@@ -1,5 +1,5 @@
 import * as helpers from '../helpers.js';
-import { groups, users ,games} from '../config/mongoCollections.js';
+import { groups, users, games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { usersData, gamesData } from './index.js';
 import xss from 'xss';
@@ -33,17 +33,17 @@ const create = async (groupName, groupDescription, groupLeader) => {
     group._id = group._id.toString();
     return group;
 };
-const getIDName = async (groupIds)=> {
+const getIDName = async (groupIds) => {
     //Given an array of IDs return an array of objects, each object contains the id and the associated name
-    let ret = []
-    for (let groupId of groupIds){
+    let ret = [];
+    for (let groupId of groupIds) {
         helpers.isValidId(groupId);
         groupId = groupId.trim();
         const group = await get(groupId);
-        ret.push({_id: groupId, name: group.groupName})
+        ret.push({ _id: groupId, name: group.groupName });
     }
     return ret;
-}
+};
 const getAll = async () => {
     const groupCollection = await groups();
     let groupList = await groupCollection.find({}).project({ _id: 1, groupName: 1 }).toArray();
@@ -64,9 +64,9 @@ const getAllGroupsbyUserID = async (userId) => {
         element._id = element._id.toString();
         return element;
     });
-    groupList = groupList.filter(group => group.players.includes(userId));
-    return groupList
-}
+    groupList = groupList.filter((group) => group.players.includes(userId));
+    return groupList;
+};
 
 const get = async (groupId) => {
     // Input Validation
@@ -98,20 +98,14 @@ const remove = async (groupId) => {
         throw `Could not delete group with id of ${groupId}`;
     }
     const userCollection = await users();
-    const userUpdateResult = await userCollection.updateMany(
-        { groups: groupId }, 
-        { $pull: { groups: groupId } }
-    );
-    if(!userUpdateResult){
-        throw "Could not remove groupid from users"
+    const userUpdateResult = await userCollection.updateMany({ groups: groupId }, { $pull: { groups: groupId } });
+    if (!userUpdateResult) {
+        throw 'Could not remove groupid from users';
     }
     const gameCollection = await games();
-    const gameUpdateResult = await gameCollection.updateMany(
-        { group: groupId }, 
-        { $set: { group: null } } 
-    );
-    if(!gameUpdateResult){
-        throw "Could not remove groupid from game"
+    const gameUpdateResult = await gameCollection.updateMany({ group: groupId }, { $set: { group: null } });
+    if (!gameUpdateResult) {
+        throw 'Could not remove groupid from game';
     }
     const res = { groupName: deletionInfo.groupName, deleted: true };
     return res;
@@ -183,10 +177,12 @@ const removeComment = async (groupId, commentId) => {
     commentId = commentId.trim();
 
     const groupCollection = await groups();
-    const removedComment = await groupCollection.updateOne({_id: new ObjectId(groupId)}, { $pull: { comments: { _id: new ObjectId(commentId)} } })
-    if(!removedComment) {throw 'Could not delete comment successfully'}
+    const removedComment = await groupCollection.updateOne({ _id: new ObjectId(groupId) }, { $pull: { comments: { _id: new ObjectId(commentId) } } });
+    if (!removedComment) {
+        throw 'Could not delete comment successfully';
+    }
     return removedComment;
-}
+};
 
 const addUser = async (userId, groupId) => {
     //Input validation
@@ -227,7 +223,7 @@ const addUser = async (userId, groupId) => {
     return { updateGame, updateUser };
 };
 
-const findGroupsThatStartWith = async (search) => {
+const searchGroups = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
     if (!search) {
@@ -241,7 +237,7 @@ const findGroupsThatStartWith = async (search) => {
         throw 'Empty string is not valid';
     }
     const groupCollection = await groups();
-    const reg = new RegExp(`^${search}`, 'i'); // 'i' for case-insensitive
+    const reg = new RegExp(`${search}`, 'i'); // 'i' for case-insensitive
     let groupList = await groupCollection.find({ groupName: reg }).limit(resultSize).toArray();
     if (!groupList || groupList.length === 0) {
         throw "Couldn't find any groups with that name";
@@ -254,29 +250,39 @@ const leaveGroup = async (userId, groupId) => {
     helpers.isValidId(groupId);
     const group = await get(groupId);
     const user = await usersData.getUser(userId);
-    if(!group) throw "Could not find group";
-    if(!user) throw "Could not find user";
-    if(!group.players.includes(userId)) throw "User is not a part of this group";
-    if(!user.groups.includes(groupId)) throw "User is not a part of this group";
+    if (!group) throw 'Could not find group';
+    if (!user) throw 'Could not find user';
+    if (!group.players.includes(userId)) throw 'User is not a part of this group';
+    if (!user.groups.includes(groupId)) throw 'User is not a part of this group';
 
     const groupCollection = await groups();
     const userCollection = await users();
 
-    const updateUser = await userCollection.updateOne(
-        { _id: new ObjectId(userId) },
-        { $pull: { groups: groupId } }
-    );
+    const updateUser = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { groups: groupId } });
 
     const updateGroup = await groupCollection.updateOne(
-        { _id: new ObjectId(groupId)},
-        { 
+        { _id: new ObjectId(groupId) },
+        {
             $pull: { players: userId },
-            $inc: { totalNumberOfPlayers: -1 }  
+            $inc: { totalNumberOfPlayers: -1 },
         }
     );
     if (updateUser.modifiedCount === 0 || updateGroup.modifiedCount === 0) {
-        throw "Could not update user or group";
+        throw 'Could not update user or group';
     }
-    return {updateUser, updateGroup}; 
-}
-export default { create, leaveGroup, getAll, get, remove, update, addComment, addUser, findGroupsThatStartWith,getIDName, getAllGroupsbyUserID, removeComment };
+    return { updateUser, updateGroup };
+};
+export default {
+    create,
+    leaveGroup,
+    getAll,
+    get,
+    remove,
+    update,
+    addComment,
+    addUser,
+    searchGroups,
+    getIDName,
+    getAllGroupsbyUserID,
+    removeComment,
+};

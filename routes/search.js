@@ -21,7 +21,7 @@ router
             if (term == "") {
                 usersList = await usersData.getAllUsers();
             } else {
-                usersList = await usersData.findUsersThatStartWith(term);
+                usersList = await usersData.searchUsers(term);
             }
         } catch (e) {
             usersList = [];
@@ -30,7 +30,7 @@ router
             if (term == "") {
                 groupsList = await groupsData.getAll();
             } else {
-                groupsList = await groupsData.findGroupsThatStartWith(term);
+                groupsList = await groupsData.searchGroups(term);
             }
         } catch (e) {
             groupsList = [];
@@ -39,7 +39,7 @@ router
             if (term == "") {
                 gamesList = await gamesData.getAll();
             } else {
-                gamesList = await gamesData.findGamesThatStartWith(term);
+                gamesList = await gamesData.searchGames(term);
             }
         } catch (e) {
             gamesList = [];

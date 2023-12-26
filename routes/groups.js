@@ -18,7 +18,7 @@ router
             const createResult = await groupsData.create(groupName, groupDescription, groupLeader);     
             res.redirect(`groups/${createResult._id}`);
         } catch (err) {
-            return res.status(400).render('error', { error: err });
+            return res.status(400).render('error', { title: 'Error', error: err });
         }
     });
 
@@ -62,7 +62,7 @@ router.route('/:groupId').get(async (req, res) => {
             isOwner: isOwner
         });
     } catch (e) {
-        return res.status(400).render('error', { error: e });
+        return res.status(400).render('error', { title: 'Error', error: e });
     }
 });
 
@@ -80,7 +80,7 @@ router.route('/:groupId/comments').post(async (req, res) => {
         return res.redirect("/groups/" + groupId);
     } catch (e) {
         if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });
-        return res.status(400).render('error', { error: e });
+        return res.status(400).render('error', { title: 'Error', error: e });
     }
 });
 
@@ -96,8 +96,7 @@ router.route('/:groupId/comments/delete').post(async (req, res) => {
         return res.redirect('/groups/' + groupId);
     }
     catch (err) {
-        console.log(err)
-        return res.status(400).render('error', {error: err})
+        return res.status(400).render('error', { title: 'Error', error: err })
     }
 })
 
@@ -112,7 +111,7 @@ router
 
             return res.render("editGroup", {title:"Edit group", groupObj});
         } catch (e) {
-            return res.status(400).render('error', { error: e });
+            return res.status(400).render('error', { title: 'Error', error: e });
         }
     })
     .post(async (req, res) => {
@@ -131,8 +130,7 @@ router
             await groupsData.update(groupId, req.body.groupName, req.body.groupDescription, currentUser._id);
             return res.redirect("/groups/" + groupId);
         } catch (e) {
-            console.log(e);
-            return res.status(400).render('error', {error: e});
+            return res.status(400).render('error', { title: 'Error', error: e });
         }
     });
 
@@ -153,8 +151,7 @@ router
             await groupsData.remove(groupId);
             return res.redirect("/");
         } catch (e) {
-            console.log(e);
-            return res.status.render('error', {error: e});
+            return res.status.render('error', { title: 'Error', error: e });
         }
     });
 
@@ -169,8 +166,7 @@ router
             await groupsData.addUser(currentUser._id, groupId);
             return res.redirect("/groups/" + groupId);
         } catch (e) {
-            console.log(e);
-            return res.status(400).render('error', {error: e});
+            return res.status(400).render('error', { title: 'Error', error: e });
         }
     })
 
@@ -186,8 +182,7 @@ router
             return res.redirect("/groups/"+groupId);
         }
         catch(e) {
-            console.log(e);
-            return res.status(400).render('error', {error:e});
+            return res.status(400).render('error', { title: 'Error', error: e });
         }
     })
 
