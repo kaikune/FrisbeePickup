@@ -123,8 +123,11 @@ router
             let groupObj = await groupsData.get(groupId);
 
 
-            if (currentUser._id !== groupObj.groupLeader) {
-                throw 'Not allowed';
+            if (!groupObj.players.includes(currentUser._id)) {
+                throw 'You are not a member of this group';
+            }
+            else if (currentUser._id !== groupObj.groupLeader) {
+                throw 'You are not the leader of this group';
             }
    
             await groupsData.update(groupId, req.body.groupName, req.body.groupDescription, currentUser._id);
@@ -144,8 +147,11 @@ router
             helpers.isValidId(groupId);
             let groupObj = await groupsData.get(groupId);
 
-            if (currentUser._id !== groupObj.groupLeader) {
-                throw 'Not allowed';
+            if (!groupObj.players.includes(currentUser._id)) {
+                throw 'You are not a member of this group';
+            }
+            else if (currentUser._id !== groupObj.groupLeader) {
+                throw 'You are not the leader of this group';
             }
 
             await groupsData.remove(groupId);
@@ -164,6 +170,7 @@ router
 
             helpers.isValidId(groupId);
             await groupsData.addUser(currentUser._id, groupId);
+
             return res.redirect("/groups/" + groupId);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
@@ -178,6 +185,7 @@ router
             let currentUser = req.session.user;
 
             helpers.isValidId(groupId);
+
             await groupsData.leaveGroup(currentUser._id, groupId);
             return res.redirect("/groups/"+groupId);
         }

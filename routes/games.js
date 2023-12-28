@@ -20,7 +20,7 @@ router
         let endTime = req.body.endTime;
         const group = req.body.group;
         let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
-        
+
         try {
             helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(maxCapacity, 10);
@@ -40,7 +40,7 @@ router
                 group,
                 req.session.user._id
             );
-            res.redirect(`games/${createResult._id}`);
+            return res.redirect(`games/${createResult._id}`);
         } catch (err) {
             return res.status(400).render('error', { title: 'Error', error: err || 'An error occurred' });
         }
@@ -97,6 +97,7 @@ router
             helpers.isValidId(gameId);
             let gameObj = await gamesData.get(gameId);
             let allGroupsData = null;
+
             if (req.session.user) {
                 let userId = req.session.user._id;
                 allGroupsData = await groupsData.getAllGroupsbyUserID(userId);
@@ -113,6 +114,14 @@ router
             let currentUser = req.session.user;
             helpers.isValidId(gameId);
             const gameObj = await gamesData.get(gameId);
+
+            if (!gameObj.players.includes(currentUser._id)) {
+                throw 'You are not a player in this game'
+            }
+            else if (gameObj.organizer !== currentUser._id) {
+                throw 'You are not the organizer of this game';
+            }
+
             helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(req.body.maxPlayers, 10);
             let startTime = helpers.convertTo12Hour(req.body.startTime);
@@ -142,7 +151,7 @@ router
                 endTime,
                 req.body.group
             );
-            //meId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, grou
+
             return res.redirect('/games/' + gameId);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
@@ -161,11 +170,15 @@ router
 
             let owner = await usersData.getUser(gameObj.organizer);
 
-            if (currentUser._id !== owner._id) {
-                throw Error('not allowed');
+            if (!gameObj.players.includes(currentUser._id)) {
+                throw 'You are not a player in this game'
+            }            
+            else if (currentUser._id !== owner._id) {
+                throw "You are not the organizer of this game";
             }
 
             await gamesData.remove(gameId);
+
             return res.redirect(`/`);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
@@ -182,6 +195,7 @@ router
             helpers.isValidId(gameId);
 
             await gamesData.addUser(currentUser._id, gameId);
+
             return res.redirect('/games/' + gameId);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
