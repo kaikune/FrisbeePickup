@@ -224,6 +224,7 @@ const update = async (gameId, userId, gameName, gameDescription, gameLocation, m
     updatedInfo._id = updatedInfo._id.toString();
     return updatedInfo;
 };
+
 const getIDName = async (gameIds) => {
     //Given an array of IDs return an array of objects, each object contains the id and the associated name
     let ret = [];
@@ -252,6 +253,7 @@ const keepStatusUpdated = async () => {
         }
     }
 };
+
 const leaveGame = async (userId, gameId) => {
     helpers.isValidId(userId);
     helpers.isValidId(gameId);

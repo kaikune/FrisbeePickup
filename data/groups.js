@@ -3,6 +3,7 @@ import { groups, users, games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { usersData, gamesData } from './index.js';
 import xss from 'xss';
+
 const create = async (groupName, groupDescription, groupLeader) => {
     // Input Validation
     helpers.validateGroup(groupName, groupDescription, groupLeader);
@@ -33,6 +34,7 @@ const create = async (groupName, groupDescription, groupLeader) => {
     group._id = group._id.toString();
     return group;
 };
+
 const getIDName = async (groupIds) => {
     //Given an array of IDs return an array of objects, each object contains the id and the associated name
     let ret = [];
@@ -44,27 +46,33 @@ const getIDName = async (groupIds) => {
     }
     return ret;
 };
+
 const getAll = async () => {
     const groupCollection = await groups();
     let groupList = await groupCollection.find({}).project({ _id: 1, groupName: 1 }).toArray();
+
     if (!groupList) throw 'Could not get all groups';
     groupList = groupList.map((element) => {
         element._id = element._id.toString();
         return element;
     });
+
     return groupList;
 };
+
 const getAllGroupsbyUserID = async (userId) => {
     helpers.isValidId(userId);
     userId = userId.trim();
     const groupCollection = await groups();
     let groupList = await groupCollection.find({}).project({ _id: 1, groupName: 1, players: 1 }).toArray();
+
     if (!groupList) throw 'Could not get all groups';
     groupList = groupList.map((element) => {
         element._id = element._id.toString();
         return element;
     });
     groupList = groupList.filter((group) => group.players.includes(userId));
+
     return groupList;
 };
 
@@ -76,8 +84,10 @@ const get = async (groupId) => {
     // Get group with given id
     const groupCollection = await groups();
     const group = await groupCollection.findOne({ _id: new ObjectId(groupId) });
+
     if (group === null) throw 'No group with that id';
     group._id = group._id.toString();
+
     return group;
 };
 
@@ -94,6 +104,7 @@ const remove = async (groupId) => {
         },
         { returnDocument: 'after' }
     );
+
     if (!deletionInfo) {
         throw `Could not delete group with id of ${groupId}`;
     }
@@ -108,6 +119,7 @@ const remove = async (groupId) => {
         throw 'Could not remove groupid from game';
     }
     const res = { groupName: deletionInfo.groupName, deleted: true };
+
     return res;
 };
 
@@ -138,6 +150,7 @@ const update = async (groupId, groupName, groupDescription, groupLeader) => {
     if (!updatedInfo) throw 'Could not update group successfully';
 
     updatedInfo._id = updatedInfo._id.toString();
+
     return updatedInfo;
 };
 
@@ -147,6 +160,7 @@ const addComment = async (groupId, userId, comment) => {
     helpers.isValidId(userId);
     groupId = groupId.trim();
     userId = userId.trim();
+
     if (!comment) throw 'Comment is not provided';
     if (typeof comment !== 'string') throw 'Comment is not a string';
     comment = comment.trim();
@@ -167,6 +181,7 @@ const addComment = async (groupId, userId, comment) => {
     const updatedInfo = await groupCollection.updateOne({ _id: new ObjectId(groupId) }, { $push: { comments: newComment } });
 
     if (!updatedInfo) throw 'Could not update group successfully';
+
     return updatedInfo;
 };
 
@@ -181,6 +196,7 @@ const removeComment = async (groupId, commentId) => {
     if (!removedComment) {
         throw 'Could not delete comment successfully';
     }
+
     return removedComment;
 };
 
@@ -205,6 +221,7 @@ const addUser = async (userId, groupId) => {
     if (!user) {
         throw 'Could not find user';
     }
+
     //Update group collection
     const groupCollection = await groups();
     const userCollection = await users();
@@ -220,12 +237,14 @@ const addUser = async (userId, groupId) => {
     if (!updateGame || !updateUser) {
         throw 'Could not update either game or user';
     }
+
     return { updateGame, updateUser };
 };
 
 const searchGroups = async (search) => {
     //Returns the first 10 users that start with a search query
     let resultSize = 10;
+
     if (!search) {
         throw 'Most provide valid search term';
     }
@@ -236,12 +255,14 @@ const searchGroups = async (search) => {
     if (search.length === 0) {
         throw 'Empty string is not valid';
     }
+
     const groupCollection = await groups();
     const reg = new RegExp(`${search}`, 'i'); // 'i' for case-insensitive
     let groupList = await groupCollection.find({ groupName: reg }).limit(resultSize).toArray();
     if (!groupList || groupList.length === 0) {
         throw "Couldn't find any groups with that name";
     }
+
     //Returns the entire grouplist right now
     return groupList;
 };
@@ -250,6 +271,7 @@ const leaveGroup = async (userId, groupId) => {
     helpers.isValidId(groupId);
     const group = await get(groupId);
     const user = await usersData.getUser(userId);
+
     if (!group) throw 'Could not find group';
     if (!user) throw 'Could not find user';
     if (!group.players.includes(userId)) throw 'User is not a part of this group';
@@ -270,6 +292,7 @@ const leaveGroup = async (userId, groupId) => {
     if (updateUser.modifiedCount === 0 || updateGroup.modifiedCount === 0) {
         throw 'Could not update user or group';
     }
+
     return { updateUser, updateGroup };
 };
 export default {

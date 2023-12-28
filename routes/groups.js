@@ -124,7 +124,7 @@ router
 
 
             if (currentUser._id !== groupObj.groupLeader) {
-                throw Error("not allowed");
+                throw 'Not allowed';
             }
    
             await groupsData.update(groupId, req.body.groupName, req.body.groupDescription, currentUser._id);
@@ -145,13 +145,13 @@ router
             let groupObj = await groupsData.get(groupId);
 
             if (currentUser._id !== groupObj.groupLeader) {
-                throw Error("not allowed");
+                throw 'Not allowed';
             }
 
             await groupsData.remove(groupId);
             return res.redirect("/");
         } catch (e) {
-            return res.status.render('error', { title: 'Error', error: e });
+            return res.status(400).render('error', { title: 'Error', error: e });
         }
     });
 

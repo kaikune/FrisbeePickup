@@ -20,6 +20,7 @@ router
         let endTime = req.body.endTime;
         const group = req.body.group;
         let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
+        
         try {
             helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(maxCapacity, 10);
@@ -27,6 +28,7 @@ router
             endTime = helpers.convertTo12Hour(endTime);
             gameDate = helpers.convertToMMDDYYYY(gameDate);
             gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime);
+            
             const createResult = await gamesData.create(
                 gameName,
                 gameDescription,
@@ -53,6 +55,7 @@ router
             helpers.isValidId(gameId);
             let gameObj = await gamesData.get(gameId);
             let hostGroup = null;
+
             if (gameObj.group !== null) {
                 hostGroup = await groupsData.get(gameObj.group);
             }
@@ -64,6 +67,7 @@ router
             let isOwner = currentUser && gameObj.organizer == currentUser._id;
             let isMember = currentUser && gameObj.players.includes(currentUser._id);
             let organizerArr = [null];
+
             if (gameObj.organizer !== null) {
                 organizerArr = await usersData.getIDName([gameObj.organizer]);
             }
@@ -115,6 +119,7 @@ router
             let endTime = helpers.convertTo12Hour(req.body.endTime);
             let gameDate = helpers.convertToMMDDYYYY(req.body.date);
             let gameLocation = { zip: req.body.zip, state: req.body.state, streetAddress: req.body.streetAddress, city: req.body.city };
+
             gamesData.formatAndValidateGame(
                 req.body.gameName,
                 req.body.gameDescription,
