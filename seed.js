@@ -77,21 +77,21 @@ export async function seed(){
     await groupsData.addComment(group5._id, allUsers[4]._id, "This group is so much fun!");
     
     
-    console.log("Creating all games...")
-    const game1 = await gamesData.create("Sunset Frisbee Fun", "Relaxed Frisbee game at sunset", { streetAddress: "101 Beach Blvd", city: "Santa Monica", state: "CA", zip: "90401" }, 15, "12/12/2024", "5:00 PM", "7:00 PM", group1._id, allUsers[0]._id);
-    const game2 = await gamesData.create("Morning Frisbee in the Park", "Start your day with a fun Frisbee game", { streetAddress: "500 Park Ave", city: "New York", state: "NY", zip: "10001" }, 20, "12/20/2024", "8:00 AM", "10:00 AM", group1._id,allUsers[0]._id);
+    console.log("Creating all games...");
+    const game1 = await gamesData.create("Sunset Frisbee Fun", "Relaxed Frisbee game at sunset", { streetAddress: "101 Beach Blvd", city: "Santa Monica", state: "CA", zip: "90401" }, 15, "2024-12-12", "17:00", "19:00", group1._id, allUsers[0]._id);
+    const game2 = await gamesData.create("Morning Frisbee in the Park", "Start your day with a fun Frisbee game", { streetAddress: "500 Park Ave", city: "New York", state: "NY", zip: "10001" }, 20, "2024-12-20", "08:00", "10:00", group1._id, allUsers[0]._id);
 
-    const game3 = await gamesData.create("Ultimate Frisbee Showdown", "Competitive ultimate Frisbee match", { streetAddress: "123 Sunshine Ave", city: "Miami", state: "FL", zip: "33101" }, 20, "12/10/2024", "10:00 AM", "1:00 PM", group2._id,allUsers[1]._id);
-    const game4 = await gamesData.create("Frisbee Champions League", "High-level ultimate Frisbee game", { streetAddress: "200 Sports Way", city: "Chicago", state: "IL", zip: "60601" }, 22, "12/15/2024", "3:00 PM", "6:00 PM", group2._id,allUsers[1]._id);
+    const game3 = await gamesData.create("Ultimate Frisbee Showdown", "Competitive ultimate Frisbee match", { streetAddress: "123 Sunshine Ave", city: "Miami", state: "FL", zip: "33101" }, 20, "2024-12-10", "10:00", "13:00", group2._id, allUsers[1]._id);
+    const game4 = await gamesData.create("Frisbee Champions League", "High-level ultimate Frisbee game", { streetAddress: "200 Sports Way", city: "Chicago", state: "IL", zip: "60601" }, 22, "2024-12-15", "15:00", "18:00", group2._id, allUsers[1]._id);
 
-    const game5 = await  gamesData.create("Frisbee Skills Bootcamp", "Intensive skill-building session for serious players", { streetAddress: "750 Field Rd", city: "Austin", state: "TX", zip: "78701" }, 25, "01/05/2025", "9:00 AM", "12:00 PM",group3._id,allUsers[2]._id);
-    const game6 = await gamesData.create("Throw and Catch Workshop", "Learn advanced throwing and catching techniques", { streetAddress: "320 Green Park", city: "Denver", state: "CO", zip: "80014" }, 30, "01/19/2025", "2:00 PM", "4:00 PM", group3._id,allUsers[2]._id);
+    const game5 = await gamesData.create("Frisbee Skills Bootcamp", "Intensive skill-building session for serious players", { streetAddress: "750 Field Rd", city: "Austin", state: "TX", zip: "78701" }, 25, "2025-01-05", "09:00", "12:00", group3._id, allUsers[2]._id);
+    const game6 = await gamesData.create("Throw and Catch Workshop", "Learn advanced throwing and catching techniques", { streetAddress: "320 Green Park", city: "Denver", state: "CO", zip: "80014" }, 30, "2025-01-19", "14:00", "16:00", group3._id, allUsers[2]._id);
 
-    const game7 = await gamesData.create("Junior Frisbee Tournament", "Friendly tournament for young Frisbee enthusiasts", { streetAddress: "980 Youth Ave", city: "San Francisco", state: "CA", zip: "94102" }, 16, "02/10/2025", "10:00 AM", "12:00 PM", group4._id,allUsers[3]._id);
-    const game8 = await gamesData.create("Youth Frisbee Fun Day", "A day full of Frisbee games and activities for youngsters", { streetAddress: "400 Kids Park Rd", city: "Portland", state: "OR", zip: "97209" }, 18, "02/24/2025", "11:00 AM", "2:00 PM", group4._id,allUsers[3]._id);
+    const game7 = await gamesData.create("Junior Frisbee Tournament", "Friendly tournament for young Frisbee enthusiasts", { streetAddress: "980 Youth Ave", city: "San Francisco", state: "CA", zip: "94102" }, 16, "2025-02-10", "10:00", "12:00", group4._id, allUsers[3]._id);
+    const game8 = await gamesData.create("Youth Frisbee Fun Day", "A day full of Frisbee games and activities for youngsters", { streetAddress: "400 Kids Park Rd", city: "Portland", state: "OR", zip: "97209" }, 18, "2025-02-24", "11:00", "14:00", group4._id, allUsers[3]._id);
 
-    const game9 = await gamesData.create("Beach Frisbee Gathering", "Casual Frisbee play on the beach", { streetAddress: "220 Ocean View Blvd", city: "Los Angeles", state: "CA", zip: "90012" }, 12, "03/05/2025", "3:00 PM", "5:00 PM", group5._id,allUsers[4]._id);
-    const game10 = await gamesData.create("Park Frisbee Meetup", "Relaxed Frisbee game at the city park", { streetAddress: "555 Central Park", city: "New York", state: "NY", zip: "10001" }, 15, "03/18/2025", "4:00 PM", "6:00 PM", group5._id,allUsers[4]._id);
+    const game9 = await gamesData.create("Beach Frisbee Gathering", "Casual Frisbee play on the beach", { streetAddress: "220 Ocean View Blvd", city: "Los Angeles", state: "CA", zip: "90012" }, 12, "2025-03-05", "15:00", "17:00", group5._id, allUsers[4]._id);
+    const game10 = await gamesData.create("Park Frisbee Meetup", "Relaxed Frisbee game at the city park", { streetAddress: "555 Central Park", city: "New York", state: "NY", zip: "10001" }, 15, "2025-03-18", "16:00", "18:00", group5._id, allUsers[4]._id);
 
     const allGroups = [group1, group2, group3, group4, group5];
     const allGames = [game1,game2,game3,game4,game5,game6,game7,game8,game9,game10];

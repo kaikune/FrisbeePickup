@@ -1,45 +1,43 @@
-let createGameForm = document.getElementById("create-game-form");
+let createGameForm = document.getElementById('create-game-form');
 
-if(createGameForm){
-    let errorLabel = document.getElementById("error-label")
-    let statusLabel = document.getElementById("status-label")
+if (createGameForm) {
+    let errorLabel = document.getElementById('error-label');
+    let statusLabel = document.getElementById('status-label');
     errorLabel.hidden = true;
 
     createGameForm.addEventListener('submit', (event) => {
-        console.log("Form submission triggered");
+        console.log('Form submission triggered');
         event.preventDefault();
-        try{
-            let gameName = document.getElementById("game-name");
-            let state = document.getElementById("state");
-            let zip = document.getElementById("zip");
-            let streetAddress = document.getElementById("street-address");
-            let city = document.getElementById("city");
-            let description = document.getElementById("description");
-            let date = document.getElementById("date");
-            let startTime = document.getElementById("start-time");
-            let endTime = document.getElementById("end-time");
-            let maxPlayers = document.getElementById("max-players");
-            let groupname = document.getElementById("group")
-            if(groupname.value === "NA") throw "Must be a part of a group to create a game"
+        try {
+            let gameName = document.getElementById('game-name');
+            let state = document.getElementById('state');
+            let zip = document.getElementById('zip');
+            let streetAddress = document.getElementById('street-address');
+            let city = document.getElementById('city');
+            let description = document.getElementById('description');
+            let date = document.getElementById('date');
+            let startTime = document.getElementById('start-time');
+            let endTime = document.getElementById('end-time');
+            let maxPlayers = document.getElementById('max-players');
+            let groupname = document.getElementById('group');
+            if (groupname.value === 'NA') throw 'Must be a part of a group to create a game';
             let location = {
                 streetAddress: streetAddress.value,
                 city: city.value,
                 state: state.value,
-                zip: zip.value
+                zip: zip.value,
             };
-            isValidNum(maxPlayers.value)
+            isValidNum(maxPlayers.value);
             let maxPlayersNumber = parseInt(maxPlayers.value, 10);
-            validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value)
-            statusLabel.innerHTML = "Game Created"
+            validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value);
+            statusLabel.innerHTML = 'Game Created';
             statusLabel.hidden = false;
-            createGameForm.submit()
-        }
-        catch(err){
-            
+            createGameForm.submit();
+        } catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;
         }
-    })
+    });
 }
 function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
     // Input Validation
@@ -59,16 +57,20 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
         typeof gameDate !== 'string' ||
         typeof startTime !== 'string' ||
         typeof endTime !== 'string'
-    )throw 'One or more string fields not given as string';
+    )
+        throw 'One or more string fields not given as string';
 
     gameName = gameName.trim();
     gameDescription = gameDescription.trim();
     gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
-    startTime = convertTo12Hour(startTime);
-    endTime = convertTo12Hour(endTime);
-    if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)throw 'One or more string fields empty';
+    console.log(gameDate, startTime, endTime);
+    //startTime = convertTo12Hour(startTime);
+    //endTime = convertTo12Hour(endTime);
+    //console.log(gameDate, startTime, endTime);
+    if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)
+        throw 'One or more string fields empty';
 
     if (gameName.length < 5) throw 'Event name less than 5 chars';
     if (gameDescription.length < 25) throw 'Event description less than 25 chars';
@@ -95,7 +97,6 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
     gameLocation.state = gameLocation.state.toUpperCase();
     if (!states.includes(gameLocation.state)) throw 'State is not valid';
     if (gameLocation.zip.length !== 5 || isNaN(gameLocation.zip)) throw 'Zip code is not valid';
-
 }
 function compareDates(day1, day2) {
     if (!day1 || !day2) throw 'Error: Missing argument(s) to compareDates()';
@@ -131,9 +132,9 @@ function compareTimes(time1, time2) {
     time1.push(time1[1].substr(-2, 2)); // [HR, MN(AM|PM), (AM|PM)]
     time1[1] = time1[1].substr(0, 2); // [HR, MN, (AM|PM)]
 
-    if(time1[0] === '12') {
+    if (time1[0] === '12') {
         time1[0] = time1[2] === 'AM' ? '0' : '12';
-    }else if (time1[2] === 'PM') {
+    } else if (time1[2] === 'PM') {
         time1[0] = (Number(time1[0]) + 12).toString();
     }
     time1[0] = Number(time1[0]) * 60 + Number(time1[1]); // [Minutes, __, (AM|PM)]
@@ -141,14 +142,15 @@ function compareTimes(time1, time2) {
     time2 = time2.split(':');
     time2.push(time2[1].substr(-2, 2));
     time2[1] = time2[1].substr(0, 2);
-    if(time2[0] === '12') {
+    if (time2[0] === '12') {
         time2[0] = time2[2] === 'AM' ? '0' : '12';
-    }else if (time2[2] === 'PM') {
+    } else if (time2[2] === 'PM') {
         time2[0] = (Number(time2[0]) + 12).toString();
     }
     time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
     return time1[0] + 30 <= time2[0];
 }
+
 function isValidDay(eventDate) {
     if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(eventDate)) return 0;
     const [year, month, day] = eventDate.split('-').map(Number);
@@ -181,6 +183,37 @@ function isValidDay(eventDate) {
             return false;
     }
 }
+
+function isValidTime(time) {
+    return /^(([01][0-9])|(2[0-3])):[0-5][0-9]$/.test(time);
+    //return /^(([1-9])|(1[0-2])):[0-5][0-9] (AM|PM)$/.test(time);
+}
+
+function convertTo12Hour(timeString) {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    if (hours === 0) {
+        throw 'Hours cannot be 0';
+    }
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const twelveHour = hours % 12 || 12;
+    return `${twelveHour.toString()}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+}
+
+function editGame() {}
+
+function isValidNum(string) {
+    if (!string) {
+        throw 'String expected';
+    }
+    if (typeof string !== 'string') {
+        throw 'String expected';
+    }
+    const number = Number(string);
+    if (isNaN(number)) {
+        throw 'Max cap is not a number';
+    }
+}
+
 const states = [
     'AK',
     'AL',
@@ -234,33 +267,3 @@ const states = [
     'WV',
     'WY',
 ];
-function isValidTime(time) {
-    return /^(([1-9])|(1[0-2])):[0-5][0-9] (AM|PM)$/.test(time);
-    //return /^((0{0,1}[1-9])|(1[0-2])):[0-5][0-9](AM|PM)$/.test(time);
-}
-function convertTo12Hour(timeString) {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    if(hours === 0){
-        throw "Hours cannot be 0"
-    }
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const twelveHour = hours % 12 || 12;
-    return `${twelveHour.toString()}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-}
-
-function editGame() {
-    
-}
-
-function isValidNum(string){
-    if(!string){
-        throw "String expected"
-    }
-    if(typeof string !== 'string'){
-        throw "String expected"
-    }
-    const number = Number(string);
-    if (isNaN(number)) {
-        throw "Max cap is not a number"
-    }
-}

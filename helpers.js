@@ -136,12 +136,8 @@ export let isValidEmail = function (email) {
 
 // Checks for valid number of days in given month
 export function isValidDay(eventDate) {
-    if (!/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/.test(eventDate)) return 0;
-    const date = eventDate.split('/');
-    const month = Number(date[0]);
-    const day = Number(date[1]);
-
-    // Checks if number of days is valid for the month
+    if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(eventDate)) return 0;
+    const [year, month, day] = eventDate.split('-').map(Number);
     switch (month) {
         case 1:
             return day <= 31;
@@ -202,10 +198,20 @@ export function isDateInFuture(gameDate) {
 }
 
 export function isValidTime(time) {
-    return /^(([1-9])|(1[0-2])):[0-5][0-9] (AM|PM)$/.test(time);
-    //return /^((0{0,1}[1-9])|(1[0-2])):[0-5][0-9](AM|PM)$/.test(time);
+    return /^(([01][0-9])|(2[0-3])):[0-5][0-9]$/.test(time);
+    //return /^(([1-9])|(1[0-2])):[0-5][0-9] (AM|PM)$/.test(time);
 }
 
+export function compareTimes(time1, time2) {
+    time1 = time1.split(':'); // Splits into [HR, MN]
+    time1[0] = Number(time1[0]) * 60 + Number(time1[1]); // [Minutes]
+
+    time2 = time2.split(':');
+    time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
+    return time1[0] + 30 <= time2[0];
+}
+
+/*
 // Returns time1 >= time2 - 30
 export function compareTimes(time1, time2) {
     time1 = time1.split(':'); // Splits into [HR, MN(AM|PM)]
@@ -230,61 +236,8 @@ export function compareTimes(time1, time2) {
     time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
     return time1[0] + 30 <= time2[0];
 }
+*/
 
-
-export const states = [
-    'AK',
-    'AL',
-    'AR',
-    'AZ',
-    'CA',
-    'CO',
-    'CT',
-    'DC',
-    'DE',
-    'FL',
-    'GA',
-    'HI',
-    'IA',
-    'ID',
-    'IL',
-    'IN',
-    'KS',
-    'KY',
-    'LA',
-    'MA',
-    'MD',
-    'ME',
-    'MI',
-    'MN',
-    'MO',
-    'MS',
-    'MT',
-    'NC',
-    'ND',
-    'NE',
-    'NH',
-    'NJ',
-    'NM',
-    'NV',
-    'NY',
-    'OH',
-    'OK',
-    'OR',
-    'PA',
-    'RI',
-    'SC',
-    'SD',
-    'TN',
-    'TX',
-    'UT',
-    'VA',
-    'VT',
-    'WA',
-    'WI',
-    'WV',
-    'WY',
-];
 function isValid24(time) {
     var regex = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
     return regex.test(time);
@@ -378,3 +331,57 @@ export function isValidNum(string){
         throw "Max cap is not a number"
     }
 }
+
+export const states = [
+    'AK',
+    'AL',
+    'AR',
+    'AZ',
+    'CA',
+    'CO',
+    'CT',
+    'DC',
+    'DE',
+    'FL',
+    'GA',
+    'HI',
+    'IA',
+    'ID',
+    'IL',
+    'IN',
+    'KS',
+    'KY',
+    'LA',
+    'MA',
+    'MD',
+    'ME',
+    'MI',
+    'MN',
+    'MO',
+    'MS',
+    'MT',
+    'NC',
+    'ND',
+    'NE',
+    'NH',
+    'NJ',
+    'NM',
+    'NV',
+    'NY',
+    'OH',
+    'OK',
+    'OR',
+    'PA',
+    'RI',
+    'SC',
+    'SD',
+    'TN',
+    'TX',
+    'UT',
+    'VA',
+    'VT',
+    'WA',
+    'WI',
+    'WV',
+    'WY',
+];

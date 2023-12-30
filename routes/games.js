@@ -24,9 +24,12 @@ router
         try {
             helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(maxCapacity, 10);
-            startTime = helpers.convertTo12Hour(startTime);
-            endTime = helpers.convertTo12Hour(endTime);
-            gameDate = helpers.convertToMMDDYYYY(gameDate);
+            startTime = helpers.stringHelper(startTime, 'Start Time');
+            endTime = helpers.stringHelper(endTime, 'End Time');
+            gameDate = helpers.stringHelper(gameDate, 'Game Date');
+            //startTime = helpers.convertTo12Hour(startTime);
+            //endTime = helpers.convertTo12Hour(endTime);
+            //gameDate = helpers.convertToMMDDYYYY(gameDate);
             gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime);
             
             const createResult = await gamesData.create(
@@ -59,6 +62,11 @@ router
             if (gameObj.group !== null) {
                 hostGroup = await groupsData.get(gameObj.group);
             }
+
+            gameObj.startTime = helpers.convertTo12Hour(gameObj.startTime);
+            gameObj.endTime = helpers.convertTo12Hour(gameObj.endTime);
+            gameObj.gameDate = helpers.convertToMMDDYYYY(gameObj.gameDate);
+            
             let players = gameObj.players;
             // players = players.filter(player => player !== gameObj.organizer)
             let playersArr = await usersData.getIDName(players);
@@ -124,9 +132,15 @@ router
 
             helpers.isValidNum(req.body.maxPlayers);
             let maxPlayersNumber = parseInt(req.body.maxPlayers, 10);
-            let startTime = helpers.convertTo12Hour(req.body.startTime);
-            let endTime = helpers.convertTo12Hour(req.body.endTime);
-            let gameDate = helpers.convertToMMDDYYYY(req.body.date);
+            let startTime = helpers.stringHelper(req.body.startTime, 'Start Time');
+            let endTime = helpers.stringHelper(req.body.endTime, 'End Time');
+            let gameDate = helpers.stringHelper(req.body.date, 'Game Date');
+
+            if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid'
+
+            // let startTime = helpers.convertTo12Hour(req.body.startTime);
+            // let endTime = helpers.convertTo12Hour(req.body.endTime);
+            // let gameDate = helpers.convertToMMDDYYYY(req.body.date);
             let gameLocation = { zip: req.body.zip, state: req.body.state, streetAddress: req.body.streetAddress, city: req.body.city };
 
             gamesData.formatAndValidateGame(
