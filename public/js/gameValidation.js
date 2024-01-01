@@ -65,7 +65,7 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
     gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
-    console.log(gameDate, startTime, endTime);
+    //console.log(gameDate, startTime, endTime);
     //startTime = convertTo12Hour(startTime);
     //endTime = convertTo12Hour(endTime);
     //console.log(gameDate, startTime, endTime);

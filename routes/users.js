@@ -26,8 +26,11 @@ router
             
             let requests = await usersData.getIDName(userObj.friendRequests)
 
+            // Updates cookie
+            req.session.user = userObj;
+
             const ret = {
-                title:"User", 
+                title: "User", 
                 user: userObj,
                 friends: friends,
                 groups: groups,
@@ -148,7 +151,7 @@ router
             }
 
             // user obj will just be currentUser.
-            return res.render("editUser", {title:"Edit user"});
+            return res.render("editUser", {title: "Edit user" });
         }
         catch (err){
             return res.status(400).render('error', { title: 'Error', error:err })
@@ -156,14 +159,24 @@ router
     })
     .post(async (req, res) => {
         try {
-
             let userId = req.params.userId;
             let currentUser = req.session.user;
+            let username = req.body.username;
+            let email = req.body.email;
+            let pfp = req.body.profilePicture;
+            let description = req.body.description;
+            let skills = {
+                forehand: req.body.forehand,
+                backhand: req.body.backhand,
+                stall: req.body.stall,
+                pull: req.body.pull
+            };
+
             if (currentUser._id !== userId) {
                 throw Error("not allowed");
             }
 
-            req.session.user = await usersData.editUser(currentUser._id, req.body.username, currentUser.emailAddress, req.body.profilePicture, req.body.description);
+            req.session.user = await usersData.editUser(currentUser._id, username, email, pfp, description, skills);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });

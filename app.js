@@ -38,7 +38,7 @@ app.use(
 
 // Middleware that updates/stores currentUser object in app.locals for template usage.
 app.use('/', (req, res, next) => {
-    app.locals.currentUser = req.session.user;
+    res.locals.currentUser = req.session.user;
     return next();
 });
 

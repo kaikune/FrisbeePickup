@@ -1,8 +1,8 @@
 <main>
     <h1>{{user.username}}</h1>
-    <p>Email: {{ user.emailAddress }}</p>
+    <p>Email: {{user.emailAddress}}</p>
     {{#if user.profilePicture}}
-    <img src="{{ user.profilePicture }}" class="profile-picture" alt="Your profile picture">
+    <img src="{{user.profilePicture}}" class="profile-picture" alt="Your profile picture">
     {{/if}}
     <p>About me: {{user.description}}</p>
     <h3>Friends:</h3>
@@ -25,6 +25,17 @@
     </ul>
 
     {{#if isOwner}}
+        {{#if user.skills}}
+            <div id="skill-wrapper">
+                <h3>Skills</h3>
+                <ul>
+                    {{#each user.skills}}
+                        <li>{{@key}}: {{#if this}}&#x2713;{{/if}} {{#unless this}}&#x2717;{{/unless}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+        
         {{#if requests}}
             <div id="friend-request-wrapper">
                 <h3>Incoming Friend Requests</h3>

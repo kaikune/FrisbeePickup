@@ -32,7 +32,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
             url: "/search?term=" + searchTerm,
             method: "GET"
         }).then(function (data) {
-            console.log(data);
+            //console.log(data);
             let usersList = data.users;
             let groupsList = data.groups;
             let gamesList = data.games;

@@ -14,7 +14,19 @@
             <label class="form-label" for="profilePicture">Profile picture:</label>
                 <input class="form-input" type="text" id="profilePicture" name="profilePicture" value="{{currentUser.profilePicture}}">
                 <br>
-            <button type="reset" class="form-submit-button">Cancel</button>
+            <label class="form-label" for="forehand">Are you comfortable throwing forehand?</label>
+                <input class="form-input" type="checkbox" id="forehand" name="forehand" value="true" {{#if currentUser.skills.forehand}}checked{{/if}}>
+                <br>
+            <label class="form-label" for="backhand">Backhand?</label>
+                <input class="form-input" type="checkbox" id="backhand" name="backhand" value="true" {{#if currentUser.skills.backhand}}checked{{/if}}>
+                <br>
+            <label class="form-label" for="stall">Counting stalls?</label>
+                <input class="form-input" type="checkbox" id="stall" name="stall" value="true" {{#if currentUser.skills.stall}}checked{{/if}}>
+                <br>
+            <label class="form-label" for="pull">Do you know what a pull is?</label>
+                <input class="form-input" type="checkbox" id="pull" name="pull" value="true" {{#if currentUser.skills.pull}}checked{{/if}}>
+                <br>
+            <button type="button" class="form-submit-button" onclick="window.history.back();">Cancel</button>
             <button type="submit" class="form-submit-button">Submit</button>
         </form>
     </div>

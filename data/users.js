@@ -44,6 +44,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
     let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
     let emailAddress = helpers.stringHelper(userData.emailAddress, 'Email address', 1, null).toLowerCase();
     let password;
+    let skills = {};
 
     helpers.isValidEmail(emailAddress);
 
@@ -55,9 +56,18 @@ export function formatAndValidateUser(userData, ignorePassword) {
         password = userData.password;
     }
 
+    // Checks to make sure skills are valid and converts them to boolean
+    if (userData.skills) {
+        for (const [key, value] of Object.entries(userData.skills)) {
+            if (value !== undefined && !['true', 'false'].includes(value)) throw 'Skill is not valid';
+            if (value === 'true') skills[key] = true;
+            else skills[key] = false;
+        }
+    }
+
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
     let description = helpers.stringHelper(userData.description, 'Description', null, 300);
-    return { username, emailAddress, password, profilePicture, description };
+    return { username, emailAddress, password, profilePicture, description, skills };
 }
 
 const createUser = async (username, emailAddress, password, pfp, description) => {
@@ -95,6 +105,7 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
         games: [],
         groups: [],
         friendRequests: [],
+        //skills: {},
     };
 
     // Update the user
@@ -118,13 +129,14 @@ const getIDName = async (userIds) => {
     return ret;
 };
 
-const editUser = async (userId, username, emailAddress, profilePicture, description) => {
+const editUser = async (userId, username, emailAddress, profilePicture, description, skills) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
+    if (typeof skills !== 'object') throw 'Skills is not an object';
 
-    let userData = { username, emailAddress, password: '', profilePicture, description };
+    let userData = { username, emailAddress, password: '', profilePicture, description, skills };
     userData = formatAndValidateUser(userData, true);
 
     const userCollection = await users();
@@ -133,10 +145,11 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
         { _id: new ObjectId(userId) },
         {
             $set: {
-                username: username,
-                emailAddress: emailAddress,
-                description: description,
-                profilePicture: profilePicture,
+                username: userData.username,
+                emailAddress: userData.emailAddress,
+                description: userData.description,
+                profilePicture: userData.profilePicture,
+                skills: userData.skills,
             },
         }
     );
