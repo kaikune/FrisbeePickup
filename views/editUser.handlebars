@@ -11,9 +11,6 @@
             <label class="form-label" for="description">Description:</label>
                 <input class="form-input" type="text" id="description" name="description" value="{{currentUser.description}}">
                 <br>
-            <label class="form-label" for="profilePicture">Profile picture:</label>
-                <input class="form-input" type="text" id="profilePicture" name="profilePicture" value="{{currentUser.profilePicture}}">
-                <br>
             <label class="form-label" for="forehand">Are you comfortable throwing forehand?</label>
                 <input class="form-input" type="checkbox" id="forehand" name="forehand" value="true" {{#if currentUser.skills.forehand}}checked{{/if}}>
                 <br>
@@ -26,8 +23,17 @@
             <label class="form-label" for="pull">Do you know what a pull is?</label>
                 <input class="form-input" type="checkbox" id="pull" name="pull" value="true" {{#if currentUser.skills.pull}}checked{{/if}}>
                 <br>
+                
             <button type="button" class="form-submit-button" onclick="window.history.back();">Cancel</button>
             <button type="submit" class="form-submit-button">Submit</button>
         </form>
     </div>
+
+    {{> updatePfp}}
+    {{> addToSlideshow}}
+
+    <a id="error-label" hidden></a>
+    <a id="message-label" hidden></a>
+    
+    <script src="/public/js/pictures.js"></script>
 </main>

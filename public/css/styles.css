@@ -241,6 +241,26 @@ footer{
 
 /* END PROFILE PICTURE */
 
+
+/* SLIDESHOW  STUFF */
+
+.slideshow-container {
+    width: 80%;
+    height: 50%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #000000;
+    overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.slideshow-image {
+    size: fixed;
+    width: 10%;
+    height: 10%;
+}
+
 /* Messages Stuff */
 
 #messages-wrapper {

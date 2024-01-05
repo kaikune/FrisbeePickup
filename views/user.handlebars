@@ -25,11 +25,12 @@
     </ul>
 
     {{#if isOwner}}
-        {{#if user.skills}}
+        {{#if user.skills.length}}
             <div id="skill-wrapper">
                 <h3>Skills</h3>
                 <ul>
                     {{#each user.skills}}
+                        <!-- If skill then checkmark or X -->
                         <li>{{@key}}: {{#if this}}&#x2713;{{/if}} {{#unless this}}&#x2717;{{/unless}}</li>
                     {{/each}}
                 </ul>
@@ -68,5 +69,10 @@
         {{/if}}
     {{ else }}
         <p>To add this user as a friend, please <a href="/login">login</a>.</p>
+    {{/if}}
+
+    {{#if user.slideshowImages.length}}
+        <h3>Slideshow</h3>
+        {{> showSlideshow}}
     {{/if}}
 </main>

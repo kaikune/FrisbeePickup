@@ -4,3 +4,5 @@
 
 node_modules/
 package-lock.json
+.env
+elevated-apex-410118-b290d9586500.json

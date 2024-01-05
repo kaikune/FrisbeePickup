@@ -59,7 +59,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
     // Checks to make sure skills are valid and converts them to boolean
     if (userData.skills) {
         for (const [key, value] of Object.entries(userData.skills)) {
-            if (value !== undefined && !['true', 'false'].includes(value)) throw 'Skill is not valid';
+            if (value !== undefined && !['true', 'false'].includes(value.toString())) throw `Skill '${key}, ${value}' is not valid`;
             if (value === 'true') skills[key] = true;
             else skills[key] = false;
         }
@@ -105,7 +105,8 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
         games: [],
         groups: [],
         friendRequests: [],
-        //skills: {},
+        skills: {},
+        slideshowImages: [],
     };
 
     // Update the user
@@ -155,6 +156,16 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
     );
     const user = await getUser(userId);
     return user;
+};
+
+const editPfp = async (userId, imagePath) => {
+    const user = await getUser(userId);
+
+    const bucketName = process.env.BUCKET_NAME;
+    const base = 'https://storage.googleapis.com';
+
+    const url = `${base}/${bucketName}/${userId}/${imagePath}`;
+    await editUser(userId, user.username, user.emailAddress, url, user.description, user.skills);
 };
 
 const getAllUsers = async () => {
@@ -384,6 +395,7 @@ const removeFriend = async (userId, friendUserId) => {
 
     return selfUpdatedInfo;
 };
+
 const isUserLeader = async (userId) => {
     //Returns True if user is owner of at least one game or group otherwise False
     helpers.isValidId(userId);
@@ -399,12 +411,64 @@ const isUserLeader = async (userId) => {
     }
     return false;
 };
+
+/**
+ *
+ * @param {string} userId
+ * @param {string} imageName - /type/imageName/imageNum
+ * @returns {object}
+ */
+const addSlideshowImage = async (userId, imagePath) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.stringHelper(imageName, 'Image Name', 1, 100);
+
+    bucketName = process.env.BUCKET_NAME;
+    const base = 'https://storage.googleapis.com';
+
+    const url = `${base}/${bucketName}/${userId}/${imagePath}`;
+
+    // Update user info
+    const userCollection = await users();
+    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $push: { slideshowImages: url } });
+
+    if (!updatedInfo) throw 'Could not update user successfully';
+
+    return updatedInfo;
+};
+
+/**
+ *
+ * @param {string} userId
+ * @param {string} imageName - /type/imageName/imageNum
+ * @returns {object}
+ */
+const removeSlideshowImage = async (userId, imagePath) => {
+    // Input Validation
+    helpers.isValidId(userId);
+    helpers.stringHelper(imageName, 'Image Name', 1, 100);
+
+    bucketName = process.env.BUCKET_NAME;
+    const base = 'https://storage.googleapis.com';
+
+    const url = `${base}/${bucketName}/${userId}/${imagePath}`;
+
+    // Update user info
+    const userCollection = await users();
+    const updatedInfo = await userCollection.updateOne({ _id: new ObjectId(userId) }, { $pull: { slideshowImages: url } });
+
+    if (!updatedInfo) throw 'Could not update user successfully';
+
+    return updatedInfo;
+};
+
 export default {
     createUser,
     getAllUsers,
     getUser,
     deleteUser,
     editUser,
+    editPfp,
     loginUser,
     searchUsers,
     sendFriendRequest,
@@ -413,4 +477,6 @@ export default {
     removeFriend,
     getIDName,
     isUserLeader,
+    addSlideshowImage,
+    removeSlideshowImage,
 };

@@ -4,6 +4,8 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import 'dotenv/config';
+import cors from 'cors';
 
 import { gamesData } from './data/index.js';
 
@@ -12,8 +14,13 @@ import configRoutesFunction from './routes/index.js';
 const app = express();
 
 app.use(cookieParser());
-
 app.use(express.json());
+
+const corsOptions = {
+    origin: true,
+};
+
+app.use(cors(corsOptions));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -91,6 +98,8 @@ app.use('/groups', async (req, res, next) => {
 
 configRoutesFunction(app);
 
-app.listen(3000, () => {
-    console.log('Your routes will be running on http://localhost:3000');
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log('Up and running!');
 });
