@@ -26,8 +26,6 @@ router
             
             let requests = await usersData.getIDName(userObj.friendRequests)
 
-            // Updates cookie
-            req.session.user = userObj;
 
             const ret = {
                 title: "User", 
@@ -37,7 +35,8 @@ router
                 games: games,
                 requests: requests,
                 isOwner: isOwner,
-                notFriend: notFriend
+                notFriend: notFriend,
+                slideshowImages: userObj.slideshowImages
             }
             return res.render('user', ret);
         } catch (e) {  
@@ -163,7 +162,6 @@ router
             let currentUser = req.session.user;
             let username = req.body.username;
             let email = req.body.email;
-            let pfp = req.body.profilePicture;
             let description = req.body.description;
             let skills = {
                 forehand: req.body.forehand,
@@ -176,7 +174,7 @@ router
                 throw Error("not allowed");
             }
 
-            req.session.user = await usersData.editUser(currentUser._id, username, email, pfp, description, skills);
+            req.session.user = await usersData.editUser(currentUser._id, username, email, currentUser.profilePicture, description, skills);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
