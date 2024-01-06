@@ -1,6 +1,6 @@
 let pfpForm = document.getElementById('pfp-form');
 let slideshowForm = document.getElementById('slideshow-form');
-const BASE_URL = process.env.SERVER_URL || 'http://localhost:3000';
+let BASE_URL = await fetch('/config').json();
 
 // Usable for pfp uploads
 if (pfpForm) {

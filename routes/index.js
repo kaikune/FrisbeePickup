@@ -13,6 +13,12 @@ const configRoutesFunction = (app) => {
     app.use('/pictures', picturesRoutes);
     app.use('/', mainRoutes);
 
+    app.get('/config', (req, res) => {
+        res.json({
+            SERVER_URL: process.env.SERVER_URL || 'http://localhost:3000',
+        });
+    });
+
     app.use('*', (req, res) => {
         return res.status(404).render('error', { title: 'Error', error: 'Not Found' });
     });
