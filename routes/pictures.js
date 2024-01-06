@@ -14,15 +14,16 @@ router
         });
     })
     .post(async function (req, res) {
-        const filenames = helpers.stringHelper(req.body.filenames, 'Filename');
+        const filenames = req.body.filenames;
         let urls = [];
 
-        debug('Generating signed urls');
+        console.log('Generating signed urls');
 
         // Gets signed urls for each image
         try {
             // Can change to whatever number of images we need
             for (let i = 0; i < filenames.length; i++) {
+                const filename = helpers.stringHelper(filenames[i], 'Filename');
                 urls.push(await picturesData.generateUploadSignedUrl(req.session.user._id, filenames[i], 'slideshow'));
             }
         } catch (err) {
@@ -30,8 +31,8 @@ router
             return res.status(500).render('error', { title: 'Error', error: err });
         }
 
-        debug('Urls generated');
-        debug('Adding to slideshow');
+        console.log('Urls generated');
+        console.log('Adding to slideshow');
 
         // Updates image urls in user collection
         try {
@@ -48,15 +49,14 @@ router
         return res.json(urls);
     })
     .delete(async function (req, res) {
-        const fileName = helpers.stringHelper(req.body.filename, 'Fileame');
-
         // Updates image urls in user collection
         try {
-            const imagePath = `slideshow/${fileName}`;
-            debug('Removing from slideshow');
+            const filename = req.body.filename;
+            const imagePath = `slideshow/${filename}`;
+            console.log('Removing from slideshow');
             await usersData.removeSlideshowImage(req.session.user._id, imagePath);
-            debug('Deleting from bucket');
-            await picturesData.deleteImageFromBucket(req.session.user._id, fileName, 'slideshow');
+            console.log('Deleting from bucket');
+            await picturesData.deleteImageFromBucket(req.session.user._id, filename, 'slideshow');
         } catch (err) {
             console.log(err);
             return res.status(500).render('error', { title: 'Error', error: err });
@@ -73,28 +73,28 @@ router
         return res.render('updatePfp', {});
     })
     .post(async function (req, res) {
-        const filename = helpers.stringHelper(req.body.filename, 'Filename');
+        const filename = req.body.filename;
         const oldFilename = req.session.user.profilePicture;
         let url = '';
 
-        debug('Generating signed url');
+        console.log('Generating signed url');
 
         // Gets signed url for each image
         try {
-            url = await picturesData.generateUploadSignedUrl(req.session.user._id, filename, 'pfp');
+            url = await picturesData.generateUploadSignedUrl(req.session.user._id, helpers.stringHelper(filename, 'Filename'), 'pfp');
         } catch (err) {
             console.log(err);
             return res.status(500).render('error', { title: 'Error', error: err });
         }
 
-        debug('Url generated');
+        console.log('Url generated');
 
         // Updates image url in user pfp collection
         try {
             const imagePath = `pfp/${filename}`;
-            debug('Updating pfp');
+            console.log('Updating pfp');
             await usersData.editPfp(req.session.user._id, imagePath);
-            debug('Deleting old pfp from bucket');
+            console.log('Deleting old pfp from bucket');
             await picturesData.deleteImageFromBucket(oldFilename);
         } catch (err) {
             console.log(err);

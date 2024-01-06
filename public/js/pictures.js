@@ -1,6 +1,5 @@
 let pfpForm = document.getElementById('pfp-form');
 let slideshowForm = document.getElementById('slideshow-form');
-let BASE_URL = await fetch('/config').json();
 
 // Usable for pfp uploads
 if (pfpForm) {
@@ -22,7 +21,7 @@ if (pfpForm) {
             const filename = file.name;
             const signedUrl = await getPfpUrl(filename);
 
-            debug('Got signed url');
+            console.log('Got signed url');
 
             await handleUpload([file], [signedUrl]);
             //event.currentTarget.submit();
@@ -41,18 +40,31 @@ if (slideshowForm) {
         try {
             let files = slideshowInput.files;
 
+            console.log('Attempting to submit files');
             if (!files) {
+                console.log('No files selected');
                 throw Error('Please select a file!');
             }
 
             for (const file of files) {
                 if (file.type != 'image/jpeg') {
+                    console.log('File type not jpeg');
                     throw Error('Only JPEG allowed!');
                 }
             }
 
-            const filenames = files.map((file) => file.name);
+            console.log('Getting filenames');
+            let filenames = [];
+
+            for (var i = 0; i < files.length; i++) {
+                filenames.push(files[i].name);
+            }
+
+            console.log('Got filenames', filenames);
             const signedUrls = await getSlideshowUrls(filenames);
+
+            console.log('Got signed urls');
+            console.log('Uploading');
 
             await handleUpload(files, signedUrls);
             //event.currentTarget.submit();
@@ -67,7 +79,7 @@ if (slideshowForm) {
  * @param {string} filename
  */
 async function getPfpUrl(filename) {
-    debug(filename);
+    console.log(filename);
     const options = {
         filename: filename,
     };
@@ -82,6 +94,7 @@ async function getPfpUrl(filename) {
  * @param {[string]} filenames
  */
 async function getSlideshowUrls(filenames) {
+    console.log('in getSlideshowUrls');
     const options = {
         filenames: filenames,
     };
@@ -97,7 +110,8 @@ async function getSlideshowUrls(filenames) {
  * @returns
  */
 async function getUrls(options, type) {
-    const url = `${BASE_URL}/pictures/${type}`;
+    console.log('Getting signed urls');
+    const url = `/pictures/${type}`;
 
     try {
         const response = await fetch(url, {
@@ -117,6 +131,7 @@ async function getUrls(options, type) {
         return data; // Return the data received from the server (an array of signed URLs)
     } catch (error) {
         console.error(error);
+        return;
     }
 }
 
@@ -128,7 +143,7 @@ async function getUrls(options, type) {
  */
 async function handleUpload(files, signedUrls) {
     setMessage('Preparing to upload');
-    debug('Preparing to upload', files);
+    console.log('Preparing to upload', files);
     try {
         for (let i = 0; i < files.length; i++) {
             const response = await fetch(signedUrls[i], {
@@ -144,11 +159,11 @@ async function handleUpload(files, signedUrls) {
                 setError(`File ${files[i].name} upload failed with status ${response.status}.`);
             }
         }
-        debug('done');
+        console.log('Done');
         setMessage('Files done uploading!');
     } catch (error) {
         setError(`File upload failed: ${error.message}`);
-        debug(`Error uploading: ${error.message}`);
+        console.log(`Error uploading: ${error.message}`);
         return;
     }
 }

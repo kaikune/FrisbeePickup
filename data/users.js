@@ -415,15 +415,15 @@ const isUserLeader = async (userId) => {
 /**
  *
  * @param {string} userId
- * @param {string} imageName - /type/imageName/imageNum
+ * @param {string} imagePath - /type/imageName/imageNum
  * @returns {object}
  */
 const addSlideshowImage = async (userId, imagePath) => {
     // Input Validation
     helpers.isValidId(userId);
-    helpers.stringHelper(imageName, 'Image Name', 1, 100);
+    helpers.stringHelper(imagePath, 'Image Path', 1, 100);
 
-    bucketName = process.env.BUCKET_NAME;
+    const bucketName = process.env.BUCKET_NAME;
     const base = 'https://storage.googleapis.com';
 
     const url = `${base}/${bucketName}/${userId}/${imagePath}`;
@@ -440,15 +440,15 @@ const addSlideshowImage = async (userId, imagePath) => {
 /**
  *
  * @param {string} userId
- * @param {string} imageName - /type/imageName/imageNum
+ * @param {string} imagePath - /type/imageName/imageNum
  * @returns {object}
  */
 const removeSlideshowImage = async (userId, imagePath) => {
     // Input Validation
     helpers.isValidId(userId);
-    helpers.stringHelper(imageName, 'Image Name', 1, 100);
+    helpers.stringHelper(imagePath, 'Image Path', 1, 100);
 
-    bucketName = process.env.BUCKET_NAME;
+    const bucketName = process.env.BUCKET_NAME;
     const base = 'https://storage.googleapis.com';
 
     const url = `${base}/${bucketName}/${userId}/${imagePath}`;

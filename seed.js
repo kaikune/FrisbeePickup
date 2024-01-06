@@ -55,14 +55,14 @@ export async function seed() {
         ['oliverP', 'oliverP@domain.com', 'Ol3i@verP', "Hello, I'm Oliver. I love puzzles and playing piano."],
     ];
 
-    debug('Creating all users...');
+    console.log('Creating all users...');
 
     const userPromises = userData.map((user) => usersData.createUser(user[0], user[1], user[2], undefined, user[3]));
     await Promise.all(userPromises);
 
     const allUsers = await usersData.getAllUsers();
 
-    debug('Creating all groups...');
+    console.log('Creating all groups...');
     const group1 = await groupsData.create('Frisbee Enthusiasts Group', 'A community for all Frisbee lovers', allUsers[0]._id);
     const group2 = await groupsData.create(
         'Ultimate Frisbee Competitors',
@@ -73,14 +73,14 @@ export async function seed() {
     const group4 = await groupsData.create('Youth Frisbee Club', 'Engaging youth in Frisbee activities and games', allUsers[3]._id);
     const group5 = await groupsData.create('Casual Frisbee Meetups', 'Casual and fun Frisbee meetups for all skill levels', allUsers[4]._id);
 
-    debug('Adding comments to group...');
+    console.log('Adding comments to group...');
     await groupsData.addComment(group1._id, allUsers[0]._id, 'This is a great group!');
     await groupsData.addComment(group2._id, allUsers[1]._id, 'I love this group!');
     await groupsData.addComment(group3._id, allUsers[2]._id, 'This group is awesome!');
     await groupsData.addComment(group4._id, allUsers[3]._id, "I'm so glad I joined this group!");
     await groupsData.addComment(group5._id, allUsers[4]._id, 'This group is so much fun!');
 
-    debug('Creating all games...');
+    console.log('Creating all games...');
     const game1 = await gamesData.create(
         'Sunset Frisbee Fun',
         'Relaxed Frisbee game at sunset',
@@ -199,7 +199,7 @@ export async function seed() {
     const allGroups = [group1, group2, group3, group4, group5];
     const allGames = [game1, game2, game3, game4, game5, game6, game7, game8, game9, game10];
 
-    debug('Adding users to groups, games, and friends...');
+    console.log('Adding users to groups, games, and friends...');
     for (let i = 5; i < userData.length; i++) {
         if (i % 5 === 0) {
             await groupsData.addUser(allUsers[i]._id, group1._id);
@@ -234,14 +234,14 @@ export async function seed() {
         }
     }
 
-    debug('Done inserting all data.');
+    console.log('Done inserting all data.');
 }
 
 const db = await dbConnection();
-debug('Connected');
+console.log('Connected');
 await db.dropDatabase(); //Clears database before insert
-debug('Database cleared');
+console.log('Database cleared');
 await seed();
-debug('Seed data entered');
+console.log('Seed data entered');
 await closeConnection();
-debug('finished');
+console.log('finished');

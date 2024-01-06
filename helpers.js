@@ -311,9 +311,6 @@ export function convertToMMDDYYYY(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${month}/${day}/${year}`;
 }
-export function testFunction() {
-    debug('Success!');
-}
 
 export function isValidNum(string) {
     if (!string) {
