@@ -85,30 +85,26 @@ export function isValidName(name) {
 }
 
 let charIsLowercase = function (c) {
-    return c >= "a" && c <= "z";
-}
+    return c >= 'a' && c <= 'z';
+};
 let charIsNumber = function (c) {
-    return c >= "0" && c <= "9";
-}
+    return c >= '0' && c <= '9';
+};
 export let isValidEmail = function (email) {
     // Based on https://help.xmatters.com/ondemand/trial/valid_email_format.htm
-    if (!email.includes("@")) return false;
-    let s = email.split("@");
+    if (!email.includes('@')) return false;
+    let s = email.split('@');
     if (s.length != 2) return false;
     let [prefix, domain] = s;
     if (!prefix.length || !domain.length) return false;
 
     for (let i = 0; i < prefix.length; i++) {
-        if (
-            charIsLowercase(prefix[i])
-            ||
-            charIsNumber(prefix[i])
-        ) {
+        if (charIsLowercase(prefix[i]) || charIsNumber(prefix[i])) {
             continue;
-        } else if ("_.-".includes(prefix[i])) {
+        } else if ('_.-'.includes(prefix[i])) {
             if (!i) return false;
             if (i == prefix.length - 1) return false;
-            if ("_.-".includes(prefix[i - 1])) return false;
+            if ('_.-'.includes(prefix[i - 1])) return false;
             continue;
         } else {
             return false;
@@ -117,7 +113,7 @@ export let isValidEmail = function (email) {
 
     let idx = -1;
     for (let i = domain.length - 1; i >= 0; i--) {
-        if (domain[i] == ".") {
+        if (domain[i] == '.') {
             idx = i;
             break;
         }
@@ -126,13 +122,13 @@ export let isValidEmail = function (email) {
     let tld = domain.substring(idx + 1);
     let site = domain.substring(0, idx - 1);
     for (let i = 0; i < site.length; i++) {
-        if (!(
-            charIsLowercase(site[i]) || charIsNumber(site[i]) || site[i] == "-"
-        )) { return false }
+        if (!(charIsLowercase(site[i]) || charIsNumber(site[i]) || site[i] == '-')) {
+            return false;
+        }
     }
     if (tld.length < 2) return false;
     return true;
-}
+};
 
 // Checks for valid number of days in given month
 export function isValidDay(eventDate) {
@@ -245,19 +241,19 @@ function isValid24(time) {
 export function convertTo12Hour(timeString) {
     //HTML uses 24 hours
     //Input validation
-    if(!timeString){
-        throw "Could not find string"
+    if (!timeString) {
+        throw 'Could not find string';
     }
-    if(typeof timeString !== 'string'){
-        throw "Not of type string"
+    if (typeof timeString !== 'string') {
+        throw 'Not of type string';
     }
-    if(!isValid24(timeString)){
-        throw "Not correct time string"
+    if (!isValid24(timeString)) {
+        throw 'Not correct time string';
     }
-    
+
     const [hours, minutes] = timeString.split(':').map(Number);
-    if(hours === 0){
-        throw "Invalid time"
+    if (hours === 0) {
+        throw 'Invalid time';
     }
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const twelveHour = hours % 12 || 12;
@@ -274,7 +270,7 @@ export function isValidDayBritainEdition(eventDate) {
         case 1:
             return day <= 31;
         case 2:
-            return day <= 28; 
+            return day <= 28;
         case 3:
             return day <= 31;
         case 4:
@@ -303,32 +299,32 @@ export function isValidDayBritainEdition(eventDate) {
 export function convertToMMDDYYYY(dateString) {
     //HTML form uses different formating for the data so this used to convert back to ours
     //Input validation
-    if(!dateString){
-        throw "Could not find string";
+    if (!dateString) {
+        throw 'Could not find string';
     }
-    if(typeof dateString !== 'string' ){
-        throw "Not of type date";
+    if (typeof dateString !== 'string') {
+        throw 'Not of type date';
     }
-    if(!isValidDayBritainEdition(dateString)){
-        throw "Not in correct format"
+    if (!isValidDayBritainEdition(dateString)) {
+        throw 'Not in correct format';
     }
     const [year, month, day] = dateString.split('-');
     return `${month}/${day}/${year}`;
 }
 export function testFunction() {
-    console.log('Success!');
+    debug('Success!');
 }
 
-export function isValidNum(string){
-    if(!string){
-        throw "String expected"
+export function isValidNum(string) {
+    if (!string) {
+        throw 'String expected';
     }
-    if(typeof string !== 'string'){
-        throw "String expected"
+    if (typeof string !== 'string') {
+        throw 'String expected';
     }
     const number = Number(string);
     if (isNaN(number)) {
-        throw "Max cap is not a number"
+        throw 'Max cap is not a number';
     }
 }
 

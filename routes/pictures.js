@@ -17,7 +17,7 @@ router
         const filenames = helpers.stringHelper(req.body.filenames, 'Filename');
         let urls = [];
 
-        console.log('Generating signed urls');
+        debug('Generating signed urls');
 
         // Gets signed urls for each image
         try {
@@ -29,6 +29,9 @@ router
             console.log(err);
             return res.status(500).render('error', { title: 'Error', error: err });
         }
+
+        debug('Urls generated');
+        debug('Adding to slideshow');
 
         // Updates image urls in user collection
         try {
@@ -50,7 +53,9 @@ router
         // Updates image urls in user collection
         try {
             const imagePath = `slideshow/${fileName}`;
+            debug('Removing from slideshow');
             await usersData.removeSlideshowImage(req.session.user._id, imagePath);
+            debug('Deleting from bucket');
             await picturesData.deleteImageFromBucket(req.session.user._id, fileName, 'slideshow');
         } catch (err) {
             console.log(err);
@@ -72,6 +77,8 @@ router
         const oldFilename = req.session.user.profilePicture;
         let url = '';
 
+        debug('Generating signed url');
+
         // Gets signed url for each image
         try {
             url = await picturesData.generateUploadSignedUrl(req.session.user._id, filename, 'pfp');
@@ -80,10 +87,14 @@ router
             return res.status(500).render('error', { title: 'Error', error: err });
         }
 
+        debug('Url generated');
+
         // Updates image url in user pfp collection
         try {
             const imagePath = `pfp/${filename}`;
+            debug('Updating pfp');
             await usersData.editPfp(req.session.user._id, imagePath);
+            debug('Deleting old pfp from bucket');
             await picturesData.deleteImageFromBucket(oldFilename);
         } catch (err) {
             console.log(err);

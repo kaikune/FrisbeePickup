@@ -1,6 +1,6 @@
 let pfpForm = document.getElementById('pfp-form');
 let slideshowForm = document.getElementById('slideshow-form');
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = process.env.SERVER_URL || 'http://localhost:3000';
 
 // Usable for pfp uploads
 if (pfpForm) {
@@ -22,7 +22,7 @@ if (pfpForm) {
             const filename = file.name;
             const signedUrl = await getPfpUrl(filename);
 
-            //console.log('Got signed url');
+            debug('Got signed url');
 
             await handleUpload([file], [signedUrl]);
             //event.currentTarget.submit();
@@ -67,7 +67,7 @@ if (slideshowForm) {
  * @param {string} filename
  */
 async function getPfpUrl(filename) {
-    //console.log(filename);
+    debug(filename);
     const options = {
         filename: filename,
     };
@@ -128,7 +128,7 @@ async function getUrls(options, type) {
  */
 async function handleUpload(files, signedUrls) {
     setMessage('Preparing to upload');
-    //console.log('Preparing to upload', files);
+    debug('Preparing to upload', files);
     try {
         for (let i = 0; i < files.length; i++) {
             const response = await fetch(signedUrls[i], {
@@ -144,11 +144,11 @@ async function handleUpload(files, signedUrls) {
                 setError(`File ${files[i].name} upload failed with status ${response.status}.`);
             }
         }
-        //console.log('done');
+        debug('done');
         setMessage('Files done uploading!');
     } catch (error) {
         setError(`File upload failed: ${error.message}`);
-        console.log(`Error uploading: ${error.message}`);
+        debug(`Error uploading: ${error.message}`);
         return;
     }
 }

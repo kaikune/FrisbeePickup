@@ -6,7 +6,7 @@ if (createGameForm) {
     errorLabel.hidden = true;
 
     createGameForm.addEventListener('submit', (event) => {
-        console.log('Form submission triggered');
+        debug('Form submission triggered');
         event.preventDefault();
         try {
             let gameName = document.getElementById('game-name');
@@ -65,10 +65,10 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
     gameDate = gameDate.trim();
     startTime = startTime.trim();
     endTime = endTime.trim();
-    //console.log(gameDate, startTime, endTime);
+    debug(gameDate, startTime, endTime);
     //startTime = convertTo12Hour(startTime);
     //endTime = convertTo12Hour(endTime);
-    //console.log(gameDate, startTime, endTime);
+    debug(gameDate, startTime, endTime);
     if (gameName.length === 0 || gameDescription.length === 0 || gameDate.length === 0 || startTime.length === 0 || endTime.length === 0)
         throw 'One or more string fields empty';
 

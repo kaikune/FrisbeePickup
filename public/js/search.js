@@ -62,7 +62,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
         executeSearch();
     });
 
-    $(searchFormInput).on("input", function (event) {
+    $(searchInput).on("input", function (event) {
         event.preventDefault();
         executeSearch();
     });

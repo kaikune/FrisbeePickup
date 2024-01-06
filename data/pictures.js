@@ -28,8 +28,8 @@ const generateUploadSignedUrl = async (userId, filename, type) => {
     // Get a signed URL for uploading file
     const [url] = await storage.bucket(bucketName).file(`${userId}/${type}/${filename}`).getSignedUrl(options);
 
-    //console.log('Generated PUT signed URL:');
-    //console.log(url);
+    debug('Generated PUT signed URL:');
+    debug(url);
 
     return url;
 };
