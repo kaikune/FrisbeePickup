@@ -14,7 +14,7 @@ router
         });
     })
     .post(async function (req, res) {
-        const filenames = req.body.filenames;
+        const filenames = helpers.stringHelper(req.body.filenames, 'Filename');
         let urls = [];
 
         console.log('Generating signed urls');
@@ -45,7 +45,7 @@ router
         return res.json(urls);
     })
     .delete(async function (req, res) {
-        const fileName = req.body.filename;
+        const fileName = helpers.stringHelper(req.body.filename, 'Fileame');
 
         // Updates image urls in user collection
         try {
@@ -68,7 +68,7 @@ router
         return res.render('updatePfp', {});
     })
     .post(async function (req, res) {
-        const filename = req.body.filename;
+        const filename = helpers.stringHelper(req.body.filename, 'Filename');
         const oldFilename = req.session.user.profilePicture;
         let url = '';
 
