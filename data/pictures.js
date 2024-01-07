@@ -1,10 +1,19 @@
 import { Storage } from '@google-cloud/storage';
 
-const project = process.env.PROJECT_ID;
-const storage = new Storage({
-    projectId: project,
-    keyFilename: process.env.SECRET_KEY,
-});
+let storage;
+if (process.env.SECRET_KEY) {
+    // If running locally
+    const project = process.env.PROJECT_ID;
+    storage = new Storage({
+        projectId: project,
+        keyFilename: process.env.SECRET_KEY,
+    });
+} else {
+    // Running on GCP
+    storage = new Storage();
+}
+
+// ... rest of your code ...
 
 // Generates a signed url for uploading an image to the GCP bucket
 /**
