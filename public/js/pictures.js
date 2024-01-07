@@ -98,6 +98,7 @@ async function getSlideshowUrls(filenames) {
     const options = {
         filenames: filenames,
     };
+
     const signedUrls = await getUrls(options, 'slideshow');
 
     return signedUrls;
@@ -113,26 +114,21 @@ async function getUrls(options, type) {
     console.log('Getting signed urls');
     const url = `/pictures/${type}`;
 
-    try {
-        const response = await fetch(url, {
-            mode: 'cors',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(options),
-        });
+    const response = await fetch(url, {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(options),
+    });
 
-        if (!response.ok) {
-            throw new Error(`Server responded with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data; // Return the data received from the server (an array of signed URLs)
-    } catch (error) {
-        console.error(error);
-        return;
+    if (!response.ok) {
+        throw new Error(`Server responded with status ${response.status}`);
     }
+
+    const data = await response.json();
+    return data; // Return the data received from the server (an array of signed URLs)
 }
 
 /**
