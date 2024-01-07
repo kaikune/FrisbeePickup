@@ -3,6 +3,7 @@ import { Storage } from '@google-cloud/storage';
 let storage;
 if (process.env.SECRET_KEY) {
     // If running locally
+    console.log('Getting local secret key');
     const project = process.env.PROJECT_ID;
     storage = new Storage({
         projectId: project,
@@ -10,6 +11,7 @@ if (process.env.SECRET_KEY) {
     });
 } else {
     // Running on GCP
+    console.log('Using ADC');
     storage = new Storage();
 }
 
