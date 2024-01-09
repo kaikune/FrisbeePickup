@@ -57,7 +57,7 @@ function rotateImages() {
     currentIndex = (currentIndex + 1) % imageContainers.length;
 }
 
-if (imageContainers) {
+if (images) {
     rotateImages();
     setInterval(rotateImages, 5000);
 }
