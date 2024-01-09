@@ -53,17 +53,14 @@ if (slideshowForm) {
                 }
             }
 
-            console.log('Getting filenames');
             let filenames = [];
 
             for (var i = 0; i < files.length; i++) {
                 filenames.push(files[i].name);
             }
 
-            console.log('Got filenames', filenames);
             const signedUrls = await getSlideshowUrls(filenames);
 
-            console.log('Got signed urls');
             console.log('Uploading');
 
             await handleUpload(files, signedUrls);
@@ -94,7 +91,6 @@ async function getPfpUrl(filename) {
  * @param {[string]} filenames
  */
 async function getSlideshowUrls(filenames) {
-    console.log('in getSlideshowUrls');
     const options = {
         filenames: filenames,
     };
@@ -168,8 +164,8 @@ function setMessage(message) {
     let messageLabel = document.getElementById('message-label');
     let errorLabel = document.getElementById('error-label');
 
-    if (message.hidden) {
-        message.hidden = false;
+    if (messageLabel.hidden) {
+        messageLabel.hidden = false;
     }
     if (!errorLabel.hidden) {
         errorLabel.hidden = true;
@@ -182,8 +178,8 @@ function setError(error) {
     let messageLabel = document.getElementById('message-label');
     let errorLabel = document.getElementById('error-label');
 
-    if (error.hidden) {
-        error.hidden = false;
+    if (errorLabel.hidden) {
+        errorLabel.hidden = false;
     }
     if (!messageLabel.hidden) {
         messageLabel.hidden = true;

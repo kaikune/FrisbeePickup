@@ -6,7 +6,7 @@
     {{/if}}
     {{#if users}}
     <div class="response-list">
-        <a>Users:</a>
+        <a>Family Frisbee Members:</a>
         <ul>
             {{#each users}}
                  <li><a href="/users/{{this._id}}">{{this.username}}</a></li>
@@ -26,7 +26,7 @@
     {{/if}}
     {{#if games}}
     <div class="response-list">
-        <a>Upcoming Games:</a>
+        <a>Upcoming Events:</a>
         <ul>
             {{#each games}}
                 <li><a href="/games/{{this._id}}">{{this.gameName}}</a></li>

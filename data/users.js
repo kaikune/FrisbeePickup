@@ -2,6 +2,7 @@ import * as helpers from '../helpers.js';
 import { users, games, groups } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
+import { picturesData } from './index.js';
 
 const searchUsers = async (search) => {
     //Returns the first 10 users that start with a search query
@@ -72,7 +73,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
 
 const createUser = async (username, emailAddress, password, pfp, description) => {
     if (!pfp) {
-        pfp = 'https://www.dinosstorage.com/wp-content/uploads/2021/04/flying-disc-emoji-clipart-md.png';
+        pfp = 'https://storage.googleapis.com/family-frisbee-media/icons/RIC3FAM.jpg';
     }
     if (!description) {
         description = '';
@@ -93,6 +94,13 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
     const saltRounds = 16;
     const hashPass = await bcrypt.hash(userData.password, saltRounds);
 
+    const skills = {
+        forehand: false,
+        backhand: false,
+        stall: false,
+        pull: false,
+    };
+
     // Create user
     const newUser = {
         _id: new ObjectId(),
@@ -105,7 +113,7 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
         games: [],
         groups: [],
         friendRequests: [],
-        skills: {},
+        skills: skills,
         slideshowImages: [],
     };
 
@@ -206,6 +214,9 @@ const deleteUser = async (userId) => {
     const gameCollection = await games();
     const groupCollection = await groups();
     const userCollection = await users();
+
+    // Delete info from bucket
+    await picturesData.deleteUserFolder(userId);
 
     // Remove user from all games
     const gameRemove = await gameCollection.updateMany(

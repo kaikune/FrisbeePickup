@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 
 const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
     gameName = helpers.stringHelper(gameName, 'Game name', 5, null);
-    gameDescription = helpers.stringHelper(gameDescription, 'Game description', 25, null);
+    gameDescription = helpers.stringHelper(gameDescription, 'Game description', 1, null);
     gameDate = helpers.stringHelper(gameDate, 'Game date', 1, null);
     startTime = helpers.stringHelper(startTime, 'Start time', 1, null);
     endTime = helpers.stringHelper(endTime, 'End time', 1, null);
@@ -27,7 +27,9 @@ const formatAndValidateGame = function (gameName, gameDescription, gameLocation,
 const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
 
-    helpers.isValidId(group);
+    // Group is optional
+    if (group !== 'N/A') helpers.isValidId(group);
+
     helpers.isValidId(organizer);
 
     // Add game to database
@@ -58,7 +60,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
     const userCollection = await users();
     const updateUser = await userCollection.updateOne({ _id: new ObjectId(organizer) }, { $push: { games: game._id } });
     if (!updateUser) {
-        throw 'Could not update the organzier';
+        throw 'Could not update the organizer';
     }
     //await closeConnection(); // For testing purposes
     return game;

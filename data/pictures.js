@@ -3,7 +3,7 @@ import { Storage } from '@google-cloud/storage';
 let storage;
 if (process.env.SECRET_KEY) {
     // If running locally
-    console.log('Getting local secret key');
+    //console.log('Getting local secret key');
     const project = process.env.PROJECT_ID;
     storage = new Storage({
         projectId: project,
@@ -11,7 +11,7 @@ if (process.env.SECRET_KEY) {
     });
 } else {
     // Running on GCP
-    console.log('Using ADC');
+    //console.log('Using ADC');
     storage = new Storage();
 }
 
@@ -50,13 +50,22 @@ const generateUploadSignedUrl = async (userId, filename, type) => {
  * @param {string} filename It is either the default or the url of the stored image
  */
 const deleteImageFromBucket = async (filename) => {
-    const bucketName = process.env.BUCKET_NAME;
+    const BUCKET_NAME = process.env.BUCKET_NAME;
 
     // Delete the file
-    if (filename !== 'https://www.dinosstorage.com/wp-content/uploads/2021/04/flying-disc-emoji-clipart-md.png') {
-        filename = filename.replace(`https://storage.googleapis.com/${bucketName}/`, '');
-        await storage.bucket(bucketName).file(filename).delete();
+    if (filename !== 'https://storage.googleapis.com/family-frisbee-media/icons/RIC3FAM.jpg') {
+        filename = filename.replace(`https://storage.googleapis.com/${BUCKET_NAME}/`, '');
+        await storage.bucket(BUCKET_NAME).file(filename).delete();
     }
 };
 
-export default { generateUploadSignedUrl, deleteImageFromBucket };
+const deleteUserFolder = async (userId) => {
+    const BUCKET_NAME = process.env.BUCKET_NAME;
+
+    // Delete the file
+    await storage.bucket(BUCKET_NAME).deleteFiles({
+        prefix: userId,
+    });
+};
+
+export default { generateUploadSignedUrl, deleteImageFromBucket, deleteUserFolder };

@@ -59,7 +59,7 @@ router
             let gameObj = await gamesData.get(gameId);
             let hostGroup = null;
 
-            if (gameObj.group !== null) {
+            if (gameObj.group !== 'N/A') {
                 hostGroup = await groupsData.get(gameObj.group);
             }
 

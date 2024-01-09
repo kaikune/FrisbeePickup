@@ -14,84 +14,27 @@ let stringHelper = function (string, stringName, minLength, maxLength) {
     }
     return string;
 };
-const states = [
-    'AK',
-    'AL',
-    'AR',
-    'AZ',
-    'CA',
-    'CO',
-    'CT',
-    'DC',
-    'DE',
-    'FL',
-    'GA',
-    'HI',
-    'IA',
-    'ID',
-    'IL',
-    'IN',
-    'KS',
-    'KY',
-    'LA',
-    'MA',
-    'MD',
-    'ME',
-    'MI',
-    'MN',
-    'MO',
-    'MS',
-    'MT',
-    'NC',
-    'ND',
-    'NE',
-    'NH',
-    'NJ',
-    'NM',
-    'NV',
-    'NY',
-    'OH',
-    'OK',
-    'OR',
-    'PA',
-    'RI',
-    'SC',
-    'SD',
-    'TN',
-    'TX',
-    'UT',
-    'VA',
-    'VT',
-    'WA',
-    'WI',
-    'WV',
-    'WY',
-];
 let charIsLowercase = function (c) {
-    return c >= "a" && c <= "z";
-}
+    return c >= 'a' && c <= 'z';
+};
 let charIsNumber = function (c) {
-    return c >= "0" && c <= "9";
-}
+    return c >= '0' && c <= '9';
+};
 let isValidEmail = function (email) {
     // Based on https://help.xmatters.com/ondemand/trial/valid_email_format.htm
-    if (!email.includes("@")) return false;
-    let s = email.split("@");
+    if (!email.includes('@')) return false;
+    let s = email.split('@');
     if (s.length != 2) return false;
     let [prefix, domain] = s;
     if (!prefix.length || !domain.length) return false;
 
     for (let i = 0; i < prefix.length; i++) {
-        if (
-            charIsLowercase(prefix[i])
-            ||
-            charIsNumber(prefix[i])
-        ) {
+        if (charIsLowercase(prefix[i]) || charIsNumber(prefix[i])) {
             continue;
-        } else if ("_.-".includes(prefix[i])) {
+        } else if ('_.-'.includes(prefix[i])) {
             if (!i) return false;
             if (i == prefix.length - 1) return false;
-            if ("_.-".includes(prefix[i - 1])) return false;
+            if ('_.-'.includes(prefix[i - 1])) return false;
             continue;
         } else {
             return false;
@@ -100,7 +43,7 @@ let isValidEmail = function (email) {
 
     let idx = -1;
     for (let i = domain.length - 1; i >= 0; i--) {
-        if (domain[i] == ".") {
+        if (domain[i] == '.') {
             idx = i;
             break;
         }
@@ -109,14 +52,14 @@ let isValidEmail = function (email) {
     let tld = domain.substring(idx + 1);
     let site = domain.substring(0, idx - 1);
     for (let i = 0; i < site.length; i++) {
-        if (!(
-            charIsLowercase(site[i]) || charIsNumber(site[i]) || site[i] == "-"
-        )) { return false }
+        if (!(charIsLowercase(site[i]) || charIsNumber(site[i]) || site[i] == '-')) {
+            return false;
+        }
     }
     if (tld.length < 2) return false;
     return true;
-}
-function validatePassword (password) {
+};
+function validatePassword(password) {
     if (password.length < 8) {
         throw 'Password must be at least 8 characters long.';
     }
@@ -129,4 +72,8 @@ function validatePassword (password) {
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
         throw 'Password must contain at least one special character.';
     }
+}
+
+function confirmDelete() {
+    return confirm('Are you sure you want to delete this user?');
 }

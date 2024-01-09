@@ -73,7 +73,6 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
         throw 'One or more string fields empty';
 
     if (gameName.length < 5) throw 'Event name less than 5 chars';
-    if (gameDescription.length < 25) throw 'Event description less than 25 chars';
     if (!isValidDay(gameDate)) throw 'Event Date is not valid';
     if (isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
     if (!isValidTime(startTime) || !isValidTime(endTime)) throw 'Start and/or end time is not valid';

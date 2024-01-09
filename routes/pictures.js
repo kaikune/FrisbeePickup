@@ -53,10 +53,14 @@ router
         try {
             const filename = req.body.filename;
             const imagePath = `slideshow/${filename}`;
+            const BUCKET_NAME = process.env.BUCKET_NAME;
+            const bucketPath = `https://storage.googleapis.com/${BUCKET_NAME}/${req.session.user._id}/${imagePath}`;
+
             console.log('Removing from slideshow');
             await usersData.removeSlideshowImage(req.session.user._id, imagePath);
+
             console.log('Deleting from bucket');
-            await picturesData.deleteImageFromBucket(req.session.user._id, filename, 'slideshow');
+            await picturesData.deleteImageFromBucket(bucketPath);
         } catch (err) {
             console.log(err);
             return res.status(500).render('error', { title: 'Error', error: err });

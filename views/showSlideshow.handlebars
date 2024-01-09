@@ -1,5 +1,21 @@
 <div class="slideshow-container">
     {{#each user.slideshowImages}}
-        <img src="{{this}}" class="slideshow-image" alt="Slideshow image">
+        <div class="slideshow-image-container">
+            <img src="{{this}}" class="slideshow-image" alt="Slideshow image">
+            {{#if ../isOwner}}
+                <button class="delete-image-button">Delete</button>
+            {{/if}}
+        </div>
     {{/each}}
+    <!--
+    {{#if isOwner}}
+        <button class="add-image-button">Add Image</button>
+    {{/if}}
+    -->
+
+    <p id="error-label" hidden></p>
+    <p id="message-label" hidden></p>
 </div>
+
+<script src="/public/js/slideshow.js"></script>
+<script src="/public/js/pictures.js"></script>

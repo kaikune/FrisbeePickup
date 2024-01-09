@@ -9,7 +9,7 @@
     <div id="list-collection">
         {{#if players}}
         <dl class="list-of-all" id="player-list">
-            <dt class="list-header">Players:</dt>
+            <dt class="list-header">Family Frisbee Members:</dt>
             {{#each players}}
             <dd class="player-list-element"><a href="/users/{{this._id}}">{{this.username}}</a></dd>
             {{/each}}
@@ -17,7 +17,7 @@
         {{/if}}
         {{#if games}}
         <dl class="list-of-all" id="game-list">
-            <dt class="list-header">Games:</dt>
+            <dt class="list-header">Events:</dt>
             {{#each games}}
             <dd class="game-list-element"><a href="/games/{{this._id}}">{{this.gameName}}</a></dd>
             {{/each}}
