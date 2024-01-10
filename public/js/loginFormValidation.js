@@ -1,20 +1,17 @@
-let loginForm = document.getElementById("login-form");
+let loginForm = document.getElementById('login-form');
 
 if (loginForm) {
-    let errorLabel = document.getElementById("error-label");
+    let errorLabel = document.getElementById('error-label');
     errorLabel.hidden = true;
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         try {
-            let emailAddress = document.getElementById("login-emailAddress").value.toLowerCase();
-            let password = document.getElementById("login-password").value;
+            let emailAddress = document.getElementById('login-emailAddress').value.toLowerCase();
             if (!isValidEmail(emailAddress)) {
-                throw Error("Invalid email!");
+                throw Error('Invalid email!');
             }
-            validatePassword(password);
             event.currentTarget.submit();
-        }
-        catch (err) {
+        } catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;
         }

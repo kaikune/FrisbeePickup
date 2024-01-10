@@ -39,7 +39,7 @@ app.use(
         secret: 'crazy super secret signing key!',
         saveUninitialized: false,
         resave: false,
-        // cookie: {maxAge: 60 * 1000}
+        cookie: { maxAge: 60 * 10000 }, // 1 hr
     })
 );
 

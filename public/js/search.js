@@ -18,6 +18,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
     a.href = linkTarget;
     a.innerHTML = linkText;
     dd.appendChild(a);
+    dd.classList.add('search-result');
     parentElement.appendChild(dd);
 };
 
@@ -26,6 +27,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
         usersUL.replaceChildren();
         groupsUL.replaceChildren();
         gamesUL.replaceChildren();
+
         let searchTerm = searchInput.value;
         $.ajax({
             url: '/search?term=' + searchTerm,
@@ -35,15 +37,15 @@ let addRow = function (parentElement, linkText, linkTarget) {
             let usersList = data.users;
             let groupsList = data.groups;
             let gamesList = data.games;
-            addHeader(usersUL, 'Family Frisbee Members:');
+            //addHeader(usersUL, 'Family Frisbee Members:');
             for (let i = 0; i < usersList.length; i++) {
                 addRow(usersUL, usersList[i].username, '/users/' + usersList[i]._id);
             }
-            addHeader(groupsUL, 'Groups:');
+            //addHeader(groupsUL, 'Groups:');
             for (let i = 0; i < groupsList.length; i++) {
                 addRow(groupsUL, groupsList[i].groupName, '/groups/' + groupsList[i]._id);
             }
-            addHeader(gamesUL, 'Events:');
+            //addHeader(gamesUL, 'Events:');
             for (let i = 0; i < gamesList.length; i++) {
                 addRow(gamesUL, gamesList[i].gameName, '/games/' + gamesList[i]._id);
             }

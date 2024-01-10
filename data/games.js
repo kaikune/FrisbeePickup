@@ -2,6 +2,7 @@ import * as helpers from '../helpers.js';
 import { games, users } from '../config/mongoCollections.js';
 import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
+import xss from 'xss';
 
 const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
     gameName = helpers.stringHelper(gameName, 'Game name', 5, null);
@@ -45,6 +46,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         totalNumberOfPlayers: 1,
         group,
         organizer,
+        comments: [],
         expired: false,
     };
 
@@ -107,6 +109,52 @@ const getAllByGroup = async (groupId, includeExpired = true) => {
     }
 
     return groupGames;
+};
+
+const addComment = async (gameId, userId, comment) => {
+    // Input Validation
+    helpers.isValidId(gameId);
+    helpers.isValidId(userId);
+    gameId = gameId.trim();
+    userId = userId.trim();
+
+    if (!comment) throw 'Comment is not provided';
+    if (typeof comment !== 'string') throw 'Comment is not a string';
+    comment = comment.trim();
+    if (comment.length === 0) throw 'Comment is all whitespace';
+
+    const game = await get(gameId);
+    if (!game.players.includes(userId)) throw 'Commenter is not in the group';
+
+    // Update record
+    const newComment = {
+        _id: new ObjectId(),
+        userId,
+        timestamp: new Date(),
+        commentText: xss(comment),
+    };
+
+    const gameCollection = await games();
+    const updatedInfo = await gameCollection.updateOne({ _id: new ObjectId(gameId) }, { $push: { comments: newComment } });
+
+    if (!updatedInfo) throw 'Could not update group successfully';
+
+    return updatedInfo;
+};
+
+const removeComment = async (gameId, commentId) => {
+    helpers.isValidId(gameId);
+    helpers.isValidId(commentId);
+    gameId = gameId.trim();
+    commentId = commentId.trim();
+
+    const gameCollection = await games();
+    const removedComment = await gameCollection.updateOne({ _id: new ObjectId(gameId) }, { $pull: { comments: { _id: new ObjectId(commentId) } } });
+    if (!removedComment) {
+        throw 'Could not delete comment successfully';
+    }
+
+    return removedComment;
 };
 
 const addUser = async (userId, gameId) => {
@@ -289,6 +337,8 @@ export default {
     getAll,
     get,
     getAllByGroup,
+    addComment,
+    removeComment,
     remove,
     update,
     addUser,

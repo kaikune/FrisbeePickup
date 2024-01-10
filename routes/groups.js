@@ -48,7 +48,7 @@ router.route('/:groupId').get(async (req, res) => {
                 }
             }
             catch{
-                comment.sender = null;
+                comment.isSender = false;
             }
         });
         

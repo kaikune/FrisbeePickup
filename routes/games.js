@@ -82,6 +82,18 @@ router
 
             const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
 
+            gameObj.comments.forEach(async comment => {
+                try{
+                    comment.sender = (await usersData.getIDName([comment.userId]))[0]
+                    if (req.session.user._id === comment.userId) {
+                        comment.isSender = true;
+                    }
+                }
+                catch{
+                    comment.isSender = false;
+                }
+            });
+
             return res.render('game', {
                 title: 'Game: ' + gameObj.gameName,
                 game: gameObj,
@@ -171,6 +183,45 @@ router
             return res.status(400).render('error', { title: 'Error', error: e });
         }
     });
+
+
+router
+    .route('/:gameId/comments')
+    .post(async (req, res) => {
+        try {
+            let gameId = req.params.gameId;
+            let comment = req.body.comment;
+            let userId = req.session.user._id
+
+            helpers.isValidId(gameId);
+            helpers.isValidId(userId);
+            helpers.stringHelper(comment, "Comment", 1, 1000);
+
+            let gameRes = await gamesData.addComment(gameId, userId, comment);
+            return res.redirect("/games/" + gameId);
+        } catch (e) {
+            if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });
+            return res.status(400).render('error', { title: 'Error', error: e });
+        }
+    });
+
+router
+    .route('/:gameId/comments/delete')
+    .post(async (req, res) => {
+        try{
+            let gameId = req.params.gameId;
+            let commentId = req.body.commentId;
+
+            helpers.isValidId(gameId);
+            helpers.isValidId(commentId);
+
+            await gamesData.removeComment(gameId, commentId);
+            return res.redirect('/games/' + gameId);
+        }
+        catch (err) {
+            return res.status(400).render('error', { title: 'Error', error: err })
+        }
+    })
 
 router
     .route('/delete/:gameId')

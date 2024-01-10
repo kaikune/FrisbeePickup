@@ -283,7 +283,7 @@ export const loginUser = async (emailAddress, password) => {
     password = password.trim();
     if (emailAddress.length === 0 || password.length === 0) throw 'Cannot be empty spaces';
     if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
-    helpers.validatePassword(password);
+    //helpers.validatePassword(password);
 
     const userCollection = await users();
     const user = await userCollection.findOne({ emailAddress: emailAddress });

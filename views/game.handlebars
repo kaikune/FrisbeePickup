@@ -7,40 +7,75 @@
             <li><a href="/users/{{this._id}}">{{ this.name }}</a></li>
         {{/each}}
     </ul>
+
     {{#if organizer}}
-    <p>Organizer: <a href="/users/{{organizer._id}}">{{organizer.name}}</a></p>
+        <p>Organizer: <a href="/users/{{organizer._id}}">{{organizer.name}}</a></p>
     {{/if}}
+
     {{#if hostGroup}}
-    <p>Host Group: <a href="/groups/{{hostGroup._id}}">{{hostGroup.groupName}}</a></p>   
+        <p>Host Group: <a href="/groups/{{hostGroup._id}}">{{hostGroup.groupName}}</a></p>   
     {{/if}}
+
     <p>Date: {{game.gameDate}} {{ game.startTime }} - {{ game.endTime }}</p>
     <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
     {{#if currentUser}}
-    {{#unless isMember}}
-        <form action="/games/join/{{game._id}}" method="POST">
-            <button type="submit" class="join-button">Join Event</button>
-        </form>
-    {{else}}
-    {{#unless isOwner}}
-        <form action="/games/leave/{{game._id}}" method="POST">
-            <button type="submit">Leave Event</button>
-        </form>
-    {{/unless}}
-    {{/unless}}
-        
-    {{ else }}
-    <p>To join this event, please <a href="/login">login</a>.</p>
+        {{#unless isMember}}
+            <form action="/games/join/{{game._id}}" method="POST">
+                <button type="submit" class="join-button">Join Event</button>
+            </form>
+            
+            {{else}}
+
+            <h3>Chat</h3>
+            <form action="/games/{{game._id}}/comments" id="message-form" method="POST">
+                <label for="comment"></label>
+                    <input type="text" id="comment" name="comment">
+                <button type="Submit" class="message-send">Send</button>
+            </form>
+
+            {{#if game.comments}}
+                <div id="messages-wrapper">
+                    <div class="messages-container">
+                        {{#each game.comments}}
+                            <div class="message">
+                                <a class="message-text">{{this.commentText}}</a>
+                                <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
+
+                                {{#if this.isSender}}
+                                    <form action="/groups/{{../game._id}}/comments/delete" method="post" class="button-wrapper">
+                                        <input type="hidden" name="commentId" value="{{this._id}}">
+                                        <button type="submit" class="delete-comment-button">Delete</button>
+                                    </form>
+                                {{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+        {{/unless}}
+            
+        {{ else }}
+        <p>To join this event, please <a href="/login">login</a>.</p>
+    {{/if}}
+
+    {{> weather}}
+
+    {{#if isMember}}
+        {{#unless isOwner}}
+            <form action="/games/leave/{{game._id}}" method="POST" onsubmit="return confirmLeave('event');">
+                <button class="leave-button" type="submit">Leave Event</button>
+            </form>
+        {{/unless}}
     {{/if}}
 
     {{#if isOwner}}
         <form action="/games/edit/{{game._id}}">
-            <button class="edit-button">Edit</button>
+            <button class="edit-button">Edit Event</button>
         </form>
-        <form action="/games/delete/{{game._id}}" method="POST">
-            <button class="delete-button">Delete</button>
+        <form action="/games/delete/{{game._id}}" method="POST" onsubmit="return confirmDelete('event');">
+            <button class="delete-button">Delete Event</button>
         </form>
     {{/if}}
 
-    {{> weather}}
 </main>

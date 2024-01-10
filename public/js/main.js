@@ -74,6 +74,10 @@ function validatePassword(password) {
     }
 }
 
-function confirmDelete() {
-    return confirm('Are you sure you want to delete this user?');
+function confirmDelete(thing = '') {
+    return confirm(`Are you sure you want to delete this ${thing}?`);
+}
+
+function confirmLeave(thing = '') {
+    return confirm(`Are you sure you want to leave this ${thing}?`);
 }

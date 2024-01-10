@@ -3,24 +3,26 @@
         <form id="searchForm">
             <label for="searchFormInput">Enter Search Here:</label>
             <input type="text" id="searchFormInput" form="searchForm">
-            <button type="button" id="searchResetButton" class="form-submit-button">Cancel</button>
-            <button type="submit" form="searchForm" class="form-submit-button">Search</button>
         </form>
     </div>
+
     <div id="list-collection">
+        <div class="list-wrapper">
+            <h3 class="list-header">Family Frisbee Members</h3>
+            <dl id="player-list" class="list-of-all"></dl>
+        </div>
 
-        
-        <dl id="player-list" class="list-of-all">
-            <dt class="list-header">Family Frisbee Members</dt>
-        </dl>
-        <dl id="group-list" class="list-of-all">
-            <dt class="list-header">Groups</dt>
-        </dl>
-        <dl id="game-list" class="list-of-all">
-            <dt class="list-header">Events</dt>
-        </dl>
+        <div class="list-wrapper">
+            <h3 class="list-header">Groups</h3>
+            <dl id="group-list" class="list-of-all"></dl>
+        </div>
 
+        <div class="list-wrapper">
+            <h3 class="list-header">Events</h3>
+            <dl id="game-list" class="list-of-all"></dl>
+        </div>
     </div>
 </main>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="/public/js/search.js"></script>

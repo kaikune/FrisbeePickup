@@ -23,7 +23,7 @@ router
             let password = req.body["login-password"];
 
             helpers.isValidEmail(emailAddress.toLowerCase());
-            helpers.validatePassword(password);
+            //helpers.validatePassword(password);
             
             let userInfo = await usersData.loginUser(emailAddress, password);
             req.session.user = userInfo;
