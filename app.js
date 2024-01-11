@@ -68,7 +68,7 @@ app.use('/', (req, res, next) => {
         }
     }
 
-    let onlyAuthenticatedRoutes = ['/logout', '/create-game', '/create-group'];
+    let onlyAuthenticatedRoutes = ['/logout', '/create-event', '/create-group'];
 
     let onlyNonAuthenticatedRoutes = ['/login', '/register'];
 

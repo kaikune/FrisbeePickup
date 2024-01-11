@@ -84,7 +84,7 @@ router
     })
 
 router
-    .route("/create-game")
+    .route("/create-event")
     .get(async (req, res) => {
         try {
             let allGamesData = await gamesData.getAll();
