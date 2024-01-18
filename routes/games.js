@@ -80,7 +80,7 @@ router
                 organizerArr = await usersData.getIDName([gameObj.organizer]);
             }
 
-            const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
+            //const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
 
             gameObj.comments.forEach(async comment => {
                 try{
@@ -102,7 +102,7 @@ router
                 hostGroup: hostGroup,
                 isOwner: isOwner,
                 isMember: isMember,
-                weather: weather,
+                //weather: weather,
             });
         } catch (e) {
             res.status(400).render('error', { title: 'Error', error: e });

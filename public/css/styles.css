@@ -15,7 +15,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 33%;
+    width: 32%;
     height: 100%;
 
 }
@@ -33,7 +33,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 33%;
+    width: 32%;
     height: 100%;
 }
 .header-right{
@@ -47,7 +47,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 33%;
+    width: 32%;
     height: 100%;
 }
 
@@ -55,9 +55,7 @@
     background-color: #fcb53e;
     color: #fcb53e;
     margin-top: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 99.5%;
+    width: 100%;
     height: auto;
     overflow: visible;
 }
@@ -75,7 +73,7 @@
     position: absolute;
     left: 0;
     top: 100%;
-    width: 106%;
+    width: 100%;
     overflow: visible;
     
 }
@@ -117,10 +115,20 @@ header {
 }
 
 /* FORM STUFF */
+form {
+    width: 100%;
+    background-color: white;
+    color: #159dd8;
+    border-style: solid;
+    border-color: #0c9dd6;
+    padding: 2%;
+}
+
 .form-wrapper {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+    width: auto;
 }
 
 .form-label {
@@ -133,42 +141,6 @@ header {
     background-color: #EFEFEF;
     margin: 3px;
     color: #159dd8;
-}
-
-#login-form {
-    background-color: white;
-    color: #159dd8;
-    border-style: solid;
-    border-color: #0c9dd6;
-    width: 25%;
-    padding: 5px
-}
-
-#create-user-form {
-    background-color: white;
-    color: #159dd8;
-    border-style: solid;
-    border-color: #0c9dd6;
-    width: 25%;
-    padding: 5px
-}
-
-#create-group-form {
-    background-color: white;
-    color: #159dd8;
-    border-style: solid;
-    border-color: #0c9dd6;
-    width: 25%;
-    padding: 5px
-}
-
-#create-game-form {
-    background-color: white;
-    color: #159dd8;
-    border-style: solid;
-    border-color: #0c9dd6;
-    width: 25%;
-    padding: 5px
 }
 
 #error-label {
@@ -243,6 +215,7 @@ footer{
 }
 
 .search-result {
+    box-sizing: border-box; /* Add this line */
     margin-top: 20px;
     padding: 20px;
     background: #fff;
@@ -252,8 +225,10 @@ footer{
 
 #list-collection {
     width: 100%;
-    height: 90%;
+    height: 100%;
+    max-width: 100%;
     display: flex;
+    overflow-x: hidden;
 }
 
 .list-wrapper {
@@ -486,17 +461,27 @@ footer{
 
 /* End Weather */
 
-/* MISC. STUFF */
-
-.hidden {
-    display: none;
-}
-
+/* Main Page */
 .home-image {
     display: block;
     width: auto;
-    height: 500px;
+    height: 55%;
     margin: auto;
+}
+
+.logo-image {
+    display: block;
+    width: auto;
+    height: 100px;
+    margin: auto;
+}
+
+.welcome-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
 }
 
 main {
@@ -508,6 +493,29 @@ main {
 p.index {
     text-align: center;
     font-size: 20px;
+}
+
+.mortgage-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+.mortgage-logo {
+    display: block;
+    width: auto;
+    height: 10%;
+    max-height: 100px;
+    margin: auto;
+}
+/* End Main Page */
+
+/* MISC. STUFF */
+
+.hidden {
+    display: none;
 }
 
 .edit-button {
