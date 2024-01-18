@@ -132,8 +132,13 @@ const getIDName = async (userIds) => {
     for (let userId of userIds) {
         helpers.isValidId(userId);
         userId = userId.trim();
-        const user = await getUser(userId);
-        ret.push({ _id: userId, name: user.username });
+        try {
+            const user = await getUser(userId);
+            ret.push({ _id: userId, name: user.username });
+        } catch (e) {
+            // In the case that a user doesnt exist, we just skip them
+            continue;
+        }
     }
     return ret;
 };
@@ -307,6 +312,7 @@ export const loginUser = async (emailAddress, password) => {
         games: user.games,
         groups: user.groups,
         friendRequests: user.friendRequests,
+        isAdmin: (user.isAdmin ??= false),
     };
 };
 
@@ -426,6 +432,21 @@ const isUserLeader = async (userId) => {
 /**
  *
  * @param {string} userId
+ * @returns Boolean representing if user is an admin
+ */
+const isUserAdmin = async (userId) => {
+    helpers.isValidId(userId);
+    const user = await getUser(userId);
+    if (user.admin) {
+        return true;
+    }
+
+    return false;
+};
+
+/**
+ *
+ * @param {string} userId
  * @param {string} imagePath - /type/imageName/imageNum
  * @returns {object}
  */
@@ -490,4 +511,5 @@ export default {
     isUserLeader,
     addSlideshowImage,
     removeSlideshowImage,
+    isUserAdmin,
 };

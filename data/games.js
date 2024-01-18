@@ -4,7 +4,7 @@ import { usersData, groupsData } from './index.js';
 import { ObjectId } from 'mongodb';
 import xss from 'xss';
 
-const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
+const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer = undefined) {
     gameName = helpers.stringHelper(gameName, 'Game name', 5, null);
     gameDescription = helpers.stringHelper(gameDescription, 'Game description', 1, null);
     gameDate = helpers.stringHelper(gameDate, 'Game date', 1, null);
@@ -22,11 +22,14 @@ const formatAndValidateGame = function (gameName, gameDescription, gameLocation,
 
     helpers.validateLocation(gameLocation);
 
+    helpers.isValidId(organizer);
+    if (!usersData.isUserAdmin(organizer)) throw 'User is not an admin';
+
     return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation };
 };
 
 const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
-    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer);
 
     // Group is optional
     if (group !== 'N/A') helpers.isValidId(group);
@@ -246,7 +249,7 @@ const remove = async (gameId) => {
 };
 
 const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
-    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime);
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, userId);
 
     const oldGame = await get(gameId); // Check if game exists
 
@@ -281,8 +284,14 @@ const getIDName = async (gameIds) => {
     for (let gameId of gameIds) {
         helpers.isValidId(gameId);
         gameId = gameId.trim();
-        const game = await get(gameId);
-        ret.push({ _id: gameId, name: game.gameName });
+
+        try {
+            const game = await get(gameId);
+            ret.push({ _id: gameId, name: game.gameName });
+        } catch (e) {
+            // In the case that a game doesn't exist, we skip
+            continue;
+        }
     }
     return ret;
 };

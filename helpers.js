@@ -45,7 +45,7 @@ export function validateGroup(groupName, groupDescription, groupLeader) {
     if (groupName.length === 0 || groupDescription.length === 0) throw 'One or more string fields empty';
 
     if (groupName.length < 5) throw 'group name less than 5 chars';
-    if (groupDescription.length < 25) throw 'group description less than 25 chars';
+    if (groupDescription.length == 0) throw 'group description is too short';
     isValidId(groupLeader);
 }
 

@@ -41,8 +41,14 @@ const getIDName = async (groupIds) => {
     for (let groupId of groupIds) {
         helpers.isValidId(groupId);
         groupId = groupId.trim();
-        const group = await get(groupId);
-        ret.push({ _id: groupId, name: group.groupName });
+
+        try {
+            const group = await get(groupId);
+            ret.push({ _id: groupId, name: group.groupName });
+        } catch (e) {
+            // In the case that a group is deleted, we skip
+            continue;
+        }
     }
     return ret;
 };

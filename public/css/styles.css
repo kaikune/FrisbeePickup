@@ -114,7 +114,7 @@ header {
 }
 
 /* FORM STUFF */
-form {
+.create-form {
     width: 100%;
     background-color: white;
     color: #159dd8;

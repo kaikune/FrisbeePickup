@@ -20,6 +20,7 @@ router
         let endTime = req.body.endTime;
         const group = req.body.group;
         let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
+        const organizer = req.session.user._id;
 
         try {
             helpers.isValidNum(req.body.maxPlayers);
@@ -30,7 +31,7 @@ router
             //startTime = helpers.convertTo12Hour(startTime);
             //endTime = helpers.convertTo12Hour(endTime);
             //gameDate = helpers.convertToMMDDYYYY(gameDate);
-            gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime);
+            gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, organizer);
             
             const createResult = await gamesData.create(
                 gameName,
@@ -41,7 +42,7 @@ router
                 startTime,
                 endTime,
                 group,
-                req.session.user._id
+                organizer
             );
             return res.redirect(`games/${createResult._id}`);
         } catch (err) {
@@ -147,6 +148,7 @@ router
             let startTime = helpers.stringHelper(req.body.startTime, 'Start Time');
             let endTime = helpers.stringHelper(req.body.endTime, 'End Time');
             let gameDate = helpers.stringHelper(req.body.date, 'Game Date');
+            const organizer = req.session.user._id;
 
             if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid'
 
@@ -162,12 +164,13 @@ router
                 maxPlayersNumber,
                 gameDate,
                 startTime,
-                endTime
+                endTime,
+                organizer
             );
 
             await gamesData.update(
                 gameId,
-                req.session.user._id,
+                organizer,
                 req.body.gameName,
                 req.body.gameDescription,
                 gameLocation,
@@ -197,7 +200,8 @@ router
             helpers.isValidId(userId);
             helpers.stringHelper(comment, "Comment", 1, 1000);
 
-            let gameRes = await gamesData.addComment(gameId, userId, comment);
+            await gamesData.addComment(gameId, userId, comment);
+            
             return res.redirect("/games/" + gameId);
         } catch (e) {
             if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });

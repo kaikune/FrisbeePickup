@@ -1,6 +1,6 @@
 <main>
     <div class="form-wrapper">
-        <form id="searchForm">
+        <form id="searchForm" class="create-form">
             <label for="searchFormInput">Enter Search Here:</label>
             <input type="text" id="searchFormInput" form="searchForm">
         </form>
@@ -14,13 +14,17 @@
 
         <div class="list-wrapper">
             <h3 class="list-header">Groups</h3>
-			<a href="/create-group">Create New Group</a>
+            {{#if currentUser.isAdmin}}
+                <a href="/create-group">Create New Group</a>
+            {{/if}}
             <dl id="group-list" class="list-of-all"></dl>
         </div>
 
         <div class="list-wrapper">
             <h3 class="list-header">Events</h3>
-			<a href="/create-event">Create New Event</a>
+            {{#if currentUser.isAdmin}}
+                <a href="/create-event">Create New Event</a>
+            {{/if}}
             <dl id="game-list" class="list-of-all"></dl>
         </div>
     </div>
