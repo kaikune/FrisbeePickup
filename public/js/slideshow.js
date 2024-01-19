@@ -1,7 +1,8 @@
 // JavaScript code to handle the add and delete buttons and the slideshow functionality
 var deleteButtons = document.querySelectorAll('.delete-image-button');
-var addButton = document.querySelector('.add-image-button');
+//var addButton = document.querySelector('.add-image-button');
 var images = document.querySelectorAll('.slideshow-image');
+const imageContainers = document.querySelectorAll('.slideshow-image-container');
 var currentIndex = 0;
 
 // Handle delete buttons
@@ -44,17 +45,27 @@ async function handleDeletion(fullImagePath) {
     return response;
 }
 
+function nextImage() {
+    imageContainers[currentIndex].style.display = 'none';
+    currentIndex = (currentIndex + 1) % images.length;
+    imageContainers[currentIndex].style.display = 'block';
+}
+
+function previousImage() {
+    imageContainers[currentIndex].style.display = 'none';
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    imageContainers[currentIndex].style.display = 'block';
+}
+
 // Handle slideshow functionality
 function rotateImages() {
-    const imageContainers = document.querySelectorAll('.slideshow-image-container');
     // Hide all images
     imageContainers.forEach(function (image) {
         image.style.display = 'none';
     });
-    // Show current image
-    imageContainers[currentIndex].style.display = 'block';
+
     // Move to next image
-    currentIndex = (currentIndex + 1) % imageContainers.length;
+    nextImage();
 }
 
 if (images) {

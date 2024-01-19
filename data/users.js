@@ -245,10 +245,11 @@ const deleteUser = async (userId) => {
         },
         { returnDocument: 'after' }
     );
+
+    // Remove user from all games they are organizing
     const updateOrganizer = await gameCollection.updateMany({ organizer: userId }, { $set: { organizer: null } }, { returnDocument: 'after' });
 
-    // Remove user from all groups
-
+    // Remove user from all groups they are leading
     const updateGroupLeader = await groupCollection.updateMany(
         { groupLeader: userId },
         {

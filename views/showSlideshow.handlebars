@@ -1,7 +1,12 @@
 <div class="slideshow-container">
     {{#each slideshowImages}}
         <div class="slideshow-image-container">
+            <button class="add-image-button" onclick="previousImage();">&lt</button>
+
             <img src="{{this}}" class="slideshow-image" alt="Slideshow image">
+            
+            <button class="add-image-button" onclick="nextImage();">&gt</button>
+
             {{#if ../isOwner}}
                 <button class="delete-image-button">Delete</button>
             {{/if}}
