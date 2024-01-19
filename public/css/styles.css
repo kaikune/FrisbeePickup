@@ -15,7 +15,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 32%;
+    width: 24%;
     height: 100%;
 
 }
@@ -33,7 +33,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 32%;
+    width: 24%;
     height: 100%;
 }
 .header-right{
@@ -47,7 +47,7 @@
     font-weight: bold;
     color: #159dd8;
     background-color: #fcb53e;
-    width: 32%;
+    width: 24%;
     height: 100%;
 }
 
@@ -512,6 +512,53 @@ p.index {
     margin: auto;
 }
 /* End Main Page */
+
+/* Event Page */
+
+.event-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-content {
+    flex: 1;
+}
+
+.event-image-container {
+    /* Adjust the width as needed */
+    width: 40%;
+    margin: 5%;
+}
+
+.event-image {
+    width: 100%;
+    height: auto;
+}
+
+/* End Event Page */
+
+/* Group Page */
+
+.group-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.group-content {
+    flex: 1;
+}
+
+.group-image-container {
+    /* Adjust the width as needed */
+    width: 40%;
+    margin: 5%;
+}
+
+.group-image {
+    width: 100%;
+    height: auto;
+}
+/* End Group Page */
 
 /* MISC. STUFF */
 

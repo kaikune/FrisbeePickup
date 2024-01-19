@@ -1,8 +1,8 @@
 let createGroupForm = document.getElementById('create-group-form');
 
 if (createGroupForm) {
-    let errorLabel = document.querySelector('.error-label');
-    let statusLabel = document.querySelector('.status-label');
+    let errorLabel = document.getElementById('error-label');
+    let statusLabel = document.getElementById('status-label');
     errorLabel.hidden = true;
 
     createGroupForm.addEventListener('submit', (event) => {

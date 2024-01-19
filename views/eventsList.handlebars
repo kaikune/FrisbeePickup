@@ -1,0 +1,16 @@
+<!-- Events List -->
+<div class="list-wrapper">
+    <h3 class="list-header">Events</h3>
+    {{#if currentUser.isAdmin}}
+        <a href="/create-event">Create New Event</a>
+    {{/if}}
+    <dl id="game-list" class="list-of-all">
+        {{#each events}}
+            <dd class="search-result">
+                <a href="/games/{{this._id}}">{{this.gameName}}</a>
+            </dd>
+        {{/each}}
+    </dl>
+</div>
+
+{{!-- {{> showSlideshow }} --}}

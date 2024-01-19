@@ -163,13 +163,10 @@ router
             let username = req.body.username;
             let email = req.body.email;
             let description = req.body.description;
-            let skills = {
-                forehand: req.body.forehand,
-                backhand: req.body.backhand,
-                stall: req.body.stall,
-                pull: req.body.pull
-            };
+            
+            let skills = req.body.skills;
 
+            //console.log(skills);
             if (currentUser._id !== userId) {
                 throw Error("not allowed");
             }

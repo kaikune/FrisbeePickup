@@ -45,7 +45,6 @@ export function formatAndValidateUser(userData, ignorePassword) {
     let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
     let emailAddress = helpers.stringHelper(userData.emailAddress, 'Email address', 1, null).toLowerCase();
     let password;
-    let skills = {};
 
     helpers.isValidEmail(emailAddress);
 
@@ -60,15 +59,19 @@ export function formatAndValidateUser(userData, ignorePassword) {
     // Checks to make sure skills are valid and converts them to boolean
     if (userData.skills) {
         for (const [key, value] of Object.entries(userData.skills)) {
-            if (value !== undefined && !['true', 'false'].includes(value.toString())) throw `Skill '${key}, ${value}' is not valid`;
-            if (value === 'true') skills[key] = true;
-            else skills[key] = false;
+            //console.log(key, value);
+            if (typeof value !== 'string' && typeof value !== 'object') throw `Skill '${key}, ${value}' is not valid`;
+            if (value.type === 'checkbox') {
+                if (value.value !== undefined && !['true', 'false'].includes(value.value.toString())) throw `Skill '${key}, ${value}' is not valid`;
+                if (value.value === 'true') userData.skills[key].value = true;
+                else userData.skills[key].value = false;
+            }
         }
     }
 
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
     let description = helpers.stringHelper(userData.description, 'Description', null, 300);
-    return { username, emailAddress, password, profilePicture, description, skills };
+    return { username, emailAddress, password, profilePicture, description, skills: userData.skills };
 }
 
 const createUser = async (username, emailAddress, password, pfp, description) => {
@@ -83,11 +86,11 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
 
     // Search for users with same username or email
     const userCollection = await users();
-    const user = await userCollection.findOne({
+    const similarUser = await userCollection.findOne({
         $or: [{ emailAddress: { $regex: new RegExp(`^${emailAddress}$`, 'i') } }, { username: { $regex: new RegExp(`^${username}$`, 'i') } }],
     });
 
-    if (user) {
+    if (similarUser) {
         throw 'Username or Email address already taken';
     }
 
@@ -95,10 +98,12 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
     const hashPass = await bcrypt.hash(userData.password, saltRounds);
 
     const skills = {
-        forehand: false,
-        backhand: false,
-        stall: false,
-        pull: false,
+        under5: { desc: '5 and under', type: 'checkbox', value: false },
+        above18: { desc: 'Above 18', type: 'checkbox', value: false },
+        inSchool: { desc: 'Grade 1-12', type: 'number', value: 0 },
+        playing: { desc: "I'll just watch and participate in community activities", type: 'checkbox', value: false },
+        thrown: { desc: "I've thrown a frisbee before", type: 'checkbox', value: false },
+        played: { desc: "I've played ultimate before here", type: 'text', value: '' },
     };
 
     // Create user
@@ -154,6 +159,14 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
     userData = formatAndValidateUser(userData, true);
 
     const userCollection = await users();
+
+    const similarUser = await userCollection.findOne({
+        $or: [{ emailAddress: { $regex: new RegExp(`^${emailAddress}$`, 'i') } }, { username: { $regex: new RegExp(`^${username}$`, 'i') } }],
+    });
+
+    if (similarUser._id != userId) {
+        throw 'Username or Email address already taken';
+    }
 
     await userCollection.updateOne(
         { _id: new ObjectId(userId) },
@@ -312,6 +325,7 @@ export const loginUser = async (emailAddress, password) => {
         games: user.games,
         groups: user.groups,
         friendRequests: user.friendRequests,
+        skills: user.skills,
         isAdmin: (user.isAdmin ??= false),
     };
 };

@@ -7,6 +7,23 @@ const router = Router();
 
 router
     .route('/')
+    .get(async (req, res) => {
+        try {
+            const allEvents = await gamesData.getAll();
+            //const eventsPage = await gamesData.getGamesPage();
+
+            const ret = {
+                title: 'Events',
+                events: allEvents,
+                //slideshowImages: eventsPage.slideshowImages,
+            };
+
+            return res.render('eventsList', ret);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'An error occurred while retrieving games' });
+        }
+    })
     .post(async (req, res) => {
         const gameName = req.body.gameName;
         const gameDescription = req.body.gameDescription;
@@ -32,7 +49,7 @@ router
             //endTime = helpers.convertTo12Hour(endTime);
             //gameDate = helpers.convertToMMDDYYYY(gameDate);
             gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, organizer);
-            
+
             const createResult = await gamesData.create(
                 gameName,
                 gameDescription,
@@ -50,65 +67,62 @@ router
         }
     });
 
-router
-    .route('/:gameId')
-    .get(async (req, res) => {
-        try {
-            let gameId = req.params.gameId;
+router.route('/:gameId').get(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
 
-            helpers.isValidId(gameId);
-            let gameObj = await gamesData.get(gameId);
-            let hostGroup = null;
+        helpers.isValidId(gameId);
+        let gameObj = await gamesData.get(gameId);
+        let hostGroup = null;
 
-            if (gameObj.group !== 'N/A') {
-                hostGroup = await groupsData.get(gameObj.group);
-            }
-
-            gameObj.startTime = helpers.convertTo12Hour(gameObj.startTime);
-            gameObj.endTime = helpers.convertTo12Hour(gameObj.endTime);
-            gameObj.gameDate = helpers.convertToMMDDYYYY(gameObj.gameDate);
-            
-            let players = gameObj.players;
-            // players = players.filter(player => player !== gameObj.organizer)
-            let playersArr = await usersData.getIDName(players);
-
-            let currentUser = req.session.user;
-            let isOwner = currentUser && gameObj.organizer == currentUser._id;
-            let isMember = currentUser && gameObj.players.includes(currentUser._id);
-            let organizerArr = [null];
-
-            if (gameObj.organizer !== null) {
-                organizerArr = await usersData.getIDName([gameObj.organizer]);
-            }
-
-            //const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
-
-            gameObj.comments.forEach(async comment => {
-                try{
-                    comment.sender = (await usersData.getIDName([comment.userId]))[0]
-                    if (req.session.user._id === comment.userId) {
-                        comment.isSender = true;
-                    }
-                }
-                catch{
-                    comment.isSender = false;
-                }
-            });
-
-            return res.render('game', {
-                title: 'Game: ' + gameObj.gameName,
-                game: gameObj,
-                players: playersArr,
-                organizer: organizerArr[0],
-                hostGroup: hostGroup,
-                isOwner: isOwner,
-                isMember: isMember,
-                //weather: weather,
-            });
-        } catch (e) {
-            res.status(400).render('error', { title: 'Error', error: e });
+        if (gameObj.group !== 'N/A') {
+            hostGroup = await groupsData.get(gameObj.group);
         }
-    });
+
+        gameObj.startTime = helpers.convertTo12Hour(gameObj.startTime);
+        gameObj.endTime = helpers.convertTo12Hour(gameObj.endTime);
+        gameObj.gameDate = helpers.convertToMMDDYYYY(gameObj.gameDate);
+
+        let players = gameObj.players;
+        // players = players.filter(player => player !== gameObj.organizer)
+        let playersArr = await usersData.getIDName(players);
+
+        let currentUser = req.session.user;
+        let isOwner = currentUser && gameObj.organizer == currentUser._id;
+        let isMember = currentUser && gameObj.players.includes(currentUser._id);
+        let organizerArr = [null];
+
+        if (gameObj.organizer !== null) {
+            organizerArr = await usersData.getIDName([gameObj.organizer]);
+        }
+
+        //const weather = await weatherData.getWeather(gameObj.gameLocation.zip);
+
+        gameObj.comments.forEach(async (comment) => {
+            try {
+                comment.sender = (await usersData.getIDName([comment.userId]))[0];
+                if (req.session.user._id === comment.userId) {
+                    comment.isSender = true;
+                }
+            } catch {
+                comment.isSender = false;
+            }
+        });
+
+        return res.render('game', {
+            title: 'Game: ' + gameObj.gameName,
+            game: gameObj,
+            players: playersArr,
+            organizer: organizerArr[0],
+            hostGroup: hostGroup,
+            isOwner: isOwner,
+            isMember: isMember,
+            //weather: weather,
+        });
+    } catch (e) {
+        res.status(400).render('error', { title: 'Error', error: e });
+    }
+});
 
 router
     .route('/edit/:gameId')
@@ -137,9 +151,8 @@ router
             const gameObj = await gamesData.get(gameId);
 
             if (!gameObj.players.includes(currentUser._id)) {
-                throw 'You are not a player in this game'
-            }
-            else if (gameObj.organizer !== currentUser._id) {
+                throw 'You are not a player in this game';
+            } else if (gameObj.organizer !== currentUser._id) {
                 throw 'You are not the organizer of this game';
             }
 
@@ -150,7 +163,7 @@ router
             let gameDate = helpers.stringHelper(req.body.date, 'Game Date');
             const organizer = req.session.user._id;
 
-            if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid'
+            if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
 
             // let startTime = helpers.convertTo12Hour(req.body.startTime);
             // let endTime = helpers.convertTo12Hour(req.body.endTime);
@@ -187,104 +200,91 @@ router
         }
     });
 
+router.route('/:gameId/comments').post(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
+        let comment = req.body.comment;
+        let userId = req.session.user._id;
 
-router
-    .route('/:gameId/comments')
-    .post(async (req, res) => {
-        try {
-            let gameId = req.params.gameId;
-            let comment = req.body.comment;
-            let userId = req.session.user._id
+        helpers.isValidId(gameId);
+        helpers.isValidId(userId);
+        helpers.stringHelper(comment, 'Comment', 1, 1000);
 
-            helpers.isValidId(gameId);
-            helpers.isValidId(userId);
-            helpers.stringHelper(comment, "Comment", 1, 1000);
+        await gamesData.addComment(gameId, userId, comment);
 
-            await gamesData.addComment(gameId, userId, comment);
-            
-            return res.redirect("/games/" + gameId);
-        } catch (e) {
-            if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });
-            return res.status(400).render('error', { title: 'Error', error: e });
+        return res.redirect('/games/' + gameId);
+    } catch (e) {
+        if (e === 'Could not update group successfully') return res.status(500).render('error', { error: e });
+        return res.status(400).render('error', { title: 'Error', error: e });
+    }
+});
+
+router.route('/:gameId/comments/delete').post(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
+        let commentId = req.body.commentId;
+
+        helpers.isValidId(gameId);
+        helpers.isValidId(commentId);
+
+        await gamesData.removeComment(gameId, commentId);
+        return res.redirect('/games/' + gameId);
+    } catch (err) {
+        return res.status(400).render('error', { title: 'Error', error: err });
+    }
+});
+
+router.route('/delete/:gameId').post(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
+        let currentUser = req.session.user;
+
+        helpers.isValidId(gameId);
+        const gameObj = await gamesData.get(gameId);
+
+        let owner = await usersData.getUser(gameObj.organizer);
+
+        if (!gameObj.players.includes(currentUser._id)) {
+            throw 'You are not a player in this game';
+        } else if (currentUser._id !== owner._id) {
+            throw 'You are not the organizer of this game';
         }
-    });
 
-router
-    .route('/:gameId/comments/delete')
-    .post(async (req, res) => {
-        try{
-            let gameId = req.params.gameId;
-            let commentId = req.body.commentId;
+        await gamesData.remove(gameId);
 
-            helpers.isValidId(gameId);
-            helpers.isValidId(commentId);
+        return res.redirect(`/`);
+    } catch (e) {
+        return res.status(400).render('error', { title: 'Error', error: e });
+    }
+});
 
-            await gamesData.removeComment(gameId, commentId);
-            return res.redirect('/games/' + gameId);
-        }
-        catch (err) {
-            return res.status(400).render('error', { title: 'Error', error: err })
-        }
-    })
+router.route('/join/:gameId').post(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
+        let currentUser = req.session.user;
 
-router
-    .route('/delete/:gameId')
-    .post(async (req, res) => {
-        try {
-            let gameId = req.params.gameId;
-            let currentUser = req.session.user;
+        helpers.isValidId(gameId);
 
-            helpers.isValidId(gameId);
-            const gameObj = await gamesData.get(gameId);
+        await gamesData.addUser(currentUser._id, gameId);
 
-            let owner = await usersData.getUser(gameObj.organizer);
+        return res.redirect('/games/' + gameId);
+    } catch (e) {
+        return res.status(400).render('error', { title: 'Error', error: e });
+    }
+});
 
-            if (!gameObj.players.includes(currentUser._id)) {
-                throw 'You are not a player in this game'
-            }            
-            else if (currentUser._id !== owner._id) {
-                throw "You are not the organizer of this game";
-            }
+router.route('/leave/:gameId').post(async (req, res) => {
+    try {
+        let gameId = req.params.gameId;
+        let currentUser = req.session.user;
 
-            await gamesData.remove(gameId);
+        helpers.isValidId(gameId);
 
-            return res.redirect(`/`);
-        } catch (e) {
-            return res.status(400).render('error', { title: 'Error', error: e });
-        }
-    });
-
-router
-    .route('/join/:gameId')
-    .post(async (req, res) => {
-        try {
-            let gameId = req.params.gameId;
-            let currentUser = req.session.user;
-
-            helpers.isValidId(gameId);
-
-            await gamesData.addUser(currentUser._id, gameId);
-
-            return res.redirect('/games/' + gameId);
-        } catch (e) {
-            return res.status(400).render('error', { title: 'Error', error: e });
-        }
-    });
-
-router
-    .route('/leave/:gameId')
-    .post(async (req, res) => {
-        try {
-            let gameId = req.params.gameId;
-            let currentUser = req.session.user;
-
-            helpers.isValidId(gameId);
-
-            await gamesData.leaveGame(currentUser._id, gameId);
-            return res.redirect('/games/' + gameId);
-        } catch (e) {
-            return res.status(400).render('error', { title: 'Error', error: e });
-        }
-    });
+        await gamesData.leaveGame(currentUser._id, gameId);
+        return res.redirect('/games/' + gameId);
+    } catch (e) {
+        return res.status(400).render('error', { title: 'Error', error: e });
+    }
+});
 
 export default router;

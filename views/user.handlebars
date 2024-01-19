@@ -29,17 +29,41 @@
         {{/each}}
     </ul>
 
+    <div id="skill-wrapper">
+        <h3>Skills</h3>
+        <ul>
+            {{#each user.skills}}
+                <!-- If skill then checkmark or X -->
+                {{#ifEquals this.type "checkbox"}}
+                        {{#if this.value}}
+                            <li>
+                                {{this.desc}}: &#x2713;
+                            </li>
+                        {{/if}}
+                {{/ifEquals}}
+
+                {{#ifEquals this.type "text"}}
+                    {{#elseEquals this.value ''}}
+                        <li>
+                            {{this.desc}}: 
+                            {{this.value}}
+                        </li>
+                    {{/elseEquals}}
+                {{/ifEquals}}
+
+                {{#ifEquals this.type "number"}}
+                    {{#elseEquals this.value 0}}
+                        <li>
+                            {{this.desc}}: 
+                            {{this.value}}
+                        </li>
+                    {{/elseEquals}}
+                {{/ifEquals}}
+            {{/each}}
+        </ul>
+    </div>
+
     {{#if isOwner}}
-        <div id="skill-wrapper">
-            <h3>Skills</h3>
-            <ul>
-                {{#each user.skills}}
-                    <!-- If skill then checkmark or X -->
-                    <li>{{@key}}: {{#if this}}&#x2713;{{/if}} {{#unless this}}&#x2717;{{/unless}}</li>
-                {{/each}}
-            </ul>
-        </div>
-        
         {{#if requests}}
             <div id="friend-request-wrapper">
                 <h3>Incoming Friend Requests</h3>

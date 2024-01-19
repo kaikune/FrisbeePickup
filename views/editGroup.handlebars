@@ -16,7 +16,11 @@
             
         </form>
     </div>
-    <a class="status-label" hidden></a>
-    <a class="error-label" hidden></a>
+
+    {{> updateGroupImage }}
+    
+    <p id="error-label" hidden></a>
+    <p id="message-label" hidden></a>
     <script src='/public/js/groupValidation.js'></script>
+    <script src="/public/js/pictures.js"></script>
 </main>

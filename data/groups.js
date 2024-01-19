@@ -19,6 +19,7 @@ const create = async (groupName, groupDescription, groupLeader) => {
         comments: [],
         players: [groupLeader],
         totalNumberOfPlayers: 1,
+        groupImage: 'https://storage.googleapis.com/family-frisbee-media/icons/RIC3FamilyLogo.jpg',
     };
 
     const groupCollection = await groups();
@@ -129,7 +130,7 @@ const remove = async (groupId) => {
     return res;
 };
 
-const update = async (groupId, groupName, groupDescription, groupLeader) => {
+const update = async (groupId, groupName, groupDescription, groupLeader, groupImage) => {
     // Input Validation
     helpers.isValidId(groupId);
     groupId = groupId.trim();
@@ -149,6 +150,7 @@ const update = async (groupId, groupName, groupDescription, groupLeader) => {
         comments: oldGroup.comments,
         players: oldGroup.players,
         totalNumberOfPlayers: oldGroup.totalNumberOfPlayers,
+        groupImage: groupImage ? groupImage : oldGroup.groupImage,
     };
 
     const groupCollection = await groups();
@@ -301,6 +303,16 @@ const leaveGroup = async (userId, groupId) => {
 
     return { updateUser, updateGroup };
 };
+
+const editGroupImage = async (groupId, imagePath) => {
+    const group = await get(groupId);
+
+    const bucketName = process.env.BUCKET_NAME;
+    const base = 'https://storage.googleapis.com';
+
+    const url = `${base}/${bucketName}/${groupId}/${imagePath}`;
+    await update(groupId, group.groupName, group.description, group.groupLeader, url);
+};
 export default {
     create,
     leaveGroup,
@@ -314,4 +326,5 @@ export default {
     getIDName,
     getAllGroupsbyUserID,
     removeComment,
+    editGroupImage,
 };

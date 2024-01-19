@@ -50,6 +50,7 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         group,
         organizer,
         comments: [],
+        gameImage: 'https://storage.googleapis.com/family-frisbee-media/icons/Full_court.png',
         expired: false,
     };
 
@@ -248,7 +249,7 @@ const remove = async (gameId) => {
     return res;
 };
 
-const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group) => {
+const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, gameImage) => {
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, userId);
 
     const oldGame = await get(gameId); // Check if game exists
@@ -265,7 +266,9 @@ const update = async (gameId, userId, gameName, gameDescription, gameLocation, m
         endTime: gameData.endTime,
         players: oldGame.players,
         totalNumberOfPlayers: oldGame.totalNumberOfPlayers,
+        comments: oldGame.comments,
         group,
+        gameImage: gameImage ? gameImage : oldGame.gameImage,
         expired: false,
     };
 
@@ -341,6 +344,28 @@ const leaveGame = async (userId, gameId) => {
     return { updateUser, updateGame };
 };
 
+const editGameImage = async (gameId, imagePath) => {
+    const game = await get(gameId);
+
+    const bucketName = process.env.BUCKET_NAME;
+    const base = 'https://storage.googleapis.com';
+
+    const url = `${base}/${bucketName}/${gameId}/${imagePath}`;
+    await update(
+        gameId,
+        game.organizer,
+        game.gameName,
+        game.description,
+        game.gameLocation,
+        game.maxCapacity,
+        game.gameDate,
+        game.startTime,
+        game.endTime,
+        game.group,
+        url
+    );
+};
+
 export default {
     create,
     getAll,
@@ -356,4 +381,5 @@ export default {
     getIDName,
     leaveGame,
     formatAndValidateGame,
+    editGameImage,
 };

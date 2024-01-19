@@ -30,7 +30,21 @@ app.use('/public', staticDir);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'main', partialsDir: __dirname + '/views' }));
+var hbs = exphbs.create({
+    // Set helper functions
+    helpers: {
+        ifEquals: function (arg1, arg2, options) {
+            return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+        },
+        elseEquals: function (arg1, arg2, options) {
+            return arg1 != arg2 ? options.fn(this) : options.inverse(this);
+        },
+    },
+    defaultLayout: 'main',
+    partialsDir: __dirname + '/views',
+});
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 app.use(

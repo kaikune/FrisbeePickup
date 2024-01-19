@@ -1,76 +1,84 @@
 <main>
-    <h1>{{group.groupName}}</h1>
-    <p>About Us: {{group.description}}</p>
-    {{#if owner}}
-    <p>Group Leader: <a href="/users/{{owner._id}}">{{owner.username}}</a></p>
-    {{/if}}
-    <p>Members:</p>
-    <ul>
-        {{#each members}}
-            <li><a href="/users/{{this._id}}">{{this.name}}</a></li>
-        {{/each}}
-    </ul>
-    <a>Upcoming Events:</a>
-    <ul>
-        {{#each games}}
-            <li><a href="/games/{{this._id}}">{{this.name}}</a></li>
-        {{/each}}
-    </ul>
-
-    {{#if currentUser }}
-        {{#unless isMember}}
-            <form action="/groups/join/{{group._id}}" method="POST">
-                <button class="join-button">Join Group</button>
-            </form>
-            
-        {{else}}
-
-            <h3>Chat</h3>
-            <form action="/groups/{{group._id}}/comments" id="message-form" method="POST">
-                <label for="comment"></label>
-                    <input type="text" id="comment" name="comment">
-                <button type="Submit" class="message-send">Send</button>
-            </form>
-
-            {{#if group.comments}}
-                <div id="messages-wrapper">
-                    <div class="messages-container">
-                        {{#each group.comments}}
-                            <div class="message">
-                                <a class="message-text">{{this.commentText}}</a>
-                                <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
-
-                                {{#if this.isSender}}
-                                    <form action="/groups/{{../group._id}}/comments/delete" method="post" class="button-wrapper">
-                                        <input type="hidden" name="commentId" value="{{this._id}}">
-                                        <button type="submit" class="delete-comment-button">Delete</button>
-                                    </form>
-                                {{/if}}
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
+    <div class="group-container">
+        <div class="group-content">
+            <h1>{{group.groupName}}</h1>
+            <p>About Us: {{group.description}}</p>
+            {{#if owner}}
+            <p>Group Leader: <a href="/users/{{owner._id}}">{{owner.username}}</a></p>
             {{/if}}
-        {{/unless}}
-        
-        {{ else }}
-        <p>To join this group, please <a href="/login">login</a>.</p>
-    {{/if}}
-    
-    {{#if isMember}}
-        {{#unless isOwner}}
-            <form action="/groups/leave/{{group._id}}" method="POST" onsubmit="return confirmLeave('group');">
-                <button class='leave-button' type="submit">Leave Group</button>
-            </form>
-        {{/unless}}
-    {{/if}}
+            <p>Members:</p>
+            <ul>
+                {{#each members}}
+                    <li><a href="/users/{{this._id}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+            <a>Upcoming Events:</a>
+            <ul>
+                {{#each games}}
+                    <li><a href="/games/{{this._id}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
 
-    {{#if isOwner}}
-        <form action="/groups/edit/{{group._id}}">
-            <button class="edit-button">Edit Group</button>
-        </form>
-        <form action="/groups/delete/{{group._id}}" method="POST" onsubmit="return confirmDelete('group');">
-            <button class="delete-button">Delete Group</button>
-        </form>
-    {{/if}}
+            {{#if currentUser }}
+                {{#unless isMember}}
+                    <form action="/groups/join/{{group._id}}" method="POST">
+                        <button class="join-button">Join Group</button>
+                    </form>
+                    
+                {{else}}
+
+                    <h3>Chat</h3>
+                    <form action="/groups/{{group._id}}/comments" id="message-form" method="POST">
+                        <label for="comment"></label>
+                            <input type="text" id="comment" name="comment">
+                        <button type="Submit" class="message-send">Send</button>
+                    </form>
+
+                    {{#if group.comments}}
+                        <div id="messages-wrapper">
+                            <div class="messages-container">
+                                {{#each group.comments}}
+                                    <div class="message">
+                                        <a class="message-text">{{this.commentText}}</a>
+                                        <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
+
+                                        {{#if this.isSender}}
+                                            <form action="/groups/{{../group._id}}/comments/delete" method="post" class="button-wrapper">
+                                                <input type="hidden" name="commentId" value="{{this._id}}">
+                                                <button type="submit" class="delete-comment-button">Delete</button>
+                                            </form>
+                                        {{/if}}
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/unless}}
+                
+                {{ else }}
+                <p>To join this group, please <a href="/login">login</a>.</p>
+            {{/if}}
+            
+            {{#if isMember}}
+                {{#unless isOwner}}
+                    <form action="/groups/leave/{{group._id}}" method="POST" onsubmit="return confirmLeave('group');">
+                        <button class='leave-button' type="submit">Leave Group</button>
+                    </form>
+                {{/unless}}
+            {{/if}}
+
+            {{#if isOwner}}
+                <form action="/groups/edit/{{group._id}}">
+                    <button class="edit-button">Edit Group</button>
+                </form>
+                <form action="/groups/delete/{{group._id}}" method="POST" onsubmit="return confirmDelete('group');">
+                    <button class="delete-button">Delete Group</button>
+                </form>
+            {{/if}}
+        </div>
+
+        <div class="group-image-container">
+            <img src="{{group.groupImage}}" alt="Group Image" class="group-image">
+        </div>
+    </div>
 </main>

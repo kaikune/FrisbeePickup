@@ -1,5 +1,9 @@
 let pfpForm = document.getElementById('pfp-form');
 let slideshowForm = document.getElementById('slideshow-form');
+let gameForm = document.getElementById('game-image-form');
+let groupForm = document.getElementById('group-image-form');
+let gameId = document.getElementById('game-id');
+let groupId = document.getElementById('group-id');
 
 // Usable for pfp uploads
 if (pfpForm) {
@@ -20,6 +24,66 @@ if (pfpForm) {
 
             const filename = file.name;
             const signedUrl = await getPfpUrl(filename);
+
+            console.log('Got signed url');
+
+            await handleUpload([file], [signedUrl]);
+            //event.currentTarget.submit();
+        } catch (err) {
+            setError(err);
+        }
+    });
+}
+
+// Usable for game image uploads
+if (gameForm) {
+    let gameInput = document.getElementById('game-upload');
+
+    gameForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try {
+            let file = gameInput.files[0];
+
+            if (!file) {
+                throw Error('Please select a file!');
+            }
+
+            if (file.type != 'image/jpeg') {
+                throw Error('Only JPEG allowed!');
+            }
+
+            const filename = file.name;
+            const signedUrl = await getGameUrl(filename);
+
+            console.log('Got signed url');
+
+            await handleUpload([file], [signedUrl]);
+            //event.currentTarget.submit();
+        } catch (err) {
+            setError(err);
+        }
+    });
+}
+
+// Usable for group image uploads
+if (groupForm) {
+    let groupInput = document.getElementById('group-upload');
+
+    groupForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try {
+            let file = groupInput.files[0];
+
+            if (!file) {
+                throw Error('Please select a file!');
+            }
+
+            if (file.type != 'image/jpeg') {
+                throw Error('Only JPEG allowed!');
+            }
+
+            const filename = file.name;
+            const signedUrl = await getGroupUrl(filename);
 
             console.log('Got signed url');
 
@@ -82,6 +146,34 @@ async function getPfpUrl(filename) {
     };
 
     const signedUrl = await getUrls(options, 'pfp');
+
+    return signedUrl;
+}
+
+/**
+ * Gets the signed Url for a new game image
+ * @param {string} filename
+ */
+async function getGameUrl(filename) {
+    console.log(filename);
+    const options = {
+        filename: filename,
+    };
+    const signedUrl = await getUrls(options, `games/${gameId.innerText}`);
+
+    return signedUrl;
+}
+
+/**
+ * Gets the signed Url for a new group image
+ * @param {string} filename
+ */
+async function getGroupUrl(filename) {
+    console.log(filename);
+    const options = {
+        filename: filename,
+    };
+    const signedUrl = await getUrls(options, `groups/${groupId.innerText}`);
 
     return signedUrl;
 }

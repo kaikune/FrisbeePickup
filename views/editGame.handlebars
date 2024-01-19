@@ -49,7 +49,11 @@
                 <br>
         <button type="submit" class="form-submit-button">Submit</button>
     </form>
-     <a id="error-label" hidden>test</a> <br>
-        <a id="status-label" hidden>test2</a> <br>
+
+    {{> updateGameImage}}
+    
+    <p id="error-label" hidden></a>
+    <p id="message-label" hidden></a>
     <script src='/public/js/gameValidation.js'></script>
+    <script src="/public/js/pictures.js"></script>
 </div>

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { usersData, picturesData } from '../data/index.js';
+import { usersData, picturesData, gamesData, groupsData } from '../data/index.js';
 import * as helpers from '../helpers.js';
 
 const router = Router();
@@ -100,6 +100,104 @@ router
             await usersData.editPfp(req.session.user._id, imagePath);
             console.log('Deleting old pfp from bucket');
             await picturesData.deleteImageFromBucket(oldFilename);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        // Send array of valid url
+        return res.json(url);
+    });
+
+router
+    .route('/games/:gameId')
+    .get(async function (req, res) {
+        return res.render('updateGameImage', {});
+    })
+    .post(async function (req, res) {
+        const filename = req.body.filename;
+        const gameId = req.params.gameId;
+        let url = '';
+        let game = {};
+
+        try {
+            game = await gamesData.get(gameId);
+            if (game.organizer !== req.session.user._id) {
+                throw 'You are not the organizer of this game';
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        console.log('Generating signed url');
+
+        // Gets signed url for each image
+        try {
+            url = await picturesData.generateUploadSignedUrl(game._id, helpers.stringHelper(filename, 'Filename'), 'gameImage');
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        console.log('Url generated');
+
+        // Updates image url in user pfp collection
+        try {
+            const imagePath = `gameImage/${filename}`;
+            console.log('Updating game image');
+            await gamesData.editGameImage(game._id, imagePath);
+            console.log('Deleting old game image from bucket');
+            await picturesData.deleteImageFromBucket(game.gameImage);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        // Send array of valid url
+        return res.json(url);
+    });
+
+router
+    .route('/groups/:groupId')
+    .get(async function (req, res) {
+        return res.render('updateGroupImage', {});
+    })
+    .post(async function (req, res) {
+        const filename = req.body.filename;
+        const groupId = req.params.groupId;
+        let url = '';
+        let group = {};
+
+        try {
+            group = await groupsData.get(groupId);
+            if (group.groupLeader !== req.session.user._id) {
+                throw 'You are not the leader of this group';
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        console.log('Generating signed url');
+
+        // Gets signed url for each image
+        try {
+            url = await picturesData.generateUploadSignedUrl(group._id, helpers.stringHelper(filename, 'Filename'), 'groupImage');
+        } catch (err) {
+            console.log(err);
+            return res.status(500).render('error', { title: 'Error', error: err });
+        }
+
+        console.log('Url generated');
+
+        // Updates image url in user pfp collection
+        try {
+            const imagePath = `groupImage/${filename}`;
+            console.log('Updating group image');
+            await groupsData.editGroupImage(group._id, imagePath);
+            console.log('Deleting old group image from bucket');
+            await picturesData.deleteImageFromBucket(group.groupImage);
         } catch (err) {
             console.log(err);
             return res.status(500).render('error', { title: 'Error', error: err });

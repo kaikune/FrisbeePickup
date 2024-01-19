@@ -1,0 +1,9 @@
+<div class="form-wrapper">
+    <form id="game-image-form" action="pictures/games/{{gameObj._id}}">
+        <label for="game-upload">Upload new event image</label>
+            <input id="game-upload" type="file" name="gameImage" accept="image/jpeg">
+        <button type="submit">Upload</button>
+    </form>
+
+    <p id='game-id' hidden>{{gameObj._id}}</p>
+</div>

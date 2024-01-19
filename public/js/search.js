@@ -1,6 +1,6 @@
 let usersUL = document.getElementById('player-list');
 let groupsUL = document.getElementById('group-list');
-let gamesUL = document.getElementById('game-list');
+//let gamesUL = document.getElementById('game-list');
 let searchForm = document.getElementById('searchForm');
 let searchInput = document.getElementById('searchFormInput');
 let searchResetButton = document.getElementById('searchResetButton');
@@ -26,7 +26,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
     let executeSearch = function () {
         usersUL.replaceChildren();
         groupsUL.replaceChildren();
-        gamesUL.replaceChildren();
+        //gamesUL.replaceChildren();
 
         let searchTerm = searchInput.value;
         $.ajax({
@@ -36,7 +36,7 @@ let addRow = function (parentElement, linkText, linkTarget) {
             //console.log(data);
             let usersList = data.users;
             let groupsList = data.groups;
-            let gamesList = data.games;
+            //let gamesList = data.games;
             //addHeader(usersUL, 'Family Frisbee Members:');
             for (let i = 0; i < usersList.length; i++) {
                 addRow(usersUL, usersList[i].username, '/users/' + usersList[i]._id);
@@ -46,9 +46,9 @@ let addRow = function (parentElement, linkText, linkTarget) {
                 addRow(groupsUL, groupsList[i].groupName, '/groups/' + groupsList[i]._id);
             }
             //addHeader(gamesUL, 'Events:');
-            for (let i = 0; i < gamesList.length; i++) {
-                addRow(gamesUL, gamesList[i].gameName, '/games/' + gamesList[i]._id);
-            }
+            // for (let i = 0; i < gamesList.length; i++) {
+            //     addRow(gamesUL, gamesList[i].gameName, '/games/' + gamesList[i]._id);
+            // }
         });
     };
 
