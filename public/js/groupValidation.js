@@ -2,7 +2,7 @@ let createGroupForm = document.getElementById('create-group-form');
 
 if (createGroupForm) {
     let errorLabel = document.getElementById('error-label');
-    let statusLabel = document.getElementById('status-label');
+    let messageLabel = document.getElementById('message-label');
     errorLabel.hidden = true;
 
     createGroupForm.addEventListener('submit', (event) => {
@@ -11,8 +11,8 @@ if (createGroupForm) {
             let groupName = document.getElementById('group-name');
             let groupDescription = document.getElementById('description');
             validateGroup(groupName.value, groupDescription.value);
-            statusLabel.innerHTML = 'Group Created';
-            statusLabel.hidden = false;
+            messageLabel.innerHTML = 'Group Created';
+            messageLabel.hidden = false;
             createGroupForm.submit();
         } catch (err) {
             event.preventDefault();
