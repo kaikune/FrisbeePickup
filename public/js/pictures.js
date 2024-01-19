@@ -6,6 +6,7 @@ let gameId = document.getElementById('game-id');
 let groupId = document.getElementById('group-id');
 
 const mb = 1048576; // 1 MB
+const maxSize = 10 * mb; // 10 MB
 
 // Usable for pfp uploads
 if (pfpForm) {
@@ -24,7 +25,7 @@ if (pfpForm) {
                 throw Error('Only JPEG allowed!');
             }
 
-            if (file.size > 4 * mb) {
+            if (file.size > maxSize) {
                 throw Error('File too large!');
             }
 
@@ -58,7 +59,7 @@ if (gameForm) {
                 throw Error('Only JPEG allowed!');
             }
 
-            if (file.size > 4 * mb) {
+            if (file.size > maxSize) {
                 throw Error('File too large!');
             }
 
@@ -92,7 +93,7 @@ if (groupForm) {
                 throw Error('Only JPEG allowed!');
             }
 
-            if (file.size > 4 * mb) {
+            if (file.size > maxSize) {
                 throw Error('File too large!');
             }
 
@@ -130,7 +131,7 @@ if (slideshowForm) {
                     throw Error('Only JPEG allowed!');
                 }
 
-                if (file.size > 4 * mb) {
+                if (file.size > maxSize) {
                     throw Error(`File: ${file.name} too large!`);
                 }
             }
@@ -248,7 +249,8 @@ async function handleUpload(files, signedUrls) {
     console.log('Preparing to upload', files);
     try {
         for (let i = 0; i < files.length; i++) {
-            if (files[i].size > 4 * mb) throw `File ${files[i].name} too large`;
+            if (files[i].size > maxSize) throw `File ${files[i].name} too large`;
+
             const response = await fetch(signedUrls[i], {
                 mode: 'cors',
                 method: 'PUT',
