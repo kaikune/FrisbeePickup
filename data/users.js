@@ -233,9 +233,6 @@ const deleteUser = async (userId) => {
     const groupCollection = await groups();
     const userCollection = await users();
 
-    // Delete info from bucket
-    await picturesData.deleteUserFolder(userId);
-
     // Remove user from all games
     const gameRemove = await gameCollection.updateMany(
         { players: userId },
@@ -290,6 +287,9 @@ const deleteUser = async (userId) => {
         !userRemove
     )
         throw 'Could not delete user';
+
+    // Delete info from bucket
+    await picturesData.deleteUserFolder(userId);
 
     return { gameRemove, groupRemove, userRemove };
 };

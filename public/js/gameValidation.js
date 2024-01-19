@@ -2,7 +2,7 @@ let createGameForm = document.getElementById('create-game-form');
 
 if (createGameForm) {
     let errorLabel = document.getElementById('error-label');
-    let statusLabel = document.getElementById('status-label');
+    let messageLabel = document.getElementById('message-label');
     errorLabel.hidden = true;
 
     createGameForm.addEventListener('submit', (event) => {
@@ -30,8 +30,8 @@ if (createGameForm) {
             isValidNum(maxPlayers.value);
             let maxPlayersNumber = parseInt(maxPlayers.value, 10);
             validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value);
-            statusLabel.innerHTML = 'Game Created';
-            statusLabel.hidden = false;
+            messageLabel.innerHTML = 'Game Created';
+            messageLabel.hidden = false;
             createGameForm.submit();
         } catch (err) {
             errorLabel.innerHTML = err;

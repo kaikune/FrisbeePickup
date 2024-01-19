@@ -1,6 +1,6 @@
 import * as helpers from '../helpers.js';
 import { games, users } from '../config/mongoCollections.js';
-import { usersData, groupsData } from './index.js';
+import { usersData, groupsData, picturesData } from './index.js';
 import { ObjectId } from 'mongodb';
 import xss from 'xss';
 
@@ -51,6 +51,8 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         organizer,
         comments: [],
         gameImage: 'https://storage.googleapis.com/family-frisbee-media/icons/Full_court.png',
+        map: '',
+        directions: '',
         expired: false,
     };
 
@@ -245,11 +247,28 @@ const remove = async (gameId) => {
         throw `Could not delete game with id of ${gameId}`;
     }
 
+    // Delete info from bucket
+    await picturesData.deleteUserFolder(gameId);
+
     const res = { gameName: deletionInfo.gameName, deleted: true };
     return res;
 };
 
-const update = async (gameId, userId, gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, gameImage) => {
+const update = async (
+    gameId,
+    userId,
+    gameName,
+    gameDescription,
+    gameLocation,
+    maxCapacity,
+    gameDate,
+    startTime,
+    endTime,
+    group,
+    gameImage,
+    map,
+    directions
+) => {
     let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, userId);
 
     const oldGame = await get(gameId); // Check if game exists
@@ -270,6 +289,8 @@ const update = async (gameId, userId, gameName, gameDescription, gameLocation, m
         group,
         gameImage: gameImage ? gameImage : oldGame.gameImage,
         expired: false,
+        map: map ?? oldGame.map,
+        directions: directions ?? oldGame.directions,
     };
 
     const gameCollection = await games();

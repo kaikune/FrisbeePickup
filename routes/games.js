@@ -161,6 +161,8 @@ router
             let startTime = helpers.stringHelper(req.body.startTime, 'Start Time');
             let endTime = helpers.stringHelper(req.body.endTime, 'End Time');
             let gameDate = helpers.stringHelper(req.body.date, 'Game Date');
+            let map = helpers.stringHelper(req.body.map, 'Map Link');
+            let directions = helpers.stringHelper(req.body.directions, 'Directions');
             const organizer = req.session.user._id;
 
             if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
@@ -191,7 +193,10 @@ router
                 gameDate,
                 startTime,
                 endTime,
-                req.body.group
+                req.body.group,
+                null,
+                map,
+                directions
             );
 
             return res.redirect('/games/' + gameId);

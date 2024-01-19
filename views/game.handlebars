@@ -21,6 +21,14 @@
             <p>Date: {{game.gameDate}} {{ game.startTime }} - {{ game.endTime }}</p>
             <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
+            {{#if game.directions}}
+                <p>Directions: {{game.directions}}</p>
+            {{/if}}
+
+            {{#if game.map}}
+                <a href="{{game.map}}">Map directions</a>
+            {{/if}}
+
             {{#if currentUser}}
                 {{#unless isMember}}
                     <form action="/games/join/{{game._id}}" method="POST">

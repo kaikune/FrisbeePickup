@@ -1,7 +1,7 @@
 import * as helpers from '../helpers.js';
 import { groups, users, games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import { usersData, gamesData } from './index.js';
+import { usersData, gamesData, picturesData } from './index.js';
 import xss from 'xss';
 
 const create = async (groupName, groupDescription, groupLeader) => {
@@ -125,6 +125,10 @@ const remove = async (groupId) => {
     if (!gameUpdateResult) {
         throw 'Could not remove groupid from game';
     }
+
+    // Delete info from bucket
+    await picturesData.deleteUserFolder(groupId);
+
     const res = { groupName: deletionInfo.groupName, deleted: true };
 
     return res;
