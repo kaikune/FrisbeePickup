@@ -6,10 +6,8 @@ if (loginForm) {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         try {
-            let emailAddress = document.getElementById('login-emailAddress').value.toLowerCase();
-            if (!isValidEmail(emailAddress)) {
-                throw Error('Invalid email!');
-            }
+            let emailAddress = stringHelper(document.getElementById('login-username').value, 'Username', 1, null).toLowerCase();
+            let password = stringHelper(document.getElementById('login-password').value, 'Password', 1, null);
             event.currentTarget.submit();
         } catch (err) {
             errorLabel.innerHTML = err;

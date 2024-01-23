@@ -1,12 +1,12 @@
 <main>
     <div class="form-wrapper">
         <form id="create-user-form" class="create-form" method="POST" action="/register">
-            <h3>Register</h3>
-            <label class="form-label" for="emailAddress">Email:</label>
-                <input class="form-input" type="text" id="emailAddress" name="emailAddress" required>
-                <br>
+            <h3>Create Profile</h3>
             <label class="form-label" for="username">Username:</label>
                 <input class="form-input" type="text" id="username" name="username" required>
+                <br>
+            <label class="form-label" for="emailAddress">Email (optional):</label>
+                <input class="form-input" type="text" id="emailAddress" name="emailAddress">
                 <br>
             <label class="form-label" for="password">Password:</label>
                 <input class="form-input" type="password" id="password" name="password" required>
@@ -15,7 +15,7 @@
                 <input class="form-input" type="password" id="confirm-password" name="confirm-password" required>
                 <br>
             <button type="reset" class="form-submit-button">Cancel</button>
-            <button type="submit" class="form-submit-button">Register</button>
+            <button type="submit" class="form-submit-button">Create</button>
             <p>Already have an account? Click <a href="/login">here</a> to login.</p>
                 
             <p>

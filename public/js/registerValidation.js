@@ -6,12 +6,12 @@ if (registerForm) {
     registerForm.addEventListener('submit', (event) => {
         event.preventDefault();
         try {
-            let emailAddress = stringHelper(document.getElementById('emailAddress').value, 'Email address', 1, null).toLowerCase();
+            let emailAddress = document.getElementById('emailAddress').value.toLowerCase();
             let username = stringHelper(document.getElementById('username').value, 'Username', 3, 10);
             let password = stringHelper(document.getElementById('password').value, 'Password', 1, null);
             let confirmPassword = stringHelper(document.getElementById('confirm-password').value, 'Confirm password', 1, null);
 
-            if (!isValidEmail(emailAddress)) {
+            if (emailAddress && !isValidEmail(emailAddress)) {
                 throw Error('Invalid email!');
             }
             validatePassword(password);

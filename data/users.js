@@ -43,10 +43,10 @@ const searchUsers = async (search) => {
 export function formatAndValidateUser(userData, ignorePassword) {
     // Formats the data fields and checks if they are valid for user data fields. Doesn't check things like duplicate email, etc.
     let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
-    let emailAddress = helpers.stringHelper(userData.emailAddress, 'Email address', 1, null).toLowerCase();
+    let emailAddress = userData.emailAddress;
     let password;
 
-    helpers.isValidEmail(emailAddress);
+    if (emailAddress) helpers.isValidEmail(emailAddress);
 
     if (!ignorePassword) {
         //err...
@@ -87,11 +87,11 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
     // Search for users with same username or email
     const userCollection = await users();
     const similarUser = await userCollection.findOne({
-        $or: [{ emailAddress: { $regex: new RegExp(`^${emailAddress}$`, 'i') } }, { username: { $regex: new RegExp(`^${username}$`, 'i') } }],
+        username: { $regex: new RegExp(`^${username}$`, 'i') },
     });
 
     if (similarUser) {
-        throw 'Username or Email address already taken';
+        throw 'Username already taken';
     }
 
     const saltRounds = 16;
@@ -294,32 +294,31 @@ const deleteUser = async (userId) => {
     return { gameRemove, groupRemove, userRemove };
 };
 
-export const loginUser = async (emailAddress, password) => {
+export const loginUser = async (username, password) => {
     //Input Validation
-    if (!emailAddress || !password) throw 'Error: 1 or more fields missing';
-    if (typeof emailAddress !== 'string' || typeof password !== 'string') throw 'Expected a string';
-    emailAddress = emailAddress.trim().toLowerCase();
+    if (!username || !password) throw 'Error: 1 or more fields missing';
+    if (typeof username !== 'string' || typeof password !== 'string') throw 'Expected a string';
+    username = username.trim().toLowerCase();
     password = password.trim();
-    if (emailAddress.length === 0 || password.length === 0) throw 'Cannot be empty spaces';
-    if (!helpers.isValidEmail(emailAddress)) throw 'Email is not valid';
+    if (username.length === 0 || password.length === 0) throw 'Cannot be empty spaces';
     //helpers.validatePassword(password);
 
     const userCollection = await users();
-    const user = await userCollection.findOne({ emailAddress: emailAddress });
+    const user = await userCollection.findOne({ username: username });
     if (!user) {
-        throw 'Either password or email is invalid';
+        throw 'Either password or username is invalid';
     }
 
     //Compare Passwords
     const compare = await bcrypt.compare(password, user.password);
     if (!compare) {
-        throw 'Either password or email is invalid';
+        throw 'Either password or username is invalid';
     }
     //I dont know what we want to return for this so currently return everything besides password feel free to change
     return {
         _id: user._id.toString(),
         username: user.username,
-        emailAddress: emailAddress,
+        emailAddress: user.emailAddress,
         description: user.description,
         profilePicture: user.profilePicture,
         friends: user.friends,

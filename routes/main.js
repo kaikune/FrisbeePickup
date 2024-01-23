@@ -19,13 +19,12 @@ router
     .post(async (req, res) => {
         try {
 
-            let emailAddress = req.body["login-emailAddress"];
+            let username = req.body["login-username"];
             let password = req.body["login-password"];
 
-            helpers.isValidEmail(emailAddress.toLowerCase());
             //helpers.validatePassword(password);
             
-            let userInfo = await usersData.loginUser(emailAddress, password);
+            let userInfo = await usersData.loginUser(username, password);
             req.session.user = userInfo;
 
             return res.redirect("/");
@@ -38,7 +37,7 @@ router
 router  
     .route("/register")
     .get(async (req, res) => {
-        return res.render("register", {title: "Register"});
+        return res.render("register", {title: "Create Profile"});
     })
     .post(async (req, res) => {
         try {
