@@ -6,7 +6,7 @@
             <br>
         <!-- NEED TO ADD LOCATION INFO -->
         <label class="form-label" for="street-address">Street Address:</label>
-                <input class="form-input" type="text" id="street-address" name="streetAddress" value="{{gameObj.description}}">
+                <input class="form-input" type="text" id="street-address" name="streetAddress" value="{{gameObj.gameLocation.streetAddress}}">
                 <br>
             <label class="form-label" for="city">City:</label>
                 <input class="form-input" type="text" id="city" name="city" value="{{gameObj.gameLocation.city}}">
@@ -14,7 +14,7 @@
             <label class="form-label" for="state">State:</label>
                 <select class="form-input" type="text" id="state" name="state" required>
                 {{#each states}}
-                     <option value="{{this}}">{{this}}</option>
+                     <option value="{{this}}" {{#ifEquals this ../gameObj.gameLocation.state}} selected {{/ifEquals}}>{{this}}</option>
                 {{/each}}
                 </select>
                 <br>

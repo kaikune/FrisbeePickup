@@ -99,7 +99,7 @@ app.use('/', (req, res, next) => {
 });
 
 // Update DB Middlware
-app.use('/groups', async (req, res, next) => {
+app.use('/games', async (req, res, next) => {
     if (req.method === 'GET') {
         try {
             await gamesData.keepStatusUpdated();

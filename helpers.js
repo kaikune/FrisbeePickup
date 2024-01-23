@@ -168,18 +168,18 @@ export function compareDates(day1, day2) {
     if (!day1 || !day2) throw 'Error: Missing argument(s) to compareDates()';
     if (typeof day1 !== 'string' || typeof day2 !== 'string') throw 'Error: Argument(s) sent to compareDates not a string';
 
-    // Get number array of [month, day, year]
-    day1 = day1.split('/').map((day) => Number(day));
-    day2 = day2.split('/').map((day) => Number(day));
+    // Get number array of [year, month, day]
+    day1 = day1.split('-').map((day) => Number(day));
+    day2 = day2.split('-').map((day) => Number(day));
 
     // Compare years
-    if (day1[2] > day2[2]) return 1;
-    if (day1[2] === day2[2]) {
+    if (day1[0] > day2[0]) return 1;
+    if (day1[0] === day2[0]) {
         // Compare months
-        if (day1[0] > day2[0]) return 1;
-        if (day1[0] === day2[0]) {
+        if (day1[1] > day2[1]) return 1;
+        if (day1[1] === day2[1]) {
             // Compare days
-            if (day1[1] >= day2[1]) return 1;
+            if (day1[2] >= day2[2]) return 1;
         }
     }
     // day1 is less than day2
@@ -188,7 +188,9 @@ export function compareDates(day1, day2) {
 
 export function isDateInFuture(gameDate) {
     let currentDate = new Date();
-    currentDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+    currentDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+
+    //console.log(gameDate, currentDate);
 
     return compareDates(currentDate, gameDate) === 1;
 }

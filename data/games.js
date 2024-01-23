@@ -288,7 +288,7 @@ const update = async (
         comments: oldGame.comments,
         group,
         gameImage: gameImage ? gameImage : oldGame.gameImage,
-        expired: false,
+        expired: oldGame.expired,
         map: map ?? oldGame.map,
         directions: directions ?? oldGame.directions,
     };
@@ -320,10 +320,12 @@ const getIDName = async (gameIds) => {
     return ret;
 };
 
-// Goes through all future games to make sure they haven't passed and updates them if they are old
+// Goes through all (future) games to make sure they haven't passed and updates them if they are old
 const keepStatusUpdated = async () => {
     const gamesList = await getAll();
     const gameCollection = await games();
+
+    //console.log('Checking for expired games');
 
     for (let game of gamesList) {
         if (helpers.isDateInFuture(game.gameDate)) {
