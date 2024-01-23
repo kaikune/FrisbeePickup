@@ -43,14 +43,16 @@ router
         try {
 
             let emailAddress = req.body.emailAddress;
+            let name = req.body.name;
             let password = req.body.password;
             let username = req.body.username;
 
             helpers.isValidEmail(emailAddress.toLowerCase());
             helpers.validatePassword(password);
             helpers.stringHelper(username, "Username", 3, 10);
+            helpers.stringHelper(name, "Name", 1, 50);
 
-            let createUserRes = await usersData.createUser(username, emailAddress, password);
+            let createUserRes = await usersData.createUser(username, emailAddress, password, null, null, name);
 
             return res.redirect("/login");
 

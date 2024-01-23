@@ -160,6 +160,7 @@ router
         try {
             let userId = req.params.userId;
             let currentUser = req.session.user;
+            let name = req.body.name;
             let username = req.body.username;
             let email = req.body.email;
             let description = req.body.description;
@@ -171,7 +172,7 @@ router
                 throw Error("not allowed");
             }
 
-            req.session.user = await usersData.editUser(currentUser._id, username, email, currentUser.profilePicture, description, skills);
+            req.session.user = await usersData.editUser(currentUser._id, username, email, currentUser.profilePicture, description, skills, name);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });

@@ -43,6 +43,7 @@ const searchUsers = async (search) => {
 export function formatAndValidateUser(userData, ignorePassword) {
     // Formats the data fields and checks if they are valid for user data fields. Doesn't check things like duplicate email, etc.
     let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
+    let name = helpers.stringHelper(userData.name, 'Name', 1, 50);
     let emailAddress = userData.emailAddress;
     let password;
 
@@ -71,17 +72,17 @@ export function formatAndValidateUser(userData, ignorePassword) {
 
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
     let description = helpers.stringHelper(userData.description, 'Description', null, 300);
-    return { username, emailAddress, password, profilePicture, description, skills: userData.skills };
+    return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name };
 }
 
-const createUser = async (username, emailAddress, password, pfp, description) => {
+const createUser = async (username, emailAddress, password, pfp, description, name) => {
     if (!pfp) {
         pfp = 'https://storage.googleapis.com/family-frisbee-media/icons/RIC3FAM.jpg';
     }
     if (!description) {
         description = '';
     }
-    let userData = { username, emailAddress, password, profilePicture: pfp, description };
+    let userData = { username, emailAddress, password, profilePicture: pfp, description, name };
     userData = formatAndValidateUser(userData, false);
 
     // Search for users with same username or email
@@ -110,6 +111,7 @@ const createUser = async (username, emailAddress, password, pfp, description) =>
     const newUser = {
         _id: new ObjectId(),
         username: userData.username,
+        name: userData.name,
         emailAddress: userData.emailAddress,
         description: userData.description,
         profilePicture: userData.profilePicture,
@@ -148,20 +150,20 @@ const getIDName = async (userIds) => {
     return ret;
 };
 
-const editUser = async (userId, username, emailAddress, profilePicture, description, skills) => {
+const editUser = async (userId, username, emailAddress, profilePicture, description, skills, name) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
     if (typeof skills !== 'object') throw 'Skills is not an object';
 
-    let userData = { username, emailAddress, password: '', profilePicture, description, skills };
+    let userData = { username, emailAddress, password: '', profilePicture, description, skills, name };
     userData = formatAndValidateUser(userData, true);
 
     const userCollection = await users();
 
     const similarUser = await userCollection.findOne({
-        $or: [{ emailAddress: { $regex: new RegExp(`^${emailAddress}$`, 'i') } }, { username: { $regex: new RegExp(`^${username}$`, 'i') } }],
+        username: { $regex: new RegExp(`^${username}$`, 'i') },
     });
 
     if (similarUser._id != userId) {
@@ -173,6 +175,7 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
         {
             $set: {
                 username: userData.username,
+                name: userData.name,
                 emailAddress: userData.emailAddress,
                 description: userData.description,
                 profilePicture: userData.profilePicture,
@@ -304,7 +307,7 @@ export const loginUser = async (username, password) => {
     //helpers.validatePassword(password);
 
     const userCollection = await users();
-    const user = await userCollection.findOne({ username: username });
+    const user = await userCollection.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
     if (!user) {
         throw 'Either password or username is invalid';
     }
@@ -318,6 +321,7 @@ export const loginUser = async (username, password) => {
     return {
         _id: user._id.toString(),
         username: user.username,
+        name: user.name,
         emailAddress: user.emailAddress,
         description: user.description,
         profilePicture: user.profilePicture,
