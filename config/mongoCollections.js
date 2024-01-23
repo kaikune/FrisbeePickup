@@ -16,3 +16,4 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn('users');
 export const games = getCollectionFn('games');
 export const groups = getCollectionFn('groups');
+export const media = getCollectionFn('media');

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { usersData, picturesData, gamesData, groupsData } from '../data/index.js';
+import { usersData, picturesData, gamesData, groupsData, mediaData } from '../data/index.js';
 import * as helpers from '../helpers.js';
 
 const router = Router();
@@ -15,7 +15,12 @@ router
     })
     .post(async function (req, res) {
         const filenames = req.body.filenames;
+        const isEventPage = req.body.isEventPage;
         let urls = [];
+        let id = '';
+
+        if (isEventPage) id = 'eventPage';
+        else id = req.session.user._id;
 
         console.log('Generating signed urls');
 
@@ -24,7 +29,8 @@ router
             // Can change to whatever number of images we need
             for (let i = 0; i < filenames.length; i++) {
                 const filename = helpers.stringHelper(filenames[i], 'Filename');
-                urls.push(await picturesData.generateUploadSignedUrl(req.session.user._id, filenames[i], 'slideshow'));
+
+                urls.push(await picturesData.generateUploadSignedUrl(id, filenames[i], 'slideshow'));
             }
         } catch (err) {
             console.log(err);
@@ -38,7 +44,8 @@ router
         try {
             for (let i = 0; i < urls.length; i++) {
                 const imagePath = `slideshow/${filenames[i]}`;
-                await usersData.addSlideshowImage(req.session.user._id, imagePath);
+                if (isEventPage) await mediaData.addEventPageSlideshowImage(imagePath);
+                else await usersData.addSlideshowImage(req.session.user._id, imagePath);
             }
         } catch (err) {
             console.log(err);
@@ -50,14 +57,18 @@ router
     })
     .delete(async function (req, res) {
         // Updates image urls in user collection
+        const isEventPage = req.body.isEventPage;
+
         try {
             const filename = req.body.filename;
             const imagePath = `slideshow/${filename}`;
             const BUCKET_NAME = process.env.BUCKET_NAME;
-            const bucketPath = `https://storage.googleapis.com/${BUCKET_NAME}/${req.session.user._id}/${imagePath}`;
+            const id = isEventPage ? 'eventPage' : req.session.user._id;
+            const bucketPath = `https://storage.googleapis.com/${BUCKET_NAME}/${id}/${imagePath}`;
 
             console.log('Removing from slideshow');
-            await usersData.removeSlideshowImage(req.session.user._id, imagePath);
+            if (isEventPage) await mediaData.removeEventPageSlideshowImage(imagePath);
+            else await usersData.removeSlideshowImage(req.session.user._id, imagePath);
 
             console.log('Deleting from bucket');
             await picturesData.deleteImageFromBucket(bucketPath);
@@ -66,7 +77,8 @@ router
             return res.status(500).render('error', { title: 'Error', error: err });
         }
 
-        return res.redirect('/users/' + req.session.user._id);
+        req.method = 'GET';
+        return res.redirect(303, '/users/' + req.session.user._id);
     });
 
 // req in the form of {filename: 'filename.jpeg'}

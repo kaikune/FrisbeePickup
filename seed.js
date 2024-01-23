@@ -1,5 +1,5 @@
 import { dbConnection, closeConnection } from './config/mongoConnection.js';
-import { usersData, gamesData, groupsData } from './data/index.js';
+import { usersData, gamesData, groupsData, mediaData } from './data/index.js';
 
 export async function seed() {
     const userData = [
@@ -233,6 +233,9 @@ export async function seed() {
             await usersData.acceptFriendRequest(allUsers[4]._id, allUsers[i]._id);
         }
     }
+
+    console.log('Creating all media...');
+    await mediaData.createEventPageSlideshow();
 
     console.log('Done inserting all data.');
 }

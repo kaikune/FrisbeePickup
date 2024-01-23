@@ -30,6 +30,14 @@ deleteButtons.forEach(function (button, index) {
 async function handleDeletion(fullImagePath) {
     const filename = fullImagePath.split('/').pop();
 
+    // Check to see if this is the event page
+    let isEventPage = document.getElementById('is-event-page');
+    if (typeof isEventPage != 'undefined' && isEventPage != null) {
+        isEventPage = true;
+    } else {
+        isEventPage = false;
+    }
+
     console.log(filename);
     const response = await fetch('/pictures/slideshow', {
         mode: 'cors',
@@ -39,6 +47,7 @@ async function handleDeletion(fullImagePath) {
         },
         body: JSON.stringify({
             filename: filename,
+            isEventPage: isEventPage,
         }),
     });
 
@@ -46,23 +55,29 @@ async function handleDeletion(fullImagePath) {
 }
 
 function nextImage() {
-    imageContainers[currentIndex].style.display = 'none';
-    currentIndex = (currentIndex + 1) % images.length;
-    imageContainers[currentIndex].style.display = 'block';
+    if (imageContainers.length > 0) {
+        imageContainers[currentIndex].style.display = 'none';
+        currentIndex = (currentIndex + 1) % images.length;
+        imageContainers[currentIndex].style.display = 'block';
+    }
 }
 
 function previousImage() {
-    imageContainers[currentIndex].style.display = 'none';
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    imageContainers[currentIndex].style.display = 'block';
+    if (imageContainers.length > 0) {
+        imageContainers[currentIndex].style.display = 'none';
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        imageContainers[currentIndex].style.display = 'block';
+    }
 }
 
 // Handle slideshow functionality
 function rotateImages() {
     // Hide all images
-    imageContainers.forEach(function (image) {
-        image.style.display = 'none';
-    });
+    if (imageContainers.length > 0) {
+        imageContainers.forEach(function (image) {
+            image.style.display = 'none';
+        });
+    }
 
     // Move to next image
     nextImage();

@@ -1,7 +1,11 @@
 <div class="form-wrapper">
-    <form id="slideshow-form" action="/pictures/slideshow/{{user._id}}">
+    <form id="slideshow-form" action="/pictures/slideshow/{{route}}">
         <label for="slideshow-upload">Upload to slideshow</label>
         <input id="slideshow-upload" type="file" name="slideshow" accept="image/jpeg" multiple>
         <button type="submit">Upload</button>
     </form>
+
+    {{#if isEventPage}}
+        <p id="is-event-page" hidden></p>
+    {{/if}}
 </div>

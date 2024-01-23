@@ -15,11 +15,8 @@ if (process.env.SECRET_KEY) {
     storage = new Storage();
 }
 
-// ... rest of your code ...
-
-// Generates a signed url for uploading an image to the GCP bucket
 /**
- *
+ * Generates a signed url for uploading an image to the GCP bucket
  * @param {string} user
  * @param {string} filename
  * @param {string} type

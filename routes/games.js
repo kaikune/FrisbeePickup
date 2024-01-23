@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { usersData, gamesData, groupsData, weatherData } from '../data/index.js';
+import { usersData, gamesData, groupsData, mediaData } from '../data/index.js';
 import * as helpers from '../helpers.js';
 
 const router = Router();
@@ -10,12 +10,13 @@ router
     .get(async (req, res) => {
         try {
             const allEvents = await gamesData.getAll();
+            const eventsPageSlideshow = await mediaData.getEventPageSlideshow();
             //const eventsPage = await gamesData.getGamesPage();
 
             const ret = {
                 title: 'Events',
                 events: allEvents,
-                //slideshowImages: eventsPage.slideshowImages,
+                slideshowImages: eventsPageSlideshow.slideshowImages,
             };
 
             return res.render('eventsList', ret);

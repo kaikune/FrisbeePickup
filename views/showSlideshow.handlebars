@@ -10,6 +10,11 @@
             {{#if ../isOwner}}
                 <button class="delete-image-button">Delete</button>
             {{/if}}
+            {{#unless ../isOwner}}
+                {{#if ../currentUser.isAdmin}}
+                    <button class="delete-image-button">Delete</button>
+                {{/if}}
+            {{/unless}}
         </div>
     {{/each}}
     <!--

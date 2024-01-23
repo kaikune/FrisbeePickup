@@ -114,12 +114,19 @@ if (groupForm) {
 if (slideshowForm) {
     let slideshowInput = document.getElementById('slideshow-upload');
 
+    // Check to see if this is the event page
+    let isEventPage = document.getElementById('is-event-page');
+    if (typeof isEventPage != 'undefined' && isEventPage != null) {
+        isEventPage = true;
+    } else {
+        isEventPage = false;
+    }
+
     slideshowForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         try {
             let files = slideshowInput.files;
 
-            console.log('Attempting to submit files');
             if (!files) {
                 console.log('No files selected');
                 throw Error('Please select a file!');
@@ -142,7 +149,9 @@ if (slideshowForm) {
                 filenames.push(files[i].name);
             }
 
-            const signedUrls = await getSlideshowUrls(filenames);
+            console.log('Getting signed urls');
+
+            const signedUrls = await getSlideshowUrls(filenames, isEventPage);
 
             console.log('Uploading');
 
@@ -159,7 +168,6 @@ if (slideshowForm) {
  * @param {string} filename
  */
 async function getPfpUrl(filename) {
-    console.log(filename);
     const options = {
         filename: filename,
     };
@@ -174,7 +182,6 @@ async function getPfpUrl(filename) {
  * @param {string} filename
  */
 async function getGameUrl(filename) {
-    console.log(filename);
     const options = {
         filename: filename,
     };
@@ -188,7 +195,6 @@ async function getGameUrl(filename) {
  * @param {string} filename
  */
 async function getGroupUrl(filename) {
-    console.log(filename);
     const options = {
         filename: filename,
     };
@@ -201,9 +207,10 @@ async function getGroupUrl(filename) {
  * Gets the signed url(s) for new slideshow image(s)
  * @param {[string]} filenames
  */
-async function getSlideshowUrls(filenames) {
+async function getSlideshowUrls(filenames, isEventPage = false) {
     const options = {
         filenames: filenames,
+        isEventPage: isEventPage,
     };
 
     const signedUrls = await getUrls(options, 'slideshow');
@@ -271,6 +278,7 @@ async function handleUpload(files, signedUrls) {
         console.log(`Error uploading: ${error.message}`);
         return;
     }
+    location.reload();
 }
 
 function setMessage(message) {
