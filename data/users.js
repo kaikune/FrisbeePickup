@@ -194,7 +194,7 @@ const editPfp = async (userId, imagePath) => {
     const base = 'https://storage.googleapis.com';
 
     const url = `${base}/${bucketName}/${userId}/${imagePath}`;
-    await editUser(userId, user.username, user.emailAddress, url, user.description, user.skills);
+    await editUser(userId, user.username, user.emailAddress, url, user.description, user.skills, user.name);
 };
 
 const getAllUsers = async () => {

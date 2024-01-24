@@ -57,7 +57,7 @@ export async function seed() {
 
     console.log('Creating all users...');
 
-    const userPromises = userData.map((user) => usersData.createUser(user[0], user[1], user[2], undefined, user[3]));
+    const userPromises = userData.map((user) => usersData.createUser(user[0], user[1], user[2], undefined, user[3], user[0]));
     await Promise.all(userPromises);
 
     const allUsers = await usersData.getAllUsers();

@@ -85,5 +85,5 @@ function rotateImages() {
 
 if (images) {
     rotateImages();
-    setInterval(rotateImages, 5000);
+    setInterval(rotateImages, 10 * 1000); // Rotate images every 10 seconds
 }

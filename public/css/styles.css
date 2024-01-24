@@ -619,4 +619,8 @@ p.index {
     cursor: pointer;
     border-radius: 5px;
 }
+
+#password {
+    font-size: 8pt;
+}
 /* END MISC. */

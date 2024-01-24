@@ -67,7 +67,7 @@
     {{#if isOwner}}
         {{#if requests}}
             <div id="friend-request-wrapper">
-                <h3>Incoming Friend Requests</h3>
+                <h3>Incoming Family Requests</h3>
                 {{#each requests}}
                     <div id="friend-request">
                         <a class="request-sender">{{this.name}}</a>
@@ -92,11 +92,11 @@
     {{else if currentUser}}
         {{#if notFriend}}
         <form action="/users/{{user._id}}/friends/sendRequest" method="POST">
-            <button type="submit" class="add-friend">Add Friend</button>
+            <button type="submit" class="add-friend">Add Family</button>
         </form>
         {{/if}}
     {{ else }}
-        <p>To add this user as a friend, please <a href="/login">login</a>.</p>
+        <p>To add this user as family, please <a href="/login">login</a>.</p>
     {{/if}}
 
     {{#if user.slideshowImages.length}}
