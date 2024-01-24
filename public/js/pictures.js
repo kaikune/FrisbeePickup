@@ -29,7 +29,7 @@ if (pfpForm) {
                 throw Error('File too large!');
             }
 
-            const filename = file.name;
+            const filename = file.name.replace(/\s/g, '-');
             const signedUrl = await getPfpUrl(filename);
 
             console.log('Got signed url');
@@ -63,7 +63,7 @@ if (gameForm) {
                 throw Error('File too large!');
             }
 
-            const filename = file.name;
+            const filename = file.name.replace(/\s/g, '-');
             const signedUrl = await getGameUrl(filename);
 
             console.log('Got signed url');
@@ -97,7 +97,7 @@ if (groupForm) {
                 throw Error('File too large!');
             }
 
-            const filename = file.name;
+            const filename = file.name.replace(/\s/g, '-');
             const signedUrl = await getGroupUrl(filename);
 
             console.log('Got signed url');
@@ -146,7 +146,7 @@ if (slideshowForm) {
             let filenames = [];
 
             for (var i = 0; i < files.length; i++) {
-                filenames.push(files[i].name);
+                filenames.push(files[i].name.replace(/\s/g, '-'));
             }
 
             console.log('Getting signed urls');

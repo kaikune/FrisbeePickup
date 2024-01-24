@@ -29,6 +29,7 @@ router
             // Can change to whatever number of images we need
             for (let i = 0; i < filenames.length; i++) {
                 const filename = helpers.stringHelper(filenames[i], 'Filename');
+                if (filename.includes(' ')) throw 'Filename cannot contain spaces';
 
                 urls.push(await picturesData.generateUploadSignedUrl(id, filenames[i], 'slideshow'));
             }
@@ -97,6 +98,7 @@ router
 
         // Gets signed url for each image
         try {
+            if (filename.includes(' ')) throw 'Filename cannot contain spaces';
             url = await picturesData.generateUploadSignedUrl(req.session.user._id, helpers.stringHelper(filename, 'Filename'), 'pfp');
         } catch (err) {
             console.log(err);
@@ -146,6 +148,7 @@ router
 
         // Gets signed url for each image
         try {
+            if (filename.includes(' ')) throw 'Filename cannot contain spaces';
             url = await picturesData.generateUploadSignedUrl(game._id, helpers.stringHelper(filename, 'Filename'), 'gameImage');
         } catch (err) {
             console.log(err);
@@ -195,6 +198,7 @@ router
 
         // Gets signed url for each image
         try {
+            if (filename.includes(' ')) throw 'Filename cannot contain spaces';
             url = await picturesData.generateUploadSignedUrl(group._id, helpers.stringHelper(filename, 'Filename'), 'groupImage');
         } catch (err) {
             console.log(err);
