@@ -4,6 +4,7 @@ let gameForm = document.getElementById('game-image-form');
 let groupForm = document.getElementById('group-image-form');
 let gameId = document.getElementById('game-id');
 let groupId = document.getElementById('group-id');
+let submitButton = document.getElementById('image-submit-button');
 
 const mb = 1048576; // 1 MB
 const maxSize = 10 * mb; // 10 MB
@@ -36,6 +37,7 @@ if (pfpForm) {
 
             await handleUpload([file], [signedUrl]);
             //event.currentTarget.submit();
+            submitButton.disabled = true;
         } catch (err) {
             setError(err);
         }
@@ -70,6 +72,7 @@ if (gameForm) {
 
             await handleUpload([file], [signedUrl]);
             //event.currentTarget.submit();
+            submitButton.disabled = true;
         } catch (err) {
             setError(err);
         }
@@ -104,6 +107,7 @@ if (groupForm) {
 
             await handleUpload([file], [signedUrl]);
             //event.currentTarget.submit();
+            submitButton.disabled = true;
         } catch (err) {
             setError(err);
         }
@@ -157,6 +161,7 @@ if (slideshowForm) {
 
             await handleUpload(files, signedUrls);
             //event.currentTarget.submit();
+            submitButton.disabled = true;
         } catch (err) {
             setError(err);
         }

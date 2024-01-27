@@ -1,4 +1,5 @@
 let createGroupForm = document.getElementById('create-group-form');
+let submitButton = document.getElementById('group-submit-button');
 
 if (createGroupForm) {
     let errorLabel = document.getElementById('error-label');
@@ -13,7 +14,9 @@ if (createGroupForm) {
             validateGroup(groupName.value, groupDescription.value);
             messageLabel.innerHTML = 'Group Created';
             messageLabel.hidden = false;
+
             createGroupForm.submit();
+            submitButton.disabled = true;
         } catch (err) {
             event.preventDefault();
             errorLabel.innerHTML = err;

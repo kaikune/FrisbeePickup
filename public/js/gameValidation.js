@@ -1,4 +1,5 @@
 let createGameForm = document.getElementById('create-game-form');
+let submitButton = document.getElementById('game-submit-button');
 
 if (createGameForm) {
     let errorLabel = document.getElementById('error-label');
@@ -32,7 +33,9 @@ if (createGameForm) {
             validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value);
             messageLabel.innerHTML = 'Game Created';
             messageLabel.hidden = false;
+
             createGameForm.submit();
+            submitButton.disabled = true;
         } catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;

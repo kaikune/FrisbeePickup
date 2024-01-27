@@ -2,7 +2,7 @@
     <form id="group-image-form" action="pictures/groups/{{groupObj._id}}">
         <label for="game-upload">Upload new event image</label>
             <input id="group-upload" type="file" name="groupImage" accept="image/jpeg">
-        <button type="submit">Upload</button>
+        <button type="submit" id="image-submit-button">Upload</button>
     </form>
 
     <p id='group-id' hidden>{{groupObj._id}}</p>

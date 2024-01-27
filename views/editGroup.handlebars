@@ -9,7 +9,7 @@
                 <input class="form-input" type="text" id="description" name="groupDescription" value="{{groupObj.description}}">
                 <br>
             {{#if currentUser}}
-                <button type="submit" class="form-submit-button">Edit</button>
+                <button type="submit" id="group-submit-button" class="form-submit-button">Edit</button>
             {{ else }}
                 <p>To edit a group, please <a href="/login">login</a> to the owners account.</p>
             {{/if}}

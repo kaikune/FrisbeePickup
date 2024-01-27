@@ -1,4 +1,5 @@
 let registerForm = document.getElementById('create-user-form');
+let submitButton = document.getElementById('register-submit-button');
 
 if (registerForm) {
     let errorLabel = document.getElementById('error-label');
@@ -19,7 +20,10 @@ if (registerForm) {
             if (password != confirmPassword) {
                 throw Error("Passwords don't match!");
             }
-            event.currentTarget.submit();
+
+            // Submit form
+            registerForm.submit();
+            submitButton.disabled = true;
         } catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;

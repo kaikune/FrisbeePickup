@@ -2,7 +2,7 @@
     <form id="slideshow-form" action="/pictures/slideshow/{{route}}">
         <label for="slideshow-upload">Upload to slideshow</label>
         <input id="slideshow-upload" type="file" name="slideshow" accept="image/jpeg" multiple>
-        <button type="submit">Upload</button>
+        <button type="submit" id="image-submit-button">Upload</button>
     </form>
 
     {{#if isEventPage}}

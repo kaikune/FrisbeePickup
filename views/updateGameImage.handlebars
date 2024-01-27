@@ -2,7 +2,7 @@
     <form id="game-image-form" action="pictures/games/{{gameObj._id}}">
         <label for="game-upload">Upload new event image</label>
             <input id="game-upload" type="file" name="gameImage" accept="image/jpeg">
-        <button type="submit">Upload</button>
+        <button type="submit" id="image-submit-button">Upload</button>
     </form>
 
     <p id='game-id' hidden>{{gameObj._id}}</p>
