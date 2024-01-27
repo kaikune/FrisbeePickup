@@ -42,7 +42,7 @@ const searchUsers = async (search) => {
 
 export function formatAndValidateUser(userData, ignorePassword) {
     // Formats the data fields and checks if they are valid for user data fields. Doesn't check things like duplicate email, etc.
-    let username = helpers.stringHelper(userData.username, 'Username', 3, 10);
+    let username = helpers.stringHelper(userData.username, 'Username', 3, 20);
     let name = helpers.stringHelper(userData.name, 'Name', 1, 50);
     let emailAddress = userData.emailAddress;
     let password;

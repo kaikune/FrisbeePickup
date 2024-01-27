@@ -49,7 +49,7 @@ router
 
             helpers.isValidEmail(emailAddress.toLowerCase());
             helpers.validatePassword(password);
-            helpers.stringHelper(username, "Username", 3, 10);
+            helpers.stringHelper(username, "Username", 3, 20);
             helpers.stringHelper(name, "Name", 1, 50);
 
             let createUserRes = await usersData.createUser(username, emailAddress, password, null, null, name);

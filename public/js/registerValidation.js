@@ -9,7 +9,7 @@ if (registerForm) {
         try {
             let emailAddress = document.getElementById('emailAddress').value.toLowerCase();
             let name = stringHelper(document.getElementById('name').value, 'Name', 1, 50);
-            let username = stringHelper(document.getElementById('username').value, 'Username', 3, 10);
+            let username = stringHelper(document.getElementById('username').value, 'Username', 3, 20);
             let password = stringHelper(document.getElementById('password').value, 'Password', 1, null);
             let confirmPassword = stringHelper(document.getElementById('confirm-password').value, 'Confirm password', 1, null);
 

@@ -26,7 +26,7 @@
             {{/if}}
 
             {{#if game.map}}
-                <a href="{{game.map}}">Map directions</a>
+                <a href="{{game.map}}">Google Map directions Link</a>
             {{/if}}
 
             {{#if currentUser}}
@@ -53,7 +53,7 @@
                                         <a class="message-sender">-{{this.sender.name}} {{this.timestamp}}</a>
 
                                         {{#if this.isSender}}
-                                            <form action="/groups/{{../game._id}}/comments/delete" method="post" class="button-wrapper">
+                                            <form action="/games/{{../game._id}}/comments/delete" method="post" class="button-wrapper">
                                                 <input type="hidden" name="commentId" value="{{this._id}}">
                                                 <button type="submit" class="delete-comment-button">Delete</button>
                                             </form>
