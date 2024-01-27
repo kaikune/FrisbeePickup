@@ -173,13 +173,13 @@ export function compareDates(day1, day2) {
     day2 = day2.split('-').map((day) => Number(day));
 
     // Compare years
-    if (day1[0] > day2[0]) return 1;
+    if (day1[0] > day2[0]) return 1; // year 1 is after than year 2
     if (day1[0] === day2[0]) {
         // Compare months
-        if (day1[1] > day2[1]) return 1;
+        if (day1[1] > day2[1]) return 1; // month 1 is after than month 2
         if (day1[1] === day2[1]) {
             // Compare days
-            if (day1[2] >= day2[2]) return 1;
+            if (day1[2] > day2[2]) return 1; // day 1 is after than day 2
         }
     }
     // day1 is less than day2
@@ -190,9 +190,7 @@ export function isDateInFuture(gameDate) {
     let currentDate = new Date();
     currentDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
 
-    //console.log(gameDate, currentDate);
-
-    return compareDates(currentDate, gameDate) === 1;
+    return compareDates(currentDate, gameDate) === 1; // Date is in the future
 }
 
 export function isValidTime(time) {
@@ -208,33 +206,6 @@ export function compareTimes(time1, time2) {
     time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
     return time1[0] + 30 <= time2[0];
 }
-
-/*
-// Returns time1 >= time2 - 30
-export function compareTimes(time1, time2) {
-    time1 = time1.split(':'); // Splits into [HR, MN(AM|PM)]
-    time1.push(time1[1].substr(-2, 2)); // [HR, MN(AM|PM), (AM|PM)]
-    time1[1] = time1[1].substr(0, 2); // [HR, MN, (AM|PM)]
-
-    if(time1[0] === '12') {
-        time1[0] = time1[2] === 'AM' ? '0' : '12';
-    }else if (time1[2] === 'PM') {
-        time1[0] = (Number(time1[0]) + 12).toString();
-    }
-    time1[0] = Number(time1[0]) * 60 + Number(time1[1]); // [Minutes, __, (AM|PM)]
-
-    time2 = time2.split(':');
-    time2.push(time2[1].substr(-2, 2));
-    time2[1] = time2[1].substr(0, 2);
-    if(time2[0] === '12') {
-        time2[0] = time2[2] === 'AM' ? '0' : '12';
-    }else if (time2[2] === 'PM') {
-        time2[0] = (Number(time2[0]) + 12).toString();
-    }
-    time2[0] = Number(time2[0]) * 60 + Number(time2[1]);
-    return time1[0] + 30 <= time2[0];
-}
-*/
 
 function isValid24(time) {
     var regex = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
