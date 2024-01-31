@@ -1,5 +1,5 @@
 let createGroupForm = document.getElementById('create-group-form');
-let submitButton = document.getElementById('group-submit-button');
+let groupSubmitButton = document.getElementById('group-submit-button');
 
 if (createGroupForm) {
     let errorLabel = document.getElementById('error-label');
@@ -16,7 +16,7 @@ if (createGroupForm) {
             messageLabel.hidden = false;
 
             createGroupForm.submit();
-            submitButton.disabled = true;
+            groupSubmitButton.disabled = true;
         } catch (err) {
             event.preventDefault();
             errorLabel.innerHTML = err;

@@ -1,5 +1,5 @@
 let createGameForm = document.getElementById('create-game-form');
-let submitButton = document.getElementById('game-submit-button');
+let gameSubmitButton = document.getElementById('game-submit-button');
 
 if (createGameForm) {
     let errorLabel = document.getElementById('error-label');
@@ -35,7 +35,7 @@ if (createGameForm) {
             messageLabel.hidden = false;
 
             createGameForm.submit();
-            submitButton.disabled = true;
+            gameSubmitButton.disabled = true;
         } catch (err) {
             errorLabel.innerHTML = err;
             errorLabel.hidden = false;

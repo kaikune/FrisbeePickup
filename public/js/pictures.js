@@ -226,12 +226,14 @@ async function getSlideshowUrls(filenames, isEventPage = false) {
 /**
  * Fetches signed urls from server
  * @param {[string]} fileNames
- * @param {string} type Either 'pfp' or 'slideshow'
+ * @param {string} type
  * @returns
  */
 async function getUrls(options, type) {
     console.log('Getting signed urls');
     const url = `/pictures/${type}`;
+    console.log(options, type);
+    console.log(url);
 
     const response = await fetch(url, {
         mode: 'cors',
