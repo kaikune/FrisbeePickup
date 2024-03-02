@@ -6,7 +6,7 @@
                 <input class="form-input" type="text" id="group-name" name="groupName" value="{{groupObj.groupName}}">
                 <br>
             <label class="form-label" for="description">Description</label>
-                <input class="form-input" type="text" id="description" name="groupDescription" value="{{groupObj.description}}">
+                <textarea class="form-input" id="description" name="groupDescription">{{groupObj.description}}</textarea>
                 <br>
             {{#if currentUser}}
                 <button type="submit" id="group-submit-button" class="form-submit-button">Edit</button>
