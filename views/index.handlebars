@@ -1,26 +1,27 @@
-<main>
-    <div class="welcome-container">
-        <img src="https://storage.googleapis.com/family-frisbee-media/icons/RIC3FamilyLogo.jpg" alt="RIC3 Family Logo" class="logo-image">
-    </div>
+<!-- Events List -->
+<div class="list-wrapper">
+    <h3 class="list-header">Events</h3>
+    {{#if currentUser.isAdmin}}
+        <a href="/create-event">Create New Event</a>
+    {{/if}}
+    <dl id="game-list" class="list-of-all">
+        {{#each events}}
+            <dd class="search-result">
+                <a href="/games/{{this._id}}">{{this.gameName}}</a>
+            </dd>
+        {{/each}}
+    </dl>
+</div>
 
-    <p class="index">
-        RIC3 Family Ultimate Frisbee welcomes everyone, which includes kids, youth and adults to toss a frisbee and play ultimate together. 
-        We play by Ultimate's 10 simple rules plus RIC3 Family house modifications <a href="http://www.ric3family.com/familyfrisbeerules">here</a>.
-        We work to make even matchups and utilize other creative tactics to level the playing field.  
-        We adhere to ultimate's Spirit of the Game, which means you play to win, but at the same time respect yourself, 
-        teammates, opponents and the game itself. It also means the responsibility of fair play is placed on the athletes themselves, 
-        rather than a referee.
-    </p>
+<!--
+<div class="event-image-container">
+    <img src="https://storage.googleapis.com/family-frisbee-media/icons/eventHub.jpg" class="event-image" alt="Event flyer">
+</div>
 
-    <img src="https://storage.googleapis.com/family-frisbee-media/icons/Full_court.png" alt="RIC3 Family Ultimate Frisbee" class="home-image">
+-->
 
-    <p class="index">
-        Participants with a user profile will get priority when an event has a max capacity but you do not need to create a profile to join an event.
-        If you have questions, feel free to email 
-        <a href="mailto: ultimate@RIC3Family.com">ultimate@RIC3Family.com</a> 
-        or text Wilkin Lai at <a href="tel:313-525-1255">(313) 525-1255</a>. <a href="https://adobe.ly/3So9pl9">Click here to view or contribute photos to "Indoor Family Frisbee at RMC"</a>
-    </p>
-    <div class="mortgage-container">
-        <img src="https://i.ibb.co/0MwySt2/Organized-RIC3-CC-Sponsored-RIC3-MB.jpg" alt="Organized by RIC3 Creative Community - Sponsored by RIC3 Mortgage Broker." class="mortgage-logo">
-    </div>
-</main>
+{{#if currentUser.isAdmin}}
+    {{> addToSlideshow route='events' isEventPage=true}}
+{{/if}}
+
+{{> showSlideshow}}
