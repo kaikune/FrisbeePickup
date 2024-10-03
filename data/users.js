@@ -150,14 +150,14 @@ const getIDName = async (userIds) => {
     return ret;
 };
 
-const editUser = async (userId, username, emailAddress, profilePicture, description, skills, name) => {
+const editUser = async (userId, username, emailAddress, profilePicture, description, skills, name, link1, link1desc, link2, link2desc) => {
     if (!userId) throw 'User Id not given';
     if (typeof userId !== 'string') throw 'User Id is not a string';
     userId = userId.trim();
     if (!ObjectId.isValid(userId)) throw 'User Id is not valid';
     if (typeof skills !== 'object') throw 'Skills is not an object';
 
-    let userData = { username, emailAddress, password: '', profilePicture, description, skills, name };
+    let userData = { username, emailAddress, password: '', profilePicture, description, skills, name, link1, link1desc, link2, link2desc };
     userData = formatAndValidateUser(userData, true);
 
     const userCollection = await users();
@@ -180,6 +180,11 @@ const editUser = async (userId, username, emailAddress, profilePicture, descript
                 description: userData.description,
                 profilePicture: userData.profilePicture,
                 skills: userData.skills,
+                link1: userData.link1,
+                link1desc: userData.link1desc,
+                link2: userData.link2,
+                link2desc: userData.link2desc,
+                
             },
         }
     );
@@ -194,7 +199,7 @@ const editPfp = async (userId, imagePath) => {
     const base = 'https://storage.googleapis.com';
 
     const url = `${base}/${bucketName}/${userId}/${imagePath}`;
-    await editUser(userId, user.username, user.emailAddress, url, user.description, user.skills, user.name);
+    await editUser(userId, user.username, user.emailAddress, url, user.description, user.skills, user.name, user.link1, user.link1desc, user.link2, user.link2desc);
 };
 
 const getAllUsers = async () => {
