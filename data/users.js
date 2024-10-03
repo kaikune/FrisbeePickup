@@ -47,12 +47,10 @@ export function formatAndValidateUser(userData, ignorePassword) {
     let emailAddress = userData.emailAddress;
     let password;
 
-    let link1 = helpers.stringHelper(userData.link1, 'Link', 1, 1000);
-    let link1desc = helpers.stringHelper(userData.link1desc, 'Link Description', 1, 100);
-    let link2 = helpers.stringHelper(userData.link2, 'Link', 1, 1000);
-    let link2desc = helpers.stringHelper(userData.link2desc, 'Link Description', 1, 100);
-
-
+    let link1desc = "";
+    let link2desc = "";
+    if (userData.link1 != ""){ link1desc = helpers.stringHelper(userData.link1desc, 'Link 1 Description', 1, 100); }
+    if(userData.link2 != ""){ link2desc = helpers.stringHelper(userData.link2desc, 'Link 2 Description', 1, 100); }
 
 
     if (emailAddress) helpers.isValidEmail(emailAddress);
@@ -80,7 +78,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
 
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
     let description = helpers.stringHelper(userData.description, 'Description', null, 300);
-    return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name, link1, link1desc, link2, link2desc };
+    return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name, link1: userData.link1, link1desc, link2: userData.link2, link2desc };
 }
 
 const createUser = async (username, emailAddress, password, pfp, description, name) => {
