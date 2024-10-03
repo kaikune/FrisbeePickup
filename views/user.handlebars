@@ -9,6 +9,10 @@
         <img src="{{user.profilePicture}}" class="profile-picture" alt="Your profile picture">
         <p>{{user.name}}</p>
         <p>{{user.description}}</p>
+        <a href="{{user.link1}}">{{user.link1desc}}</a>
+        <a href="{{user.link2}}">{{user.link2desc}}</a>
+
+
     </div>
 
     <h3>Family:</h3>
@@ -23,7 +27,7 @@
             <li><a href="/groups/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
     </ul>
-    <h3>Upcoming Events:</h3>
+    <h3>Events:</h3>
     <ul>
         {{#each games}}
             <li><a href="/games/{{this._id}}">{{this.name}}</a></li>

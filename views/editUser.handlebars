@@ -14,6 +14,18 @@
             <label class="form-label" for="description">Bio:</label>
                 <textarea class="form-input" id="description" name="description">{{currentUser.description}}</textarea>
                 <br>
+            <label class="form-label" for="link1">Link 1:</label>
+                <input class="form-input" id="link1" name="link1" value="{{currentUser.link1}}">
+                <br>
+            <label class="form-label" for="link1desc">Link 1 description:</label>
+                <input class="form-input" id="link1desc" name="link1desc" value="{{currentUser.link1desc}}">
+                <br>
+            <label class="form-label" for="link2">Link 2:</label>
+                <input class="form-input" id="link2" name="link2" value="{{currentUser.link2}}">
+                <br>
+            <label class="form-label" for="link2desc">Link 2 description:</label>
+                <input class="form-input" id="link2desc" name="link2desc" value="{{currentUser.link2desc}}">
+                <br>
             
             <!-- Skills -->
             {{#each currentUser.skills}}
