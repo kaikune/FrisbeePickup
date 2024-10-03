@@ -167,12 +167,19 @@ router
             
             let skills = req.body.skills;
 
+            let link1 = req.body.link1;
+            let link1desc = req.body.link1desc;
+            let link2 = req.body.link2;
+            let link2desc = req.body.link2desc;
+
+            
+
             //console.log(skills);
             if (currentUser._id !== userId) {
                 throw Error("not allowed");
             }
 
-            req.session.user = await usersData.editUser(currentUser._id, username, email, currentUser.profilePicture, description, skills, name);
+            req.session.user = await usersData.editUser(currentUser._id, username, email, currentUser.profilePicture, description, skills, name, link1, link1desc, link2, link2desc);
             return res.redirect("/users/" + currentUser._id);
         } catch (e) {
             return res.status(400).render('error', { title: 'Error', error: e });
