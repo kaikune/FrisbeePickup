@@ -501,26 +501,23 @@ main {
   width: 100%;
   margin: auto;
 }
-main.index {
-  height: 100%;
-  width: 100%;
-  margin-left: 20%;
-  margin-right: 20%;
-  margin-top: auto;
-  margin-bottom: auto;
-
-}
 
 p.index {
   text-align: center;
   font-size: 20px;
+  left: 10%;
+  right: 10%;
+}
+
+img.index {
+  left: 10%;
 }
 
 .mortgage-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: right;
   width: 100%;
 }
 
