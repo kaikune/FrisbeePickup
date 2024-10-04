@@ -39,6 +39,8 @@ router
         const group = req.body.group;
         let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
         const organizer = req.session.user._id;
+        const link = req.body.link;
+        const linkdesc = req.body.linkdesc;
 
         try {
             helpers.isValidNum(req.body.maxPlayers);
@@ -49,7 +51,7 @@ router
             //startTime = helpers.convertTo12Hour(startTime);
             //endTime = helpers.convertTo12Hour(endTime);
             //gameDate = helpers.convertToMMDDYYYY(gameDate);
-            gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, organizer);
+            gamesData.formatAndValidateGame(gameName, gameDescription, gameLocation, maxPlayersNumber, gameDate, startTime, endTime, organizer, link, linkdesc);
 
             const createResult = await gamesData.create(
                 gameName,
@@ -60,7 +62,9 @@ router
                 startTime,
                 endTime,
                 group,
-                organizer
+                organizer,
+                link,
+                linkdesc
             );
             return res.redirect(`games/${createResult._id}`);
         } catch (err) {
