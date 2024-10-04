@@ -271,9 +271,11 @@ const update = async (
     group,
     gameImage,
     map,
-    directions
+    directions,
+    link,
+    linkdesc
 ) => {
-    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, userId);
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, userId, link, linkdesc);
 
     const oldGame = await get(gameId); // Check if game exists
 
@@ -295,6 +297,8 @@ const update = async (
         expired: oldGame.expired,
         map: map ?? oldGame.map,
         directions: directions ?? oldGame.directions,
+        link: gameData.link,
+        linkdesc: gameData.linkdesc
     };
 
     const gameCollection = await games();
