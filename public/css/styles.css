@@ -502,22 +502,24 @@ main {
   margin: auto;
 }
 
+main.index{
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 p.index {
   text-align: center;
   font-size: 20px;
-  left: 10%;
-  right: 10%;
-}
-
-img.index {
-  left: 10%;
 }
 
 .mortgage-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: right;
+  align-items: center;
   width: 100%;
 }
 
@@ -525,7 +527,7 @@ img.index {
   display: block;
   width: auto;
   height: 200px;
-  margin: auto;
+  margin: -300px 0px 0px -300px;
 }
 /* End Main Page */
 
