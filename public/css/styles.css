@@ -501,6 +501,15 @@ main {
   width: 100%;
   margin: auto;
 }
+main.index {
+  height: 100%;
+  width: 100%;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
 
 p.index {
   text-align: center;
