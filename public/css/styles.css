@@ -498,7 +498,7 @@ footer {
 
 #index-main {
   height: 100%;
-  width: 100%;
+  width: 80%;
   margin: auto;
 }
 
@@ -523,7 +523,7 @@ p.index {
   display: block;
   width: auto;
   height: 200px;
-  margin: -300px 0px 0px -300px;
+  margin: auto;
 }
 /* End Main Page */
 
