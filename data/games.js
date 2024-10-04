@@ -11,7 +11,7 @@ const formatAndValidateGame = function (gameName, gameDescription, gameLocation,
     startTime = helpers.stringHelper(startTime, 'Start time', 1, null);
     endTime = helpers.stringHelper(endTime, 'End time', 1, null);
 
-    if (link != ""){ link1desc = helpers.stringHelper(linkdesc, 'Link Description', 1, 100); }
+    if (link != ""){ linkdesc = helpers.stringHelper(linkdesc, 'Link Description', 1, 100); }
 
     if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
     if (helpers.isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
