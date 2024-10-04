@@ -19,6 +19,9 @@
             {{/if}}
 
             <p>Date: {{game.gameDate}} {{ game.startTime }} - {{ game.endTime }}</p>
+
+            <a href="{{game.link}}">{{game.linkdesc}}</a>
+            
             <p>Location: {{ game.gameLocation.streetAddress}}, {{ game.gameLocation.city }}, {{ game.gameLocation.state }}, {{ game.gameLocation.zip }}</p>
 
             {{#if game.directions}}

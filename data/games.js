@@ -4,12 +4,14 @@ import { usersData, groupsData, picturesData } from './index.js';
 import { ObjectId } from 'mongodb';
 import xss from 'xss';
 
-const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer = undefined) {
+const formatAndValidateGame = function (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer = undefined, link, linkdesc) {
     gameName = helpers.stringHelper(gameName, 'Game name', 5, null);
     gameDescription = helpers.stringHelper(gameDescription, 'Game description', 1, null);
     gameDate = helpers.stringHelper(gameDate, 'Game date', 1, null);
     startTime = helpers.stringHelper(startTime, 'Start time', 1, null);
     endTime = helpers.stringHelper(endTime, 'End time', 1, null);
+
+    if (link != ""){ link1desc = helpers.stringHelper(linkdesc, 'Link Description', 1, 100); }
 
     if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
     if (helpers.isDateInFuture(gameDate)) throw 'Event Date has to be in the future';
@@ -25,11 +27,11 @@ const formatAndValidateGame = function (gameName, gameDescription, gameLocation,
     helpers.isValidId(organizer);
     if (!usersData.isUserAdmin(organizer)) throw 'User is not an admin';
 
-    return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation };
+    return { gameName, gameDescription, gameDate, startTime, endTime, maxCapacity, gameLocation, link, linkdesc };
 };
 
-const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer) => {
-    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer);
+const create = async (gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, group, organizer, link, linkdesc) => {
+    let gameData = formatAndValidateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, organizer, link, linkdesc );
 
     // Group is optional
     if (group !== 'N/A') helpers.isValidId(group);
@@ -54,6 +56,8 @@ const create = async (gameName, gameDescription, gameLocation, maxCapacity, game
         map: '',
         directions: '',
         expired: false,
+        link: gameData.link,
+        linkdesc: gameData.linkdesc,
     };
 
     const gameCollection = await games();

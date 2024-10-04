@@ -77,7 +77,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
     }
 
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
-    let description = helpers.stringHelper(userData.description, 'Description', null, 300);
+    let description = helpers.stringHelper(userData.description, 'Description', null, null);
     return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name, link1: userData.link1, link1desc, link2: userData.link2, link2desc };
 }
 
