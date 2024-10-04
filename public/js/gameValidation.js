@@ -5,7 +5,6 @@ if (createGameForm) {
     let errorLabel = document.getElementById('error-label');
     let messageLabel = document.getElementById('message-label');
     errorLabel.hidden = true;
-
     createGameForm.addEventListener('submit', (event) => {
         //console.log('Form submission triggered');
         event.preventDefault();
@@ -28,9 +27,12 @@ if (createGameForm) {
                 state: state.value,
                 zip: zip.value,
             };
+            let link = document.getElementById('link');
+            let linkdesc = document.getElementById('linkdesc');
+
             isValidNum(maxPlayers.value);
             let maxPlayersNumber = parseInt(maxPlayers.value, 10);
-            validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value);
+            validateGame(gameName.value, description.value, location, maxPlayersNumber, date.value, startTime.value, endTime.value, link.value, linkdesc.value);
             messageLabel.innerHTML = 'Game Created';
             messageLabel.hidden = false;
 
@@ -42,7 +44,7 @@ if (createGameForm) {
         }
     });
 }
-function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime) {
+function validateGame(gameName, gameDescription, gameLocation, maxCapacity, gameDate, startTime, endTime, link, linkdesc) {
     // Input Validation
 
     if (!gameName) throw 'Game name is required';
@@ -53,6 +55,7 @@ function validateGame(gameName, gameDescription, gameLocation, maxCapacity, game
     if (!gameDate) throw 'Game date is required';
     if (!startTime) throw 'Start time is required';
     if (!endTime) throw 'End time is required';
+    if (link && !linkdesc) throw 'Link Description is required if link is included';
 
     if (
         typeof gameName !== 'string' ||

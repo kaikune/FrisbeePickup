@@ -39,8 +39,8 @@ router
         const group = req.body.group;
         let gameLocation = { zip: zip, state: state, streetAddress: streetAddress, city: city };
         const organizer = req.session.user._id;
-        const link = req.body.link;
-        const linkdesc = req.body.linkdesc;
+        let link = req.body.link;
+        let linkdesc = req.body.linkdesc;
 
         try {
             helpers.isValidNum(req.body.maxPlayers);
@@ -48,6 +48,8 @@ router
             startTime = helpers.stringHelper(startTime, 'Start Time');
             endTime = helpers.stringHelper(endTime, 'End Time');
             gameDate = helpers.stringHelper(gameDate, 'Game Date');
+            link = helpers.stringHelper(link, 'Link');
+            linkdesc = helpers.stringHelper(linkdesc, 'Link Description');
             //startTime = helpers.convertTo12Hour(startTime);
             //endTime = helpers.convertTo12Hour(endTime);
             //gameDate = helpers.convertToMMDDYYYY(gameDate);
@@ -169,6 +171,9 @@ router
             let map = helpers.stringHelper(req.body.map, 'Map Link');
             let directions = helpers.stringHelper(req.body.directions, 'Directions');
             const organizer = req.session.user._id;
+            let link = helpers.stringHelper(req.body.link, "Link");
+            let linkdesc = helpers.stringHelper(req.body.linkdesc, "Link Description");
+
 
             if (!helpers.isValidDay(gameDate)) throw 'Event Date is not valid';
 
@@ -185,7 +190,9 @@ router
                 gameDate,
                 startTime,
                 endTime,
-                organizer
+                organizer,
+                link,
+                linkdesc
             );
 
             await gamesData.update(
@@ -201,7 +208,9 @@ router
                 req.body.group,
                 null,
                 map,
-                directions
+                directions,
+                link,
+                linkdesc
             );
 
             return res.redirect('/games/' + gameId);
