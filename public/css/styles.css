@@ -502,8 +502,10 @@ footer {
   margin: auto;
 }
 
-main.index{
-  width: 80%;
+main {
+  height: 100%;
+  width: 100%;
+  margin: auto;
 }
 
 p.index {
