@@ -48,9 +48,17 @@ export function formatAndValidateUser(userData, ignorePassword) {
     let password;
 
     let link1desc = "";
+    let link1 = "";
     let link2desc = "";
-    if (userData.link1 != ""){ link1desc = helpers.stringHelper(userData.link1desc, 'Link 1 Description', 1, 100); }
-    if(userData.link2 != ""){ link2desc = helpers.stringHelper(userData.link2desc, 'Link 2 Description', 1, 100); }
+    let link2 = "";
+    if (userData.link1 != null && userData.link1 != ""){ 
+        link1 = helpers.stringHelper(userData.link1, "Link 1");
+        link1desc = helpers.stringHelper(userData.link1desc, 'Link 1 Description', 1, 100); 
+    }
+    if(userData.link2 != null && userData.link2 != ""){ 
+        link2 = helpers.stringHelper(userData.link2, 'Link 2')
+        link2desc = helpers.stringHelper(userData.link2desc, 'Link 2 Description', 1, 100); 
+    }
 
 
     if (emailAddress) helpers.isValidEmail(emailAddress);
@@ -78,7 +86,7 @@ export function formatAndValidateUser(userData, ignorePassword) {
 
     let profilePicture = helpers.stringHelper(userData.profilePicture, 'Profile picture', null, 2048);
     let description = helpers.stringHelper(userData.description, 'Description', null, null);
-    return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name, link1: userData.link1, link1desc, link2: userData.link2, link2desc };
+    return { username, emailAddress, password, profilePicture, description, skills: userData.skills, name, link1, link1desc, link2, link2desc };
 }
 
 const createUser = async (username, emailAddress, password, pfp, description, name) => {

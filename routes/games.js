@@ -48,8 +48,10 @@ router
             startTime = helpers.stringHelper(startTime, 'Start Time');
             endTime = helpers.stringHelper(endTime, 'End Time');
             gameDate = helpers.stringHelper(gameDate, 'Game Date');
-            link = helpers.stringHelper(link, 'Link');
-            linkdesc = helpers.stringHelper(linkdesc, 'Link Description');
+            if(link != null && link != ""){
+                link = helpers.stringHelper(link, 'Link');
+                linkdesc = helpers.stringHelper(linkdesc, 'Link Description', 1, 300);
+            }
             //startTime = helpers.convertTo12Hour(startTime);
             //endTime = helpers.convertTo12Hour(endTime);
             //gameDate = helpers.convertToMMDDYYYY(gameDate);
